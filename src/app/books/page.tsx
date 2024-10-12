@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import client from "@/lib/wix";
 
 export default async function Home() {
@@ -21,8 +22,9 @@ export default async function Home() {
                     <p className="text-gray-600">{book?.author}</p>
                 </div>
             ))}
-
         </div>
+
+        <Button>Add Book</Button>
     </div>
   );
 }
