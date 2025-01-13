@@ -1,5 +1,15 @@
 import { Button } from "@/components/ui/button";
 import client from "@/lib/wix";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+  } from "@/components/ui/card"
+import Link from "next/link";
+  
 
 export default async function Home() {
 
@@ -17,10 +27,20 @@ export default async function Home() {
 
         <div className="grid grid-cols-3 gap-4">
             {books.map((book) => (
-                <div key={book?._id} className="p-4 border border-gray-200 rounded-lg">
-                    <h2 className="text-xl font-bold">{book?.title}</h2>
-                    <p className="text-gray-600">{book?.author}</p>
-                </div>
+                <Card key={book?._id}>
+                <CardHeader>
+                  <CardTitle>{book?.title}</CardTitle>
+                  <CardDescription>Card Description</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p>{book?.author}</p>
+                </CardContent>
+                <CardFooter>
+                  <Button asChild>
+                    <Link href={`/books/${book?._id}`}>Read Reviews</Link>
+                    </Button>
+                </CardFooter>
+              </Card>
             ))}
         </div>
 
