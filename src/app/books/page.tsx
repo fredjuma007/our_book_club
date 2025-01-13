@@ -10,6 +10,7 @@ import {
     CardTitle,
   } from "@/components/ui/card"
 import Link from "next/link";
+import { Book, BookIcon } from "lucide-react";
   
 
 export default async function Home() {
@@ -34,7 +35,7 @@ export default async function Home() {
                   <CardDescription>Card Description</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {book?.image && (
+                    {book?.image ? (
                     <Image
                                     width={150}
                                     height={200} 
@@ -42,7 +43,11 @@ export default async function Home() {
                                     alt={book?.title}
                                     className="w-[150px] h-[200px] mb-4 rounded-lg"
                                 />
-                    )}
+                    ) : ( <div className="flex flex-col gap-2 items-center justify-center w-[150px] h-[200px] mb-4 bg-gray-200 rounded-lg">
+                        <BookIcon className="w-12 h-12 text-gray-400" />
+                        <p className="text-black">No Image</p>
+                        </div>
+                        )}
                   <p>{book?.author}</p>
                 </CardContent>
                 <CardFooter>
