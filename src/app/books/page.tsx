@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import client from "@/lib/wix";
+import client, { convertWixImageToUrl } from "@/lib/wix";
+import Image from "next/image";
 import {
     Card,
     CardContent,
@@ -33,6 +34,15 @@ export default async function Home() {
                   <CardDescription>Card Description</CardDescription>
                 </CardHeader>
                 <CardContent>
+                    {book?.image && (
+                    <Image
+                                    width={150}
+                                    height={200} 
+                                    src={convertWixImageToUrl(book?.image)} 
+                                    alt={book?.title}
+                                    className="w-[150px] h-[200px] mb-4 rounded-lg"
+                                />
+                    )}
                   <p>{book?.author}</p>
                 </CardContent>
                 <CardFooter>
