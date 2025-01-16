@@ -10,28 +10,32 @@ export async function Header() {
   const isLoggedIn = await getServerClient().auth.loggedIn();
 
   return (
-    <div className="bg-gray-100 border-b py-3">
+    <div className="bg-gray-100 dark:bg-gray-900 border-b py-3">
       <div className="container mx-auto flex justify-between items-center">
         <Button variant="link" asChild>
-            <Link
+          <Link
             href="/"
-            className="text-3xl flex items-center gap-2 font-[family-name:var(--font-dancing-script)] text-black"
-            >
+            className="text-3xl flex items-center gap-2 font-[family-name:var(--font-dancing-script)] text-gray-900 dark:text-gray-100"
+          >
             <Image src="/logo.jpeg" width={60} height={60} alt="TheBookClub" />
             READING CIRCLE
-            </Link>
+          </Link>
         </Button>
 
         <ModeToggle />
 
         <div>
           <Button asChild variant="link">
-            <Link className="text-black" href="/books">Browse Books</Link>
+            <Link className="text-gray-900 dark:text-gray-100" href="/books">
+              Browse Books
+            </Link>
           </Button>
 
           {isLoggedIn && (
             <Button asChild variant="link">
-              <Link href="/reviews">Reviews</Link>
+              <Link className="text-gray-900 dark:text-gray-100" href="/reviews">
+                Reviews
+              </Link>
             </Button>
           )}
         </div>
@@ -39,7 +43,9 @@ export async function Header() {
         <div>
           {isLoggedIn ? (
             <div className="flex items-center gap-2">
-              <p className="text-sm">Hello, {member?.nickname}</p>
+              <p className="text-sm text-gray-900 dark:text-gray-100">
+                Hello, {member?.nickname}
+              </p>
               <form action={logoutAction}>
                 <Button variant="outline">Logout</Button>
               </form>
