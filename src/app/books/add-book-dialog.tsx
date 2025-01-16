@@ -69,11 +69,6 @@ export function AddBookDialog() {
           </div>
 
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="isbn">ISBN (optional)</Label>
-            <Input name="isbn" id="isbn" type="text" />
-          </div>
-
-          <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="description">Description (optional)</Label>
             <Textarea name="description" id="description" />
           </div>

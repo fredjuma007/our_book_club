@@ -60,7 +60,8 @@ export default async function Home({
             src={"/not-found.svg"}
             alt={"book not found icon"}
           />
-          <p>No books found</p>
+          <p>No books found.</p>
+          <p>Confirm the spelling of the book and try again</p>
         </div>
       )}
 
