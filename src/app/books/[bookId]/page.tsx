@@ -28,71 +28,87 @@ export default async function BookPage({
     .then((res) => res.items.map((item) => item.data));
 
   return (
-    <div className="container mx-auto py-12 flex flex-col gap-12">
+    <div className="max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 dark:bg-gray-900 dark:text-white">
+      {/* Back Button */}
       <div>
         <Button variant="link" asChild>
           <Link href="/books">
-            <ChevronLeft /> Back to books
+            <ChevronLeft className="mr-1" /> Back to books
           </Link>
         </Button>
       </div>
 
-      <Card>
+      {/* Book Details */}
+      <Card className="rounded-lg shadow-md bg-white dark:bg-gray-800">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">{book?.title}</CardTitle>
+          <CardTitle className="text-3xl font-bold">{book?.title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4">
+          <div className="flex flex-col lg:flex-row gap-8">
             {book?.image ? (
               <Image
                 width={200}
                 height={300}
                 src={convertWixImageToUrl(book?.image)}
                 alt={book?.title}
-                className="w-[200px] h-[300px] mb-4 rounded-lg"
+                className="w-[200px] h-[300px] rounded-lg object-cover shadow-md"
               />
             ) : (
-              <div className="flex-shrink-0 flex flex-col gap-2 items-center justify-center w-[200px] h-[300px] mb-4 rounded-lg bg-gray-200">
-                <BookIcon className="w-10 h-10" />
-                <p>No Image</p>
+              <div className="flex-shrink-0 flex flex-col items-center justify-center w-[200px] h-[300px] rounded-lg bg-gray-200 dark:bg-gray-700">
+                <BookIcon className="w-10 h-10 text-gray-500 dark:text-gray-300" />
+                <p className="text-gray-500 dark:text-gray-300">No Image</p>
               </div>
             )}
-            <div>
+            <div className="flex flex-col justify-between">
               <p className="text-lg font-semibold">By {book?.author}</p>
-              <p className="text-sm text-muted-foreground">
-                Published in {book?.publicationDate}
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Published in {book?.publicationDate || "Unknown Year"}
               </p>
-              <p className="mt-4">{book?.description}</p>
+              <p className="mt-4 text-gray-700 dark:text-gray-300">
+                {book?.description || "No description available for this book."}
+              </p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <Card>
+      {/* Reviews Section */}
+      <Card className="rounded-lg shadow-md bg-white dark:bg-gray-800">
         <CardHeader>
-          <CardTitle>Reviews</CardTitle>
+          <CardTitle className="text-2xl font-bold">Reviews</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {reviews.map((review) => (
-              <div key={review?._id} className="border-b pb-4">
-                <div className="flex justify-between items-center">
-                  <p className="font-semibold">{review?.name}</p>
-                  <div className="flex">
-                    {[...Array(review?.rating)].map((_, i) => (
-                      <StarIcon
-                        key={i}
-                        className="w-5 h-5 fill-yellow-400 text-yellow-400"
-                      />
-                    ))}
+          <div className="space-y-6">
+            {reviews.length > 0 ? (
+              reviews.map((review) => (
+                <div key={review?._id} className="border-b pb-4 last:border-none">
+                  <div className="flex justify-between items-center">
+                    <p className="font-semibold">{review?.name}</p>
+                    <div className="flex">
+                      {[...Array(review?.rating)].map((_, i) => (
+                        <StarIcon
+                          key={i}
+                          className="w-5 h-5 text-yellow-400 fill-yellow-400"
+                        />
+                      ))}
+                    </div>
                   </div>
+                  <p className="mt-2 text-gray-700 dark:text-gray-300">
+                    {review?.review}
+                  </p>
                 </div>
-                <p className="mt-2">{review?.review}</p>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400">
+                No reviews available. Be the first to review this book!
+              </p>
+            )}
           </div>
 
-          <PostReviewForm bookId={book?._id} />
+          {/* Review Form */}
+          <div className="mt-8">
+            <PostReviewForm bookId={book?._id} />
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
-import { ModeToggle } from "@/components/ModeToggle"; // Import the ModeToggle component
 import { Header } from "./header";
 
 const geistSans = localFont({
