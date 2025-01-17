@@ -16,6 +16,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.4",
     "@wix/data": "^1.0.158",
+    "@wix/media": "^1.0.120",
     "@wix/members": "^1.0.156",
     "@wix/sdk": "^1.14.1",
     "class-variance-authority": "^0.7.0",

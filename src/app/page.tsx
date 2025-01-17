@@ -8,7 +8,7 @@ export default function Home() {
       <div className="text-center max-w-3xl">
         <Image
           src="/logo.jpeg"
-          alt="TheBookClub Logo"
+          alt="reading circle logo"
           width={200}
           height={200}
           className="mx-auto mb-8"
