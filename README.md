@@ -3,7 +3,7 @@
   href="https://cdn.jsdelivr.net/gh/dheereshagrwal/colored-icons@1.7.5/src/app/ci.min.css"
 />
 
-Reading CIrcle 📚 is a bookclub by ALX Kenya
+Reading Circle 📚 is a bookclub that aims to connect booklovers
 ======================================
 
 the project is a website that catalogues books read by the members of the book club. The website allows members to comment on the books and share a star rating. The website also allows members to see the books that have been read by the book club.
