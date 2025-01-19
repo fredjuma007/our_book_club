@@ -4,7 +4,7 @@ import { getServerClient } from "@/lib/wix";
 import { OauthData } from "@wix/sdk";
 import { cookies } from "next/headers";
 
-export async function loginCallbackAction(url: string) {
+export async function loginCallbackAction(url: string, redirectUri: string) {
   const returnedOAuthData = getServerClient().auth.parseFromUrl(url);
 
   if (returnedOAuthData.error) {
