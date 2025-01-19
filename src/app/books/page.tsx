@@ -58,7 +58,7 @@ export default async function Home({
             Search
           </Button>
         </form>
-        <AddBookDialog />
+        {/*<AddBookDialog />*/}
       </div>
 
       {/* No Books Found */}
