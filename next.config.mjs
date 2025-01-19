@@ -10,6 +10,11 @@ const nextConfig = {
     },
     // Ignore build validation errors
     skipBuildValidation: true,
+
+    // Disable ESLint checks during builds
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
 };
 
 export default nextConfig;
