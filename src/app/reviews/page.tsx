@@ -24,7 +24,7 @@ export default async function ReviewsPage() {
   return (
     <div className="max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 dark:bg-gray-900 dark:text-white">
       {/* Page Title */}
-      <h1 className="text-3xl font-bold">Your Reviews</h1>
+      <h1 className="text-3xl font-bold  text-green-600 dark:text-green-500">Your Reviews</h1>
 
       {/* No Reviews Fallback */}
       {reviews.length === 0 && (
@@ -35,7 +35,7 @@ export default async function ReviewsPage() {
             src="/not-found.svg"
             alt="No reviews icon"
           />
-          <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
+          <p className="text-lg font-medium  text-green-600 dark:text-green-500">
             You have not reviewed any books yet.
           </p>
         </div>

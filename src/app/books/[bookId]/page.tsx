@@ -31,7 +31,11 @@ export default async function BookPage({
     <div className="max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 dark:bg-gray-900 dark:text-white">
       {/* Back Button */}
       <div>
-        <Button variant="link" asChild>
+        <Button
+          variant="link"
+          asChild
+          className="text-green-600 dark:text-green-500 hover:underline"
+        >
           <Link href="/books">
             <ChevronLeft className="mr-1" /> Back to books
           </Link>
@@ -41,7 +45,9 @@ export default async function BookPage({
       {/* Book Details */}
       <Card className="rounded-lg shadow-md bg-white dark:bg-gray-800">
         <CardHeader>
-          <CardTitle className="text-3xl font-bold">{book?.title}</CardTitle>
+          <CardTitle className="text-3xl font-bold text-green-600 dark:text-green-500">
+            {book?.title}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col lg:flex-row gap-8">
@@ -75,7 +81,9 @@ export default async function BookPage({
       {/* Reviews Section */}
       <Card className="rounded-lg shadow-md bg-white dark:bg-gray-800">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Reviews</CardTitle>
+          <CardTitle className="text-2xl font-bold text-green-600 dark:text-green-500">
+            Reviews
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">

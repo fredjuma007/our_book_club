@@ -33,14 +33,14 @@ export async function Header() {
           {/* Navigation Links */}
           <div className="flex items-center gap-6">
             <Button asChild variant="link">
-              <Link className="text-gray-900 dark:text-gray-100" href="/books">
+              <Link className=" text-green-600 dark:text-green-500" href="/books">
                 Browse Books
               </Link>
             </Button>
 
             {isLoggedIn && (
               <Button asChild variant="link">
-                <Link className="text-gray-900 dark:text-gray-100" href="/reviews">
+                <Link className=" text-green-600 dark:text-green-500" href="/reviews">
                   Reviews
                 </Link>
               </Button>
@@ -51,7 +51,7 @@ export async function Header() {
           <div className="flex items-center gap-4">
             {isLoggedIn ? (
               <div className="flex items-center gap-2">
-                <p className="text-sm text-gray-900 dark:text-gray-100">
+                <p className="text-sm text-green-600 dark:text-green-500">
                   Hello, {member?.nickname}
                 </p>
                 <form action={logoutAction}>

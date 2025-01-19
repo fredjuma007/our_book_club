@@ -62,7 +62,10 @@ export function PostReviewForm({ bookId }: { bookId: string }) {
         required
       />
       <div className="flex items-center space-x-2">
-        <label htmlFor="rating" className="text-sm font-medium">
+        <label
+          htmlFor="rating"
+          className="text-sm font-medium text-green-600 dark:text-green-500"
+        >
           Rating:
         </label>
         <Input
@@ -90,7 +93,7 @@ export function PostReviewForm({ bookId }: { bookId: string }) {
       <Button
         disabled={isLoading}
         type="submit"
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white dark:bg-green-500 dark:hover:bg-green-600"
       >
         {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
         Post Review
