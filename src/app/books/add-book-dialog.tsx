@@ -22,11 +22,15 @@ export function AddBookDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Add Book</Button>
+        <Button className="bg-green-500 hover:bg-green-600 text-white transition-colors">
+          Add Book
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add a new book</DialogTitle>
+          <DialogTitle className="text-green-600 dark:text-green-500">
+            Add a new book
+          </DialogTitle>
           <DialogDescription>
             If you didn&apos;t find a book you&apos;re looking for, add one
             here.
@@ -73,7 +77,12 @@ export function AddBookDialog() {
             <Textarea name="description" id="description" />
           </div>
 
-          <Button type="submit">Add Book</Button>
+          <Button
+            type="submit"
+            className="bg-green-500 hover:bg-green-600 text-white transition-colors"
+          >
+            Add Book
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

@@ -33,7 +33,9 @@ export default async function Home({
     <div className="max-w-screen-xl mx-auto py-12 space-y-8 px-4 lg:px-8 dark:bg-gray-900 dark:text-white">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h1 className="text-3xl sm:text-4xl font-bold">Books</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-green-600 dark:text-green-500">
+          Books
+        </h1>
         <form
           action={async (formData) => {
             "use server";
@@ -48,7 +50,11 @@ export default async function Home({
             placeholder="Search books"
             className="dark:bg-gray-800 dark:text-white"
           />
-          <Button variant="secondary" type="submit">
+          <Button
+            variant="secondary"
+            type="submit"
+            className="bg-green-500 hover:bg-green-600 text-white transition-colors"
+          >
             Search
           </Button>
         </form>
@@ -79,7 +85,7 @@ export default async function Home({
             className="hover:shadow-lg transition-shadow duration-300 rounded-lg bg-white dark:bg-gray-800"
           >
             <CardHeader>
-              <CardTitle className="text-lg font-semibold">
+              <CardTitle className="text-lg font-semibold text-green-600 dark:text-green-500">
                 {book?.title}
               </CardTitle>
               <CardDescription className="text-sm text-gray-500 dark:text-gray-400">
@@ -103,7 +109,11 @@ export default async function Home({
               )}
             </CardContent>
             <CardFooter className="flex justify-center">
-              <Button asChild variant="secondary">
+              <Button
+                asChild
+                variant="secondary"
+                className="bg-green-500 hover:bg-green-600 text-white transition-colors"
+              >
                 <Link href={`/books/${book?._id}`}>Read Reviews</Link>
               </Button>
             </CardFooter>
