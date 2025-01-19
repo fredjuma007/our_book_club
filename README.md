@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/dheereshagrwal/colored-icons@1.7.5/src/app/ci.min.css"
+/>
 
-## Getting Started
+Reading CIrcle 📚 is a bookclub by ALX Kenya
+======================================
 
-First, run the development server:
+the project is a website that catalogues books read by the members of the book club. The website allows members to comment on the books and share a star rating. The website also allows members to see the books that have been read by the book club.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
+- Browse books (incude search by book title)
+- Add books
+- Review on books
+- Rate books
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
+<div align="center">
+<code><img width="55" src="https://github.com/marwin1991/profile-technology-icons/assets/136815194/5f8c622c-c217-4649-b0a9-7e0ee24bd704" alt="Next.js" title="Next.js"/></code>
+<code><img width="55" src="https://user-images.githubusercontent.com/25181517/183890598-19a0ac2d-e88a-4005-a8df-1ee36782fde1.png" alt="TypeScript" title="TypeScript"/></code>
+	<code><img width="55" src="https://user-images.githubusercontent.com/25181517/202896760-337261ed-ee92-4979-84c4-d4b829c7355d.png" alt="Tailwind CSS" title="Tailwind CSS"/></code>
+	
+</div>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## More libraries and APIs used
+- Wix headless CMS for storing books data
+- shadcn (UI library)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Screenshots
 
-## Learn More
+THE INTERFACE ⬇️⬇️⬇️
+![Alt Text](screenshots/landing_page.png)
+![Alt Text](screenshots/books_page.png)
+![Alt Text](screenshots/review_page.png)
 
-To learn more about Next.js, take a look at the following resources:
+you can support me by giving a star to this repo ⭐️
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Also you can financially support me by buying me a coffee ☕️
+<p><a href="https://https://www.buymeacoffee.com/fredjuma"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="https://www.buymeacoffee.com/fredjuma" /></a></p><br><br>
