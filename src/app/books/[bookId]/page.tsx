@@ -68,8 +68,9 @@ export default async function BookPage({
             <div className="flex flex-col justify-between">
               <p className="text-lg font-semibold">By {book?.author}</p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Published in {book?.publicationDate || "Unknown Year"}
+                Recommended by {book?.publisher}
               </p>
+              {/*<p className="text-lg font-semibold">Recommended by {book?.publisher}</p>*/}
               <p className="mt-4 text-gray-700 dark:text-gray-300">
                 {book?.description || "No description available for this book."}
               </p>
