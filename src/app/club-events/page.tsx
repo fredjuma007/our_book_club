@@ -37,23 +37,23 @@ export default function EventsPage() {
             className="p-4 border rounded-lg bg-white dark:bg-gray-800 shadow-md"
           >
             <div className="flex items-center justify-between mb-4">
-  <div className="flex items-center gap-4">
-    {/* Event Image */}
-    <Image
-      src={event.imageUrl}
-      alt={event.title}
-      width={0} // Set width to 0 for responsive sizing
-      height={0} // Set height to 0 for responsive sizing
-      className="rounded-lg w-48 h-48" // Tailwind classes for width and height
-    />
-    {/* Event Title and Date */}
-    <div>
-      <p className="text-lg font-semibold text-green-600 dark:text-green-500">
-        {event.title}
-      </p>
-      <p className="text-sm text-gray-600 dark:text-gray-400">{event.date}</p>
-    </div>
-  </div>
+              <div className="flex items-center gap-4">
+                {/* Event Image */}
+                <Image
+                  src={event.imageUrl}
+                  alt={event.title}
+                  width={150}
+                  height={120}
+                  className="rounded-lg"
+                />
+                {/* Event Title and Date */}
+                <div>
+                  <p className="text-lg font-semibold text-green-600 dark:text-green-500">
+                    {event.title}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{event.date}</p>
+                </div>
+              </div>
 
               {/* Button */}
               <Button
