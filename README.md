@@ -36,4 +36,4 @@ THE INTERFACE ⬇️⬇️⬇️
 you can support me by giving a star to this repo ⭐️
 
 Also you can financially support me by buying me a coffee ☕️
-<p><a href="https://https://www.buymeacoffee.com/fredjuma"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="https://www.buymeacoffee.com/fredjuma" /></a></p><br><br>
+<p><a href="buymeacoffee.com/fredjuma"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="https://www.buymeacoffee.com/fredjuma" /></a></p><br><br>
