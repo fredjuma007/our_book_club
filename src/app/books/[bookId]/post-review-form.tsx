@@ -81,13 +81,13 @@ export function PostReviewForm({ bookId }: { bookId: string }) {
             })
           }
           className="w-20"
+          required
         />
       </div>
       <Textarea
         placeholder="Write your review here..."
         value={newReview.review}
         onChange={(e) => setNewReview({ ...newReview, review: e.target.value })}
-        required
       />
       <Button
         disabled={isLoading}
