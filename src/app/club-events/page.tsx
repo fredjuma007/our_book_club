@@ -28,7 +28,9 @@ export default function EventsPage() {
   return (
     <div className="max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 text-white">
       {/* Page Title */}
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Upcoming Events</h1>
+    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
+      Upcoming <span className="text-green-600">Events</span>
+    </h1>
 
       {/* Events List */}
       <div className="space-y-8">
