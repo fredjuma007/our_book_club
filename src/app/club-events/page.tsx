@@ -10,7 +10,7 @@ export default function EventsPage() {
       id: 1,
       title: "Book Club Meeting",
       date: "February 1st, 2025",
-      description: "Join us for our monthly book club meeting to discuss the latest read!",
+      description: "Join us for our monthly book club meeting to discuss the latest read! The Silent Patient by Alex Michaelides.",
       imageUrl: "/feb-poster.jpeg",
       link: "https://meet.google.com/ibt-birz-rtm",
     },
@@ -60,7 +60,7 @@ export default function EventsPage() {
                 variant="outline"
                 className="text-green-600 border-green-600 hover:bg-green-600 hover:text-white"
               >
-                <Link href={event.link} className="text-green-600 dark:text-green-500">
+                <Link href={event.link} target="_blank" className="text-green-600 dark:text-green-500">
                   Event Link
                 </Link>
               </Button>
