@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useState } from "react";
 import Link from "next/link";
 
 export default function EventsPage() {
@@ -10,6 +9,7 @@ export default function EventsPage() {
       id: 1,
       title: "Book Club Meeting",
       date: "February 1st, 2025",
+      moderators: ["Esther Nekesa", "Emma Mwangi"],
       description: "Join us for our monthly book club meeting to discuss the latest read! The Silent Patient by Alex Michaelides.",
       imageUrl: "/feb-poster.jpeg",
       link: "https://meet.google.com/ibt-birz-rtm",
@@ -18,6 +18,7 @@ export default function EventsPage() {
       id: 2,
       title: "February Outing Book Discussion",
       date: "February 22nd, 2025",
+      moderators: ["Book Club", "Book Club"],
       description: "A special book discussion at the local park. Bring your own picnic!",
       imageUrl: "/park.jpg",
       link: "",
@@ -64,11 +65,20 @@ export default function EventsPage() {
                   Event Link
                 </Link>
               </Button>
-
             </div>
 
             {/* Event Description */}
             <p className="text-gray-700 dark:text-gray-300">{event.description}</p>
+
+            {/* Moderators */}
+            <div className="mt-4">
+              <p className="font-semibold text-green-600 dark:text-green-500">Moderators:</p>
+              <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300">
+                {event.moderators.map((moderator, index) => (
+                  <li key={index}>{moderator}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         ))}
       </div>
