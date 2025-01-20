@@ -61,7 +61,7 @@ export default async function Home({
         {/*<AddBookDialog />*/}
 
         <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-600 hover:text-white">
-        <Link className=" text-green-600 dark:text-green-500" href="/club-events">
+        <Link className=" text-green-600 dark:text-white" href="/club-events">
                 Events
               </Link>
         </Button>
