@@ -58,7 +58,7 @@ export default function EventsPage() {
               {/* Button */}
               <Button
                 variant="outline"
-                className="text-green-600 border-green-600 hover:bg-green-600 hover:text-white"
+                className="text-green-600 border-green-600 hover:bg-green-200 hover:text-white"
               >
                 <Link href={event.link} target="_blank" className="text-green-600 dark:text-green-500">
                   Event Link
