@@ -19,13 +19,24 @@ export default function Home() {
             Discover, share, and review your favorite books with a community of
             book lovers.
           </p>
-          <Button
-            asChild
-            size="lg"
-            className="bg-green-500 hover:bg-green-600 text-white font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:translate-y-1"
-          >
-            <Link href="/books">Explore Books</Link>
-          </Button>
+            <div className="flex justify-center space-x-4">
+            <Button
+              asChild
+              size="lg"
+              className="bg-green-500 hover:bg-green-600 text-white font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:translate-y-1"
+            >
+              <Link href="/books">Explore Books</Link>
+            </Button>
+
+            <Button
+              asChild
+              size="lg"
+              className="bg-green-500 hover:bg-green-600 text-white font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:translate-y-1"
+            >
+              <Link href="/club-events">Events</Link>
+            </Button>
+            </div>
+
         </div>
       </div>
       <footer className="bg-gray-800 text-white py-4 text-center">
