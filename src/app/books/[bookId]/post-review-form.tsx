@@ -80,7 +80,6 @@ export function PostReviewForm({ bookId }: { bookId: string }) {
               rating: parseInt(e.target.value),
             })
           }
-          required
           className="w-20"
         />
       </div>
