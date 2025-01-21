@@ -9,10 +9,17 @@ Reading Circle 📚 is a bookclub that aims to connect booklovers
 the project is a website that catalogues books read by the members of the book club. The website allows members to comment on the books and share a star rating. The website also allows members to see the books that have been read by the book club.
 
 ## Features
-- Browse books (incude search by book title)
-- Add books
-- Review on books
+- Browse books read by the club (incude search by book title)
+- View book detailss
 - Rate books
+- Comment on books
+- View upcoming club events
+- Dark mode
+
+## Future Features
+- Better User authentication
+- Ability to delete and edit comments and ratings
+- Search books by author name
 
 ## Tech Stack
 <div align="center">
@@ -36,4 +43,4 @@ THE INTERFACE ⬇️⬇️⬇️
 you can support me by giving a star to this repo ⭐️
 
 Also you can financially support me by buying me a coffee ☕️
-<p><a href="buymeacoffee.com/fredjuma"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="https://www.buymeacoffee.com/fredjuma" /></a></p><br><br>
+<p><a href="https://buymeacoffee.com/fredjuma"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="https://www.buymeacoffee.com/fredjuma" /></a></p><br><br>
