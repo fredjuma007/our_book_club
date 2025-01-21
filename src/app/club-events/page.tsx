@@ -18,7 +18,7 @@ export default function EventsPage() {
       id: 2,
       title: "February Outing Book Discussion",
       date: "February 22nd, 2025",
-      moderators: ["Book Club", "Book Club"],
+      moderators: ["Book Club", "Book Club", "Emily Wanjah : Bottle Painting 🎨"],
       description: "A special book discussion at the local park. Bring your own picnic!",
       imageUrl: "/park.jpg",
       link: "",
