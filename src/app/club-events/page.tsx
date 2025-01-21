@@ -21,7 +21,7 @@ export default function EventsPage() {
       moderators: ["Book Club", "Book Club", "Emily Wanjah : Bottle Painting 🎨"],
       description: "A special book discussion at the local park. Bring your own picnic!",
       imageUrl: "/park.jpg",
-      link: "",
+      link: "https://www.google.com/maps/dir//Kilimani+Arboretum+Rd,+off+State+House+Rd,+Nairobi/@-1.2785264,36.7187365,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x182f174bc97fd9e3:0x12620926802e6623!2m2!1d36.8011385!2d-1.2785277?entry=ttu&g_ep=EgoyMDI1MDExNS4wIKXMDSoASAFQAw%3D%3D",
     },
   ];
 
