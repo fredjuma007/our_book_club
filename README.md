@@ -29,7 +29,7 @@ the project is a website that catalogues books read by the members of the book c
 ## Screenshots
 
 THE INTERFACE ⬇️⬇️⬇️
-![Alt Text](screenshots/landing_page.png)
+![Alt Text](screenshots/landing_page1.png)
 ![Alt Text](screenshots/books_page.png)
 ![Alt Text](screenshots/review_page.png)
 
