@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getMember, getServerClient } from "@/lib/wix";
+import { convertWixImageToUrl } from "@/lib/wix-client";
 import { StarIcon } from "lucide-react";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
@@ -21,10 +22,20 @@ export default async function ReviewsPage() {
     .find()
     .then((res) => res.items.map((item) => item.data));
 
+  // Fetch book data for each review
+  const books = await Promise.all(
+    reviews.map(async (review) => {
+      const book = await client.items
+        .getDataItem(review?.bookId, { dataCollectionId: "Books" })
+        .then((res) => res.data);
+      return { review, book };
+    })
+  );
+
   return (
     <div className="max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 dark:bg-gray-900 dark:text-white">
       {/* Page Title */}
-      <h1 className="text-3xl font-bold  text-green-600 dark:text-green-500">Your Reviews</h1>
+      <h1 className="text-3xl font-bold text-green-600 dark:text-green-500">Your Reviews</h1>
 
       {/* No Reviews Fallback */}
       {reviews.length === 0 && (
@@ -35,7 +46,7 @@ export default async function ReviewsPage() {
             src="/not-found.svg"
             alt="No reviews icon"
           />
-          <p className="text-lg font-medium  text-green-600 dark:text-green-500">
+          <p className="text-lg font-medium text-green-600 dark:text-green-500">
             You have not reviewed any books yet.
           </p>
         </div>
@@ -43,23 +54,38 @@ export default async function ReviewsPage() {
 
       {/* Reviews List */}
       <div className="space-y-8">
-        {reviews.map((review) => (
+        {books.map(({ review, book }) => (
           <div
             key={review?._id}
             className="p-4 border rounded-lg bg-white dark:bg-gray-800 shadow-md"
           >
             <div className="flex items-center justify-between mb-2">
-              {/* Book Title */}
+              {/* Reviewer */}
               <p className="text-lg font-semibold">{review?.name}</p>
+
+                {/* Book Image */}
+            <Image
+                            width={100}
+                            height={100}
+                            src={convertWixImageToUrl(book?.image)}
+                            alt={book?.title}
+                            className="w-[100px] h-[100px] rounded-lg object-cover shadow-md"
+                          />
 
               {/* Star Rating */}
               <div className="flex">
-                {[...Array(review?.rating)].map((_, i) => (
+                {[...Array(Math.floor(review?.rating))].map((_, i) => (
                   <StarIcon
                     key={i}
                     className="w-5 h-5 text-yellow-400 fill-yellow-400"
                   />
                 ))}
+                {review?.rating % 1 !== 0 && (
+                  <StarIcon
+                    key="half"
+                    className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-50" // todo: add opacity for a half star effect
+                  />
+                )}
               </div>
 
               {/* Delete Button */}
