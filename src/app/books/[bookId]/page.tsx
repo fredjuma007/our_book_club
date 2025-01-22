@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; 
 import Image from "next/image";
 import { BookIcon, ChevronLeft, StarIcon } from "lucide-react";
 import { PostReviewForm } from "./post-review-form";
@@ -70,11 +70,24 @@ export default async function BookPage({
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Recommended by {book?.publisher}
               </p>
-              {/*<p className="text-lg font-semibold">Recommended by {book?.publisher}</p>*/}
               <p className="mt-4 text-gray-700 dark:text-gray-300">
                 {book?.description || "No description available for this book."}
               </p>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Review Form */}
+      <Card className="rounded-lg shadow-md bg-white dark:bg-gray-800">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-green-600 dark:text-green-500">
+            Rate & Post a Review
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="mt-8">
+            <PostReviewForm bookId={book?._id} />
           </div>
         </CardContent>
       </Card>
@@ -112,11 +125,6 @@ export default async function BookPage({
                 No reviews available. Be the first to review this book!
               </p>
             )}
-          </div>
-
-          {/* Review Form */}
-          <div className="mt-8">
-            <PostReviewForm bookId={book?._id} />
           </div>
         </CardContent>
       </Card>
