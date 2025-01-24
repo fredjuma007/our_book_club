@@ -1,36 +1,57 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { Calendar } from "@/components/ui/calendar";
+import React from "react";
 
 export default function EventsPage() {
-  //events data
+  // State for the selected date
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
+
+  // Events data
   const events = [
     {
       id: 1,
       title: "Book Club Meeting",
-      date: "February 1st, 2025",
+      date: new Date(2025, 1, 1), // highlighted date
       moderators: ["Esther Nekesa", "Emma Mwangi"],
-      description: "Join us for our monthly book club meeting to discuss the latest read! The Silent Patient by Alex Michaelides.",
+      description:
+        "Join us for our monthly book club meeting to discuss the latest read! The Silent Patient by Alex Michaelides.",
       imageUrl: "/feb-poster.jpeg",
       link: "https://meet.google.com/ibt-birz-rtm",
     },
     {
       id: 2,
       title: "February Outing Book Discussion",
-      date: "February 22nd, 2025",
+      date: new Date(2025, 1, 22),
       moderators: ["Book Club", "Book Club", "Emily Wanjah : Bottle Painting 🎨"],
       description: "A special book discussion at the local park. Bring your own picnic!",
       imageUrl: "/park.jpg",
-      link: "https://www.google.com/maps/dir//Kilimani+Arboretum+Rd,+off+State+House+Rd,+Nairobi/@-1.2785264,36.7187365,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x182f174bc97fd9e3:0x12620926802e6623!2m2!1d36.8011385!2d-1.2785277?entry=ttu&g_ep=EgoyMDI1MDExNS4wIKXMDSoASAFQAw%3D%3D",
+      link: "https://www.google.com/maps/dir//Kilimani+Arboretum+Rd,+off+State+House+Rd,+Nairobi",
     },
   ];
+
+  // Create a set of event dates for easy comparison
+  const eventDates = new Set(events.map((event) => event.date.toDateString()));
+
+  // Define custom modifiers
+  const modifiers = {
+    highlighted: (day: Date) => eventDates.has(day.toDateString()),
+  };
+
+  // Define custom styles for modifiers
+  const modifiersClassNames = {
+    highlighted: "bg-green-600 text-white rounded-full", // Highlighted date styling
+  };
 
   return (
     <div className="max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 text-white">
       {/* Page Title */}
-    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
-      Upcoming <span className="text-green-600">Events</span>
-    </h1>
+      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
+        Upcoming <span className="text-green-600">Events</span>
+      </h1>
 
       {/* Events List */}
       <div className="space-y-8">
@@ -54,7 +75,9 @@ export default function EventsPage() {
                   <p className="text-lg font-semibold text-green-600 dark:text-green-500">
                     {event.title}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{event.date}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {event.date.toDateString()}
+                  </p>
                 </div>
               </div>
 
@@ -83,6 +106,49 @@ export default function EventsPage() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Calendar Section */}
+      <div className="mt-12 p-4 border rounded-lg bg-white dark:bg-gray-800 shadow-md">
+        <h2 className="text-2xl font-bold text-green-600 dark:text-green-500 mb-4">Event Calendar</h2>
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Calendar for current month */}
+          <div className="flex-1">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              defaultMonth={new Date()} // Current month
+              modifiers={modifiers}
+              modifiersClassNames={modifiersClassNames}
+              className="rounded-md border text-gray-800 dark:text-gray-200" // Added text color for light theme
+            />
+          </div>
+          {/* Calendar for next month */}
+          <div className="flex-1">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              defaultMonth={new Date(new Date().setMonth(new Date().getMonth() + 1))} // Next month
+              modifiers={modifiers}
+              modifiersClassNames={modifiersClassNames}
+              className="rounded-md border text-gray-800 dark:text-gray-200" // Added text color for light theme
+            />
+          </div>
+          {/* Calendar for the month after next */}
+          <div className="flex-1">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              defaultMonth={new Date(new Date().setMonth(new Date().getMonth() + 2))} // Month after next
+              modifiers={modifiers}
+              modifiersClassNames={modifiersClassNames}
+              className="rounded-md border text-gray-800 dark:text-gray-200" // Added text color for light theme
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

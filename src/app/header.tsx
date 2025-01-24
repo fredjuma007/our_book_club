@@ -34,7 +34,7 @@ export async function Header() {
           <div className="flex items-center gap-6">
             <Button asChild variant="link">
               <Link className=" text-green-600 dark:text-green-500" href="/books">
-                Browse Books
+                Books
               </Link>
             </Button>
 
