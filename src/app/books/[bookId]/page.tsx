@@ -28,13 +28,13 @@ export default async function BookPage({
     .then((res) => res.items.map((item) => item.data));
 
   return (
-    <div className="max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 dark:bg-gray-900 dark:text-white">
+    <div className="max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 bg-pink-100 text-red-900 dark:bg-gray-900 dark:text-white">
       {/* Back Button */}
       <div>
         <Button
           variant="link"
           asChild
-          className="text-green-600 dark:text-green-500 hover:underline"
+          className="text-red-600 dark:text-red-400 hover:underline"
         >
           <Link href="/books">
             <ChevronLeft className="mr-1" /> Back to books
@@ -43,9 +43,9 @@ export default async function BookPage({
       </div>
 
       {/* Book Details */}
-      <Card className="rounded-lg shadow-md bg-white dark:bg-gray-800">
+      <Card className="rounded-lg shadow-md bg-white dark:bg-gray-800 border border-red-300">
         <CardHeader>
-          <CardTitle className="text-3xl font-bold text-green-600 dark:text-green-500">
+          <CardTitle className="text-3xl font-bold text-red-600 dark:text-red-400">
             {book?.title}
           </CardTitle>
         </CardHeader>
@@ -57,17 +57,17 @@ export default async function BookPage({
                 height={300}
                 src={convertWixImageToUrl(book?.image)}
                 alt={book?.title}
-                className="w-[200px] h-[300px] rounded-lg object-cover shadow-md"
+                className="w-[200px] h-[300px] rounded-lg object-cover shadow-md border-2 border-red-300"
               />
             ) : (
-              <div className="flex-shrink-0 flex flex-col items-center justify-center w-[200px] h-[300px] rounded-lg bg-gray-200 dark:bg-gray-700">
-                <BookIcon className="w-10 h-10 text-gray-500 dark:text-gray-300" />
-                <p className="text-gray-500 dark:text-gray-300">No Image</p>
+              <div className="flex-shrink-0 flex flex-col items-center justify-center w-[200px] h-[300px] rounded-lg bg-red-200 dark:bg-gray-700">
+                <BookIcon className="w-10 h-10 text-red-500 dark:text-gray-300" />
+                <p className="text-red-500 dark:text-gray-300">No Image</p>
               </div>
             )}
             <div className="flex flex-col justify-between">
               <p className="text-lg font-semibold">By {book?.author}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-red-500 dark:text-gray-400">
                 Recommended by {book?.publisher}
               </p>
               <p className="mt-4 text-gray-700 dark:text-gray-300">
@@ -79,9 +79,9 @@ export default async function BookPage({
       </Card>
 
       {/* Review Form */}
-      <Card className="rounded-lg shadow-md bg-white dark:bg-gray-800">
+      <Card className="rounded-lg shadow-md bg-white dark:bg-gray-800 border border-red-300">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-green-600 dark:text-green-500">
+          <CardTitle className="text-2xl font-bold text-red-600 dark:text-red-400">
             Rate & Post a Review
           </CardTitle>
         </CardHeader>
@@ -93,9 +93,9 @@ export default async function BookPage({
       </Card>
 
       {/* Reviews Section */}
-      <Card className="rounded-lg shadow-md bg-white dark:bg-gray-800">
+      <Card className="rounded-lg shadow-md bg-white dark:bg-gray-800 border border-red-300">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-green-600 dark:text-green-500">
+          <CardTitle className="text-2xl font-bold text-red-600 dark:text-red-400">
             Reviews
           </CardTitle>
         </CardHeader>
@@ -103,7 +103,7 @@ export default async function BookPage({
           <div className="space-y-6">
             {reviews.length > 0 ? (
               reviews.map((review) => (
-                <div key={review?._id} className="border-b pb-4 last:border-none">
+                <div key={review?._id} className="border-b border-red-300 pb-4 last:border-none">
                   <div className="flex justify-between items-center">
                     <p className="font-semibold">{review?.name}</p>
                     <div className="flex">
@@ -121,7 +121,7 @@ export default async function BookPage({
                 </div>
               ))
             ) : (
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-red-500 dark:text-gray-400">
                 No reviews available. Be the first to review this book!
               </p>
             )}
@@ -131,3 +131,4 @@ export default async function BookPage({
     </div>
   );
 }
+
