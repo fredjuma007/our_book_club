@@ -14,18 +14,9 @@ export default function EventsPage() {
   const events = [
     {
       id: 1,
-      title: "February Outing Romance Book Discussion ❤️ & Bottle Painting 🎨",
-      date: new Date(2025, 1, 22),
-      moderators: ["John Njuki", "Elizabeth", "Emily Wanjah : Bottle Painting 🎨"],
-      description: "A special book discussion at The Nairobi Arboretum. The book of the month is Vicious (Sinners of Saint Book 1) by L.J. Shen 📚. We will also have a bottle painting session 🎨. What to Carry:♦️Glass bottles (like wine bottles) 🍷♦️Snacks 🍎",
-      imageUrl: "/feb poster.jpeg",
-      link: "https://www.google.com/maps/dir//Kilimani+Arboretum+Rd,+off+State+House+Rd,+Nairobi",
-    },
-    {
-      id: 2,
       title: "Book Club Meeting",
       date: new Date(2025, 2, 29), // highlighted date
-      moderators: ["BookClub Member", "BookClub Member"],
+      moderators: ["BookClub Member", "Immanuel Njogu"],
       description:
         "Join us for our monthly book club meeting to discuss the latest read!.",
       imageUrl: "/logo.jpeg",
