@@ -80,7 +80,7 @@ const Modal = ({ image, onClose }: { image: { src: string; caption: string }; on
         {/* Close Button */}
         <Button
           variant="outline"
-          className="absolute top-4 right-4 text-white border-green-600 hover:bg-green-600 hover:text-white"
+          className="absolute top-4 right-4 text-gray-900 dark:text-white border-green-600 hover:bg-green-600 hover:text-white"
           onClick={(e) => {
             e.stopPropagation();
             onClose();
