@@ -25,7 +25,7 @@ export default function Home() {
             <span className="text-green-500">favorite books</span> with a
             community of <span className="text-green-500">book lovers</span>.
           </p>
-          <div className="flex justify-center space-x-4">
+          <div className="flex flex-wrap justify-center gap-4">
             <Button
               asChild
               size="lg"
