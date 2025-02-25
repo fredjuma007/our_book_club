@@ -31,7 +31,7 @@ export default function Home() {
               size="lg"
               className="bg-green-500 hover:bg-green-600 text-white font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:translate-y-1"
             >
-              <Link href="/books">Explore Books</Link>
+              <Link href="/books">Explore Books 📚</Link>
             </Button>
 
             <Button
@@ -39,7 +39,15 @@ export default function Home() {
               size="lg"
               className="bg-green-500 hover:bg-green-600 text-white font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:translate-y-1"
             >
-              <Link href="/club-events">Events</Link>
+              <Link href="/club-events">Events 👯‍♂️</Link>
+            </Button>
+
+            <Button
+              asChild
+              size="lg"
+              className="bg-green-500 hover:bg-green-600 text-white font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:translate-y-1"
+            >
+              <Link href="/gallery">Gallery 📸</Link>
             </Button>
           </div>
         </div>

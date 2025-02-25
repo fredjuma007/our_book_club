@@ -34,7 +34,7 @@ export default async function Home({
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
         <h1 className="text-3xl sm:text-4xl font-bold text-green-600 dark:text-green-500">
-          Books
+          Books 📚
         </h1>
         <form
           action={async (formData) => {
@@ -55,14 +55,20 @@ export default async function Home({
             type="submit"
             className="bg-green-500 hover:bg-green-600 text-white transition-colors"
           >
-            Search
+            Search 🔍
           </Button>
         </form>
         {/*<AddBookDialog />*/}
 
         <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-200 hover:text-white">
         <Link className=" text-green-600 dark:text-white" href="/club-events">
-                Events
+               <span className="text-green-600">👯‍♂️ Events</span>
+              </Link>
+        </Button>
+
+         <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-200 hover:text-white">
+        <Link className=" text-green-600 dark:text-white" href="/gallery">
+        📸 <span className="text-green-600">Gallery</span>
               </Link>
         </Button>
 
