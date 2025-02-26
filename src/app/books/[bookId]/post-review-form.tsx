@@ -10,7 +10,7 @@ import { getClient } from "@/lib/wix-client";
 
 const initialReview = {
   name: "",
-  rating: 5,
+  rating: 3.5,
   review: "",
 };
 
