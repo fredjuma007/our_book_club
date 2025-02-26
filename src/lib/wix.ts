@@ -1,26 +1,29 @@
-import { createClient, OAuthStrategy } from "@wix/sdk";
-import { items } from "@wix/data";
-import { cookies } from "next/headers";
-import { members, authorization } from "@wix/members";
+import { createClient, OAuthStrategy } from "@wix/sdk"
+import { items } from "@wix/data"
+import { cookies } from "next/headers"
+import { members, authorization } from "@wix/members"
 
-export function getServerClient() {
+export async function getServerClient() {
+  const cookieStore = await cookies()
+  const sessionCookie = cookieStore.get("session")
+
   return createClient({
     modules: { items, members, authorization },
     auth: OAuthStrategy({
       clientId: process.env.NEXT_PUBLIC_WIX_CLIENT_ID!,
-      tokens: JSON.parse(cookies().get("session")?.value || "null"),
+      tokens: JSON.parse(sessionCookie?.value || "null"),
     }),
-  });
+  })
 }
 
 export async function getMember() {
-  const client = getServerClient();
+  const client = await getServerClient()
 
   if (!client.auth.loggedIn()) {
-    return undefined;
+    return undefined
   }
 
-  const { member } = await client.members.getCurrentMember();
+  const { member } = await client.members.getCurrentMember()
 
   return member
     ? {
@@ -29,5 +32,5 @@ export async function getMember() {
         nickname: member.profile?.nickname,
         slug: member.profile?.slug,
       }
-    : undefined;
+    : undefined
 }

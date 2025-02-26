@@ -88,7 +88,7 @@ export default async function ReviewsPage() {
                 )}
               </div>
 
-              {/* Delete Button */}
+              {/*Delete Button*/}
               <form
                 action={async () => {
                   "use server";
@@ -99,9 +99,9 @@ export default async function ReviewsPage() {
                   revalidatePath("/reviews");
                 }}
               >
-                {/* <Button variant="destructive" size="sm" type="submit">
+                <Button variant="destructive" size="sm" type="submit">
                   Delete
-                </Button> */}
+                </Button>
               </form>
             </div>
 

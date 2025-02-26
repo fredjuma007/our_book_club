@@ -1,13 +1,14 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
-import { loginAction, logoutAction } from "./actions";
-import { getMember, getServerClient } from "@/lib/wix";
-import { ModeToggle } from "@/components/ModeToggle";
+import { Button } from "@/components/ui/button"
+import Image from "next/image"
+import Link from "next/link"
+import { loginAction, logoutAction } from "./actions"
+import { getMember, getServerClient } from "@/lib/wix"
+import { ModeToggle } from "@/components/ModeToggle"
 
 export async function Header() {
-  const member = await getMember();
-  const isLoggedIn = await getServerClient().auth.loggedIn();
+  const [member, client] = await Promise.all([getMember(), getServerClient()])
+
+  const isLoggedIn = client.auth.loggedIn()
 
   return (
     <div className="bg-gray-100 dark:bg-gray-900 border-b py-3">
@@ -20,9 +21,8 @@ export async function Header() {
           >
             <Image src="/logo.jpeg" width={60} height={60} alt="TheBookClub" />
             <span className="hidden md:inline text-3xl md:text-4xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-teal-500 to-green-600 tracking-wider transform transition-all duration-300 ease-in-out hover:scale-105 md:hover:scale-110 hover:shadow-lg md:hover:shadow-xl">
-  READING CIRCLE
-</span>
-
+              READING CIRCLE
+            </span>
           </Link>
         </Button>
 
@@ -33,14 +33,14 @@ export async function Header() {
           {/* Navigation Links */}
           <div className="flex items-center gap-6">
             <Button asChild variant="link">
-              <Link className=" text-green-600 dark:text-green-500" href="/books">
+              <Link className="text-green-600 dark:text-green-500" href="/books">
                 Books
               </Link>
             </Button>
 
             {isLoggedIn && (
               <Button asChild variant="link">
-                <Link className=" text-green-600 dark:text-green-500" href="/reviews">
+                <Link className="text-green-600 dark:text-green-500" href="/reviews">
                   Reviews
                 </Link>
               </Button>
@@ -51,9 +51,7 @@ export async function Header() {
           <div className="flex items-center gap-4">
             {isLoggedIn ? (
               <div className="flex items-center gap-2">
-                <p className="text-sm text-green-600 dark:text-green-500">
-                  Hello, {member?.nickname}
-                </p>
+                <p className="text-sm text-green-600 dark:text-green-500">Hello {member?.nickname}</p>
                 <form action={logoutAction}>
                   <Button variant="outline">Logout</Button>
                 </form>
@@ -67,5 +65,5 @@ export async function Header() {
         </div>
       </div>
     </div>
-  );
+  )
 }

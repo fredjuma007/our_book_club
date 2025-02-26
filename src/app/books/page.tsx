@@ -1,55 +1,46 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import Link from "next/link";
-import Image from "next/image";
-import { BookIcon } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { redirect } from "next/navigation";
-import { AddBookDialog } from "./add-book-dialog";
-import { getServerClient } from "@/lib/wix";
-import { convertWixImageToUrl } from "@/lib/wix-client";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
+import Image from "next/image"
+import { BookIcon } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { redirect } from "next/navigation"
+import { getServerClient } from "@/lib/wix"
+import { convertWixImageToUrl } from "@/lib/wix-client"
 
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { search?: string };
+  searchParams: { search?: string }
 }) {
-  const books = await getServerClient()
-    .items.queryDataItems({
+  const client = await getServerClient()
+
+  const books = await client.items
+    .queryDataItems({
       dataCollectionId: "Books",
     })
     .startsWith("title", searchParams.search ?? "")
     .find()
-    .then((res) => res.items.map((item) => item.data));
+    .then((res) => res.items.map((item) => item.data))
+    .catch((error) => {
+      console.error("Error fetching books:", error)
+      return []
+    })
 
   return (
     <div className="max-w-screen-xl mx-auto py-12 space-y-8 px-4 lg:px-8 dark:bg-gray-900 dark:text-white">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h1 className="text-3xl sm:text-4xl font-bold text-green-600 dark:text-green-500">
-          Books 📚
-        </h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-green-600 dark:text-green-500">Books 📚</h1>
         <form
           action={async (formData) => {
-            "use server";
-            const search = formData.get("search");
-            redirect(`/books?search=${search}`);
+            "use server"
+            const search = formData.get("search")
+            redirect(`/books?search=${search}`)
           }}
           className="flex gap-2"
         >
-          <Input
-            name="search"
-            type="text"
-            placeholder="Search books"
-            className="dark:bg-gray-800 dark:text-white"
-          />
+          <Input name="search" type="text" placeholder="Search books" className="dark:bg-gray-800 dark:text-white" />
           <Button
             variant="secondary"
             type="submit"
@@ -61,32 +52,24 @@ export default async function Home({
         {/*<AddBookDialog />*/}
 
         <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-200 hover:text-white">
-        <Link className=" text-green-600 dark:text-white" href="/club-events">
-               <span className="text-green-600">👯‍♂️ Events</span>
-              </Link>
+          <Link className="text-green-600 dark:text-white" href="/club-events">
+            <span className="text-green-600">👯‍♂️ Events</span>
+          </Link>
         </Button>
 
-         <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-200 hover:text-white">
-        <Link className=" text-green-600 dark:text-white" href="/gallery">
-        📸 <span className="text-green-600">Gallery</span>
-              </Link>
+        <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-200 hover:text-white">
+          <Link className="text-green-600 dark:text-white" href="/gallery">
+            📸 <span className="text-green-600">Gallery</span>
+          </Link>
         </Button>
-
       </div>
 
       {/* No Books Found */}
       {books.length === 0 && (
         <div className="border p-12 flex flex-col gap-4 items-center justify-center bg-gray-100 dark:bg-gray-800">
-          <Image
-            width={200}
-            height={200}
-            src={"/not-found.svg"}
-            alt={"book not found icon"}
-          />
+          <Image width={200} height={200} src={"/not-found.svg"} alt={"book not found icon"} />
           <p className="text-gray-700 dark:text-gray-300">No books found.</p>
-          <p className="text-gray-500 dark:text-gray-400">
-            Confirm the spelling of the book and try again
-          </p>
+          <p className="text-gray-500 dark:text-gray-400">Confirm the spelling of the book and try again</p>
         </div>
       )}
 
@@ -98,9 +81,7 @@ export default async function Home({
             className="hover:shadow-lg transition-shadow duration-300 rounded-lg bg-white dark:bg-gray-800"
           >
             <CardHeader>
-              <CardTitle className="text-lg font-semibold text-green-600 dark:text-green-500">
-                {book?.title}
-              </CardTitle>
+              <CardTitle className="text-lg font-semibold text-green-600 dark:text-green-500">{book?.title}</CardTitle>
               <CardDescription className="text-sm text-gray-500 dark:text-gray-400">
                 {book?.author || "Unknown Author"}
               </CardDescription>
@@ -110,7 +91,7 @@ export default async function Home({
                 <Image
                   width={150}
                   height={200}
-                  src={convertWixImageToUrl(book.image)}
+                  src={convertWixImageToUrl(book.image) || "/placeholder.svg"}
                   alt={book?.title}
                   className="w-full h-48 object-cover mb-4 rounded-lg"
                 />
@@ -134,5 +115,5 @@ export default async function Home({
         ))}
       </div>
     </div>
-  );
+  )
 }

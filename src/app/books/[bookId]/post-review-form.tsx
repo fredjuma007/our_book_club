@@ -14,8 +14,8 @@ const initialReview = {
   review: "",
 };
 
-export function PostReviewForm({ bookId }: { bookId: string }) {
-  const [newReview, setNewReview] = useState(initialReview);
+export function PostReviewForm({ bookId, userName }: { bookId: string; userName: string }) {
+  const [newReview, setNewReview] = useState({ ...initialReview, name: userName });
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
