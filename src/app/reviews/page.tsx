@@ -35,7 +35,9 @@ export default async function ReviewsPage() {
   return (
     <div className="max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 dark:bg-gray-900 dark:text-white">
       {/* Page Title */}
-      <h1 className="text-3xl font-bold text-green-600 dark:text-green-500">Your Reviews</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
+      Your <span className="text-green-600">Reviews & ⭐⭐⭐ </span>
+      </h1>
 
       {/* No Reviews Fallback */}
       {reviews.length === 0 && (

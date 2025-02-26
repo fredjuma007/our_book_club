@@ -111,7 +111,7 @@ export default async function Page({ params }: PageProps) {
         <Card className="rounded-lg shadow-md bg-white dark:bg-gray-800">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-green-600 dark:text-green-500">
-              Rate & Post a Review
+            ⭐ Rate & Post a Review ⭐
             </CardTitle>
           </CardHeader>
           <CardContent>
