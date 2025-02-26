@@ -144,11 +144,13 @@ export default async function Page({ params }: PageProps) {
                   <div key={review._id} className="border-b pb-4 last:border-none">
                     <div className="flex justify-between items-center">
                       <p className="font-semibold">{review.name}</p>
-                      <div className="flex">
-                        {[...Array(review.rating)].map((_, i) => (
+                        <div className="flex items-center">
+                        {Array.from({ length: Math.floor(review.rating) }).map((_, i) => (
                           <StarIcon key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                         ))}
-                      </div>
+                        {review.rating % 1 !== 0 && <StarIcon className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-50" />}
+                        </div>
+
                     </div>
                     <p className="mt-2 text-gray-700 dark:text-gray-300">{review.review}</p>
                   </div>
