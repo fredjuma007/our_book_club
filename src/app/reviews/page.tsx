@@ -36,19 +36,20 @@ export default async function ReviewsPage() {
     <div className="max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 dark:bg-gray-900 dark:text-white">
       {/* Page Title */}
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
-      Your <span className="text-green-600">Reviews & ⭐⭐⭐ </span>
+        Your <span className="text-green-600">Reviews & ⭐⭐⭐</span>
       </h1>
 
       {/* No Reviews Fallback */}
       {reviews.length === 0 && (
-        <div className="flex flex-col items-center justify-center gap-4 border p-8 rounded-lg bg-gray-50 dark:bg-gray-800">
+        <div className="flex flex-col items-center justify-center gap-4 border border-green-600 p-8 rounded-lg bg-white/70 dark:bg-gray-800/70 shadow-lg backdrop-blur-md">
           <Image
             width={200}
             height={200}
             src="/not-found.svg"
             alt="No reviews icon"
+            className="opacity-80"
           />
-          <p className="text-lg font-medium text-green-600 dark:text-green-500">
+          <p className="text-lg font-medium text-green-700 dark:text-green-400">
             You have not reviewed any books yet.
           </p>
         </div>
@@ -59,20 +60,13 @@ export default async function ReviewsPage() {
         {books.map(({ review, book }) => (
           <div
             key={review?._id}
-            className="p-4 border rounded-lg bg-white dark:bg-gray-800 shadow-md"
+            className="p-6 border border-green-700 rounded-lg bg-white/70 dark:bg-gray-800/70 shadow-lg backdrop-blur-md hover:shadow-xl transition-all"
           >
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-4">
               {/* Reviewer */}
-              <p className="text-lg font-semibold">{review?.name}</p>
-
-                {/* Book Image */}
-            <Image
-                            width={100}
-                            height={100}
-                            src={convertWixImageToUrl(book?.image)}
-                            alt={book?.title}
-                            className="w-[100px] h-[100px] rounded-lg object-cover shadow-md"
-                          />
+              <p className="text-lg font-semibold text-green-700 dark:text-green-400">
+                {review?.name}
+              </p>
 
               {/* Star Rating */}
               <div className="flex">
@@ -85,12 +79,37 @@ export default async function ReviewsPage() {
                 {review?.rating % 1 !== 0 && (
                   <StarIcon
                     key="half"
-                    className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-50" // todo: add opacity for a half star effect
+                    className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-50"
                   />
                 )}
               </div>
+            </div>
 
-              {/*Delete Button*/}
+            {/* Book Section */}
+            <div className="flex items-center gap-6">
+              {/* Book Image */}
+              {book?.image ? (
+                <Image
+                  width={100}
+                  height={100}
+                  src={convertWixImageToUrl(book?.image)}
+                  alt={book?.title}
+                  className="w-[100px] h-[100px] rounded-lg object-cover shadow-md border border-green-700 transition-transform hover:scale-105"
+                />
+              ) : (
+                <div className="w-[100px] h-[100px] flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg border border-green-700">
+                  <p className="text-gray-600 dark:text-gray-300">No Image</p>
+                </div>
+              )}
+
+              {/* Review Content */}
+              <p className="text-gray-700 dark:text-gray-300 font-serif">
+                {review?.review}
+              </p>
+            </div>
+
+            {/* Delete Button */}
+            <div className="mt-4 flex justify-end">
               <form
                 action={async () => {
                   "use server";
@@ -101,14 +120,16 @@ export default async function ReviewsPage() {
                   revalidatePath("/reviews");
                 }}
               >
-                <Button variant="destructive" size="sm" type="submit">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  type="submit"
+                  className="transition-transform hover:scale-105"
+                >
                   Delete
                 </Button>
               </form>
             </div>
-
-            {/* Review Content */}
-            <p className="text-gray-700 dark:text-gray-300">{review?.review}</p>
           </div>
         ))}
       </div>
