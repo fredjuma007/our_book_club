@@ -6,15 +6,15 @@ import Link from "next/link";
 import { Calendar } from "@/components/ui/calendar";
 import React from "react";
 import { motion } from "framer-motion";
-import { BookOpen, 
-  Users,
+import { 
+  BookOpen, 
   MapPin,
   Clock,
-  ChevronDown,
   ImagePlay,
-  BookMarked, 
-  Coffee,
-  Sparkles } from 'lucide-react';
+  BookMarked,
+  CalendarCheck,
+  Sparkles 
+} from 'lucide-react';
 
 export default function EventsPage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -32,7 +32,7 @@ export default function EventsPage() {
       description: "Join us for our monthly book club meeting to discuss the latest read!",
       imageUrl: "/logo.jpeg",
       link: "",
-      attendees: 105,
+      eventDate: "March 29, 2025",
       bookTitle: "TBA",
       type: "Book Discussion"
     },
@@ -194,9 +194,9 @@ export default function EventsPage() {
                             {event.location}
                           </div>
                           <div className="flex items-center gap-2 group/item">
-                            <Users className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
-                            {event.attendees} Attendees
-                          </div>
+                          <CalendarCheck className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
+                            {event.eventDate}
+                          </div> 
                           <div className="flex items-center gap-2 group/item">
                             <BookOpen className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
                             {event.bookTitle}
@@ -244,7 +244,10 @@ export default function EventsPage() {
                 <div className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 hover:scale-x-100 transition-transform origin-left" />
               </div>
               <p className="text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
-                Simply Join our upcoming book club meeting to get started!
+                Simply Read of the month and join us for the discussion!
+              </p>
+              <p className="text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
+                Then join our upcoming book club meeting to get started!
               </p>
               <Link href="/gallery">
                 <Button
@@ -306,16 +309,6 @@ export default function EventsPage() {
             </div>
           </motion.div>
         )}
-
-        {/* Scroll Indicator */}
-        {/* <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="absolute bottom-4 left-1/2 transform -translate-x-1/2"
-        >
-          <ChevronDown className="w-6 h-6 text-green-700 animate-bounce" />
-        </motion.div> */}
       </div>
     </div>
   );
