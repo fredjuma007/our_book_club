@@ -22,9 +22,12 @@ interface Book {
   _id: string;
   title: string;
   author: string;
-  publisher?: string;
+  publisher?: string; // This will be used as the recommender
   description?: string;
   image?: any;
+  goodreadsUrl?: string;
+  genre?: string;
+  reviewDate?: string;
 }
 
 interface PageProps {
@@ -43,19 +46,15 @@ export default async function Page({ params }: PageProps) {
 
   try {
     const [bookResponse, reviewsResponse] = await Promise.all([
-      client.items.getDataItem(params.bookId, {
-        dataCollectionId: "Books",
-      }),
-      client.items.queryDataItems({
-        dataCollectionId: "Reviews",
-      }).eq("bookId", params.bookId).find(),
+      client.items.getDataItem(params.bookId, { dataCollectionId: "Books" }),
+      client.items.queryDataItems({ dataCollectionId: "Reviews" }).eq("bookId", params.bookId).find(),
     ]);
 
-    const book = bookResponse.data as Book;
+    const book = bookResponse?.data as Book | undefined;
     const reviews = reviewsResponse.items.map((item) => item.data as Review);
 
     if (!book) {
-      notFound();
+      return notFound();
     }
 
     return (
@@ -77,11 +76,7 @@ export default async function Page({ params }: PageProps) {
 
         {/* Back Button */}
         <div>
-          <Button
-            variant="outline"
-            className="bg-green-700 text-white hover:bg-green-800 transition-all font-serif"
-            asChild
-          >
+          <Button variant="outline" className="bg-green-700 text-white hover:bg-green-800 transition-all font-serif" asChild>
             <Link href="/books">
               <ChevronLeft className="mr-1" /> Back to books
             </Link>
@@ -112,17 +107,41 @@ export default async function Page({ params }: PageProps) {
                 </div>
               )}
               <div className="flex flex-col justify-between space-y-4">
-                <p className="text-lg font-semibold text-green-700 dark:text-green-400">
-                  By {book.author}
-                </p>
+                <p className="text-lg font-semibold text-green-700 dark:text-green-400">By {book.author}</p>
                 {book.publisher && (
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Recommended by {book.publisher}
+                    Recommended by <span className="font-medium text-green-700 dark:text-green-400">{book.publisher}</span>
                   </p>
                 )}
+                <div className="flex gap-4 text-sm font-medium">
+                  {book.genre && (
+                  <span className="px-3 py-1 bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-300 rounded-md">
+                    <span className="text-gray-600 dark:text-gray-400">Genre:</span> {book.genre}
+                  </span>
+                  )}
+                  {book.reviewDate && (
+                    <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md">
+                      Review Date: {book.reviewDate}
+                    </span>
+                  )}
+                </div>
                 <p className="text-gray-700 dark:text-gray-300 font-serif leading-relaxed">
                   {book.description || "No description available for this book."}
                 </p>
+
+                {/* Add to Reading List Button */}
+                {book.goodreadsUrl ? (
+                  <a
+                    href={book.goodreadsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md transition-all shadow-md"
+                  >
+                    View on Goodreads &rarr;
+                  </a>
+                ) : (
+                  <p className="text-sm text-gray-500 italic">Goodreads link not available</p>
+                )}
               </div>
             </div>
           </CardContent>
@@ -131,23 +150,16 @@ export default async function Page({ params }: PageProps) {
         {/* Review Form */}
         <Card className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
-              ⭐ Rate & Post a Review ⭐
-            </CardTitle>
+            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">⭐ Rate & Post a Review ⭐</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoggedIn && member ? (
               <PostReviewForm bookId={book._id} userName={member.nickname || member.loginEmail || "Anonymous"} />
             ) : (
               <div className="text-center space-y-4">
-                <p className="text-gray-600 dark:text-gray-400 font-serif">
-                  Please log in to post a review
-                </p>
+                <p className="text-gray-600 dark:text-gray-400 font-serif">Please log in to post a review</p>
                 <form action={loginAction}>
-                  <Button
-                    variant="outline"
-                    className="bg-green-700 text-white hover:bg-green-800 transition-all font-serif"
-                  >
+                  <Button variant="outline" className="bg-green-700 text-white hover:bg-green-800 transition-all font-serif">
                     Login to Review
                   </Button>
                 </form>
@@ -159,36 +171,27 @@ export default async function Page({ params }: PageProps) {
         {/* Reviews Section */}
         <Card className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
-              Reviews
-            </CardTitle>
+            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">Reviews</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
               {reviews.length > 0 ? (
                 reviews.map((review) => (
-                  <div
-                    key={review._id}
-                    className="border-b pb-4 last:border-none transition-all hover:bg-green-50 dark:hover:bg-gray-700 p-4 rounded-lg"
-                  >
+                  <div key={review._id} className="border-b pb-4 last:border-none transition-all hover:bg-green-50 dark:hover:bg-gray-700 p-4 rounded-lg">
                     <div className="flex justify-between items-center">
                       <p className="font-semibold text-green-700 dark:text-green-400">{review.name}</p>
                       <div className="flex items-center">
                         {Array.from({ length: Math.floor(review.rating) }).map((_, i) => (
                           <StarIcon key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                         ))}
-                        {review.rating % 1 !== 0 && (
-                          <StarIcon className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-50" />
-                        )}
+                        {review.rating % 1 !== 0 && <StarIcon className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-50" />}
                       </div>
                     </div>
                     <p className="mt-2 text-gray-700 dark:text-gray-300 font-serif">{review.review}</p>
                   </div>
                 ))
               ) : (
-                <p className="text-gray-500 dark:text-gray-400 font-serif">
-                  No reviews available. Be the first to review this book!
-                </p>
+                <p className="text-gray-500 dark:text-gray-400 font-serif">No reviews available. Be the first to review this book!</p>
               )}
             </div>
           </CardContent>
@@ -197,6 +200,6 @@ export default async function Page({ params }: PageProps) {
     );
   } catch (error) {
     console.error("Error fetching book data:", error);
-    notFound();
+    return notFound();
   }
 }

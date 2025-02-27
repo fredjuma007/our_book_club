@@ -4,6 +4,7 @@ import { convertWixImageToUrl } from "@/lib/wix-client";
 import { StarIcon } from "lucide-react";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function ReviewsPage() {
@@ -87,20 +88,22 @@ export default async function ReviewsPage() {
 
             {/* Book Section */}
             <div className="flex items-center gap-6">
-              {/* Book Image */}
-              {book?.image ? (
-                <Image
-                  width={100}
-                  height={100}
-                  src={convertWixImageToUrl(book?.image)}
-                  alt={book?.title}
-                  className="w-[100px] h-[100px] rounded-lg object-cover shadow-md border border-green-700 transition-transform hover:scale-105"
-                />
-              ) : (
-                <div className="w-[100px] h-[100px] flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg border border-green-700">
-                  <p className="text-gray-600 dark:text-gray-300">No Image</p>
-                </div>
-              )}
+              {/* Clickable Book Image */}
+              <Link href={`/books/${book?._id}`} passHref>
+                {book?.image ? (
+                  <Image
+                    width={100}
+                    height={100}
+                    src={convertWixImageToUrl(book?.image)}
+                    alt={book?.title}
+                    className="w-[100px] h-[100px] rounded-lg object-cover shadow-md border border-green-700 transition-transform hover:scale-105 cursor-pointer"
+                  />
+                ) : (
+                  <div className="w-[100px] h-[100px] flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg border border-green-700 cursor-pointer">
+                    <p className="text-gray-600 dark:text-gray-300">No Image</p>
+                  </div>
+                )}
+              </Link>
 
               {/* Review Content */}
               <p className="text-gray-700 dark:text-gray-300 font-serif">
