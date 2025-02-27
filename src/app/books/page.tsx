@@ -32,7 +32,9 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
   return (
     <div className="max-w-screen-xl mx-auto py-12 space-y-8 px-4 lg:px-8 bg-[#f5f0e1] dark:bg-gray-900 dark:text-white">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 border-b-4 border-green-700 pb-6">
-        <h1 className="text-4xl font-bold text-green-800 dark:text-green-500 font-serif">📚 The Book Nook</h1>
+        <h1 className="text-4xl font-bold text-green-800 dark:text-green-500 font-serif">
+          All Books 📚 
+          </h1>
         <form
           action={async (formData) => {
             "use server";

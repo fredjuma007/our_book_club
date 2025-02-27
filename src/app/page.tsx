@@ -21,7 +21,7 @@ export default function Home() {
             WELCOME TO <span className="text-green-500">THE READING CIRCLE</span>
           </h1>
           <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 italic">
-            "A reader lives a thousand lives before he dies..." – George R.R. Martin
+            "Whatever came to mind, whatever came to hand, I would read." –Stephen King
           </p>
           <p className="text-xl text-gray-700 dark:text-gray-300 mb-6">
             Discover, share, and review your <span className="text-green-500">favorite books</span> with a
