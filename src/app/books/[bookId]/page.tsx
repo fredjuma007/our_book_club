@@ -59,7 +59,22 @@ export default async function Page({ params }: PageProps) {
     }
 
     return (
-      <div className="max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 bg-[#f5f0e1] dark:bg-gray-900 dark:text-white">
+      <div className="relative max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 dark:text-white">
+        {/* Background Image */}
+        {book.image && (
+          <div className="absolute inset-0 w-full h-full -z-10">
+            <div className="relative w-full h-full opacity-30">
+              <Image
+                src={convertWixImageToUrl(book.image) || "/placeholder.svg"}
+                alt={book.title}
+                layout="fill"
+                objectFit="cover"
+                className="rounded-lg"
+              />
+            </div>
+          </div>
+        )}
+
         <div>
           <Button variant="link" asChild className="text-green-800 dark:text-green-500 hover:underline">
             <Link href="/books">
@@ -68,7 +83,7 @@ export default async function Page({ params }: PageProps) {
           </Button>
         </div>
 
-        <Card className="rounded-lg shadow-lg bg-[#fffaf0] dark:bg-gray-800 border border-green-700">
+        <Card className="relative rounded-lg shadow-lg bg-white/80 dark:bg-gray-800/80 border border-green-700 backdrop-blur-lg">
           <CardHeader>
             <CardTitle className="text-3xl font-bold text-green-800 dark:text-green-500 font-serif">{book.title}</CardTitle>
           </CardHeader>
@@ -83,7 +98,7 @@ export default async function Page({ params }: PageProps) {
                   className="w-[200px] h-[300px] rounded-lg object-cover shadow-md border border-green-700"
                 />
               ) : (
-                <div className="flex-shrink-0 flex flex-col items-center justify-center w-[200px] h-[300px] rounded-lg bg-[#eae2d0] dark:bg-gray-700 border border-green-700">
+                <div className="flex-shrink-0 flex flex-col items-center justify-center w-[200px] h-[300px] rounded-lg bg-gray-100 dark:bg-gray-700 border border-green-700">
                   <BookIcon className="w-10 h-10 text-gray-600 dark:text-gray-300" />
                   <p className="text-gray-600 dark:text-gray-300">No Image</p>
                 </div>
@@ -101,7 +116,7 @@ export default async function Page({ params }: PageProps) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-lg shadow-md bg-[#fffaf0] dark:bg-gray-800 border border-green-700">
+        <Card className="relative rounded-lg shadow-md bg-white/80 dark:bg-gray-800/80 border border-green-700 backdrop-blur-lg">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
               ⭐ Rate & Post a Review ⭐
@@ -125,7 +140,7 @@ export default async function Page({ params }: PageProps) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-lg shadow-md bg-[#fffaf0] dark:bg-gray-800 border border-green-700">
+        <Card className="relative rounded-lg shadow-md bg-white/80 dark:bg-gray-800/80 border border-green-700 backdrop-blur-lg">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">Reviews</CardTitle>
           </CardHeader>

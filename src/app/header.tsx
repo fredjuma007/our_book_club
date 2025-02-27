@@ -41,7 +41,7 @@ export async function Header() {
 
           <div className="flex items-center gap-4 md:gap-6">
             {/* Navigation Links */}
-            <div className="hidden md:flex items-center gap-6">
+            <div className="md:flex items-center gap-6">
               <Button asChild variant="ghost" className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors">
                 <Link href="/books">Books</Link>
               </Button>
