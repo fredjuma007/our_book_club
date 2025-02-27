@@ -76,7 +76,7 @@ export default async function Page({ params }: PageProps) {
         )}
 
         <div>
-          <Button variant="link" asChild className="text-green-800 dark:text-green-500 hover:underline">
+          <Button variant="outline" className="bg-green-700 text-white hover:bg-green-800 font-serif" asChild>
             <Link href="/books">
               <ChevronLeft className="mr-1" /> Back to books
             </Link>
