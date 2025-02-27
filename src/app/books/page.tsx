@@ -49,7 +49,6 @@ export default async function Home({
             Search 🔍
           </Button>
         </form>
-        {/*<AddBookDialog />*/}
 
         <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-200 hover:text-white">
           <Link className="text-green-600 dark:text-white" href="/club-events">
@@ -87,20 +86,22 @@ export default async function Home({
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center">
-              {book?.image ? (
-                <Image
-                  width={150}
-                  height={200}
-                  src={convertWixImageToUrl(book.image) || "/placeholder.svg"}
-                  alt={book?.title}
-                  className="w-full h-48 object-cover mb-4 rounded-lg"
-                />
-              ) : (
-                <div className="flex flex-col gap-2 items-center justify-center w-[150px] h-[200px] mb-4 rounded-lg bg-gray-200 dark:bg-gray-700">
-                  <BookIcon className="w-10 h-10 text-gray-500 dark:text-gray-300" />
-                  <p className="text-gray-500 dark:text-gray-300">No Image</p>
-                </div>
-              )}
+              <Link href={`/books/${book?._id}`} className="w-full">
+                {book?.image ? (
+                  <Image
+                    width={150}
+                    height={200}
+                    src={convertWixImageToUrl(book.image) || "/placeholder.svg"}
+                    alt={book?.title}
+                    className="w-full h-48 object-cover mb-4 rounded-lg hover:opacity-80 transition-opacity"
+                  />
+                ) : (
+                  <div className="flex flex-col gap-2 items-center justify-center w-[150px] h-[200px] mb-4 rounded-lg bg-gray-200 dark:bg-gray-700 hover:opacity-80 transition-opacity">
+                    <BookIcon className="w-10 h-10 text-gray-500 dark:text-gray-300" />
+                    <p className="text-gray-500 dark:text-gray-300">No Image</p>
+                  </div>
+                )}
+              </Link>
             </CardContent>
             <CardFooter className="flex justify-center">
               <Button
