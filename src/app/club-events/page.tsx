@@ -33,7 +33,7 @@ export default function EventsPage() {
       imageUrl: "/logo.jpeg",
       link: "",
       eventDate: "March 29, 2025",
-      bookTitle: "TBA",
+      bookTitle: "Sometimes I Lie",
       type: "Book Discussion"
     },
   ];
