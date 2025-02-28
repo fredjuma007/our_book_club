@@ -53,6 +53,12 @@ export default async function Page({ params }: PageProps) {
     const book = bookResponse?.data as Book | undefined;
     const reviews = reviewsResponse.items.map((item) => item.data as Review);
 
+    // Calculate average rating
+    const averageRating =
+  reviews.length > 0
+    ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+    : 0;
+
     if (!book) {
       return notFound();
     }
@@ -88,6 +94,7 @@ export default async function Page({ params }: PageProps) {
           <CardHeader>
             <CardTitle className="text-3xl font-bold text-green-800 dark:text-green-500 font-serif">
               {book.title}
+              <p className="text-lg font-semibold text-green-700 dark:text-green-400">By {book.author}</p>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -107,7 +114,19 @@ export default async function Page({ params }: PageProps) {
                 </div>
               )}
               <div className="flex flex-col justify-between space-y-4">
-                <p className="text-lg font-semibold text-green-700 dark:text-green-400">By {book.author}</p>
+                
+                {/* Average Rating */}
+              <div className="flex items-center gap-2">
+                <p className="text-lg font-semibold text-green-700 dark:text-green-400">Club Average Rating:</p>
+                <div className="flex">
+                  {Array.from({ length: Math.floor(averageRating) }).map((_, i) => (
+                    <StarIcon key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                  ))}
+                  {averageRating % 1 !== 0 && <StarIcon className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-50" />}
+                </div>
+                <p className="text-gray-700 dark:text-gray-300">({averageRating.toFixed(1)} / 5)</p>
+              </div>
+
                 {book.publisher && (
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Recommended by <span className="font-medium text-green-700 dark:text-green-400">{book.publisher}</span>
