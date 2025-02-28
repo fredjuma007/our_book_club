@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import Image from "next/image"
 import Link from "next/link"
 import { convertWixImageToUrl } from "@/lib/wix-client"
-import { updateReviewAction } from "@/app/actions"
+import { deleteReviewAction, updateReviewAction } from "@/app/actions"
 
 // ... other imports remain the same ...
 
@@ -169,11 +169,7 @@ function ReviewContent({ review, book }: any) {
         </Button>
         <form
           action={async () => {
-            await updateReviewAction(review?._id, {
-              rating: review?.rating,
-              review: review?.review,
-              name: review?.name,
-            })
+            await deleteReviewAction(review?._id);
           }}
         >
           <Button

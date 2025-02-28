@@ -87,3 +87,23 @@ export async function updateReviewAction(reviewId: string, updatedData: {
     throw error;
   }
 }
+
+// Delete a review
+export async function deleteReviewAction(reviewId: string) {
+  try {
+    const client = await getServerClient();
+
+    // Ensure reviewId is valid before making the request
+    if (!reviewId) {
+      throw new Error("Invalid review ID");
+    }
+
+    // deleting an item
+    await client.items.removeDataItem(reviewId, { dataCollectionId: "Reviews" });
+
+    revalidatePath("/reviews");
+  } catch (error) {
+    console.error("Delete review error:", error);
+    throw error;
+  }
+}
