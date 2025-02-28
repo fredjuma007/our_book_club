@@ -55,3 +55,35 @@ export async function logoutAction() {
     throw error;
   }
 }
+
+// Update a review with new data
+export async function updateReviewAction(reviewId: string, updatedData: { 
+  rating: number;
+  review: string;
+  name: string;
+}) {
+  try {
+    const client = await getServerClient();
+    
+    // First, get the existing review to preserve other fields
+    const existingReview = await client.items.getDataItem(reviewId, {
+      dataCollectionId: "Reviews"
+    }).then(res => res.data);
+
+    // Update the review with new data while preserving other fields
+    await client.items.updateDataItem(reviewId, {
+      dataCollectionId: "Reviews",
+      dataItem: {
+        data: { // Wrap merged data inside 'data' property
+          ...existingReview, // Preserve existing fields
+          ...updatedData // Merge new data
+        }
+      }
+    });
+    
+    revalidatePath("/reviews");
+  } catch (error) {
+    console.error("Update review error:", error);
+    throw error;
+  }
+}
