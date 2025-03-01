@@ -19,6 +19,7 @@ export default function GalleryPage() {
     },
     { src: "/gallery/paint n sip.jpg", caption: "Painting session with Lit Nomads" },
     { src: "/gallery/paint n sip (1).jpg", caption: "Painting session with Lit Nomads" },
+    { src: "/gallery/Discussion.jpg", caption: "Moderators During A book Review" },
     { src: "/gallery/picnic.jpg", caption: "A beautiful day at the picnic" },
     { src: "/gallery/picnic notes.jpg", caption: "A beautiful day at the picnic" },
     { src: "/gallery/bottles.jpg", caption: "Enjoying the great outdoors" },

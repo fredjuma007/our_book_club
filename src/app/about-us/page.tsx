@@ -108,7 +108,7 @@ export default function AboutUs() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="flex items-center gap-4">
                 <Image
-                  src="/logo.jpeg"
+                  src="/gallery/Esther.jpg"
                   alt="Team Member 1"
                   width={100}
                   height={100}
@@ -125,7 +125,7 @@ export default function AboutUs() {
               </div>
               <div className="flex items-center gap-4">
                 <Image
-                  src="/logo.jpeg"
+                  src="/gallery/Brenda.jpg"
                   alt="Team Member 2"
                   width={100}
                   height={100}
@@ -140,7 +140,7 @@ export default function AboutUs() {
               </div>
               <div className="flex items-center gap-4">
                 <Image
-                  src="/logo.jpeg"
+                  src="/gallery/Juma.jpg"
                   alt="Team Member 3"
                   width={100}
                   height={100}
@@ -200,4 +200,3 @@ export default function AboutUs() {
     </div>
   )
 }
-
