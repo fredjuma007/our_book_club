@@ -34,18 +34,6 @@ export default function Home() {
             <h1 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif">
               The Reading Circle
             </h1>
-
-            <nav className="flex gap-4">
-                <Button
-                  asChild
-                  variant="outline"
-                  className="border-green-500 relative group md:absolute md:right-8"
-                >
-                  <Link href="/about-us">
-                  About Us
-                  </Link>
-                </Button>
-              </nav>
           </motion.div>
         </header>
 
@@ -104,6 +92,17 @@ export default function Home() {
                   Join Events
                 </Link>
               </Button>
+                <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-green-600 text-green-700 hover:bg-green-50 gap-2 group"
+                >
+                <Link href="/about-us">
+                  <Users className="w-5 h-5" />
+                  About
+                </Link>
+                </Button>
             </div>
 
             {/* Stats */}
