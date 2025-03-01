@@ -37,10 +37,13 @@ export default function Home() {
 
             <nav className="flex gap-4">
                 <Button
+                  asChild
                   variant="outline"
                   className="border-green-500 relative group md:absolute md:right-8"
                 >
+                  <Link href="/about-us">
                   About Us
+                  </Link>
                 </Button>
               </nav>
           </motion.div>

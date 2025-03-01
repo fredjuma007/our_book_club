@@ -172,7 +172,7 @@ export default function AboutUs() {
             </p>
 
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-6">
-              <Link href="https://wa.me/+254714747231">
+                <Link href="https://wa.me/+254714747231" target="_blank" rel="noopener noreferrer">
                 <Button
                   variant="outline"
                   className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden w-full md:w-auto"
