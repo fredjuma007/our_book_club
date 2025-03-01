@@ -34,6 +34,15 @@ export default function Home() {
             <h1 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif">
               The Reading Circle
             </h1>
+
+            <nav className="flex gap-4">
+                <Button
+                  variant="outline"
+                  className="text-green-700 hover:text-green-800 hover:bg-green-100/50 relative group md:absolute md:right-8"
+                >
+                  About Us
+                </Button>
+              </nav>
           </motion.div>
         </header>
 

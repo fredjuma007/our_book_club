@@ -55,11 +55,6 @@ export async function Header() {
                   <Link href="/reviews">Reviews</Link>
                 </Button>
               )}
-
-              <Button asChild variant="ghost" className="text-green-600 dark:text-green-400 
-              hover:text-green-700 dark:hover:text-green-300 transition-colors">
-                <Link href="/about-us">About Us</Link>
-              </Button>
             </div>
 
             {/* Authentication Button */}
