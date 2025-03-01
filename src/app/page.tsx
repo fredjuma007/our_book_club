@@ -38,7 +38,7 @@ export default function Home() {
             <nav className="flex gap-4">
                 <Button
                   variant="outline"
-                  className="text-green-700 hover:text-green-800 hover:bg-green-100/50 relative group md:absolute md:right-8"
+                  className="border-green-500 relative group md:absolute md:right-8"
                 >
                   About Us
                 </Button>
