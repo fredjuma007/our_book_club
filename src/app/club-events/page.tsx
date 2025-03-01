@@ -244,8 +244,7 @@ export default function EventsPage() {
                 <div className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 hover:scale-x-100 transition-transform origin-left" />
               </div>
               <p className="text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
-                Simply Read of the month and join us for the discussion
-                Then join our upcoming book club meeting to get started!
+                Simply Read the book of the month and join us for the discussion!
               </p>
               <Link href="/gallery">
                 <Button
