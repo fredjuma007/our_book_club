@@ -13,7 +13,8 @@ import {
   ImagePlay,
   BookMarked,
   CalendarCheck,
-  Sparkles 
+  Sparkles,
+  Info, 
 } from 'lucide-react';
 
 export default function EventsPage() {
@@ -34,6 +35,20 @@ export default function EventsPage() {
       link: "",
       eventDate: "March 29, 2025",
       bookTitle: "Sometimes I Lie",
+      type: "Book Discussion"
+    },
+    {
+      id: 2,
+      title: "Book Club Meeting",
+      date: new Date(2025, 4, 31),
+      time: "7:00 PM - 9:00 PM",
+      location: "Virtual",
+      moderators: ["Club Member", "Club Member"],
+      description: "Join us for our monthly book club meeting to discuss the latest read!",
+      imageUrl: "/logo.jpeg",
+      link: "",
+      eventDate: "May 31, 2025",
+      bookTitle: "TBA",
       type: "Book Discussion"
     },
   ];
@@ -84,7 +99,7 @@ export default function EventsPage() {
           >
             <h1 className="text-5xl md:text-6xl font-bold text-green-800 dark:text-green-500 font-serif mb-4 relative inline-block group">
               <span className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-              Upcoming Events 👯‍♂️
+              Upcoming Events 📅
               <Sparkles className="absolute -right-8 -top-8 w-6 h-6 text-green-700/40 animate-spin-slow" />
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
@@ -239,21 +254,21 @@ export default function EventsPage() {
             >
               <div className="relative inline-block">
                 <h3 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
-                  Want to Join Us?
+                  Want to know more? Maybe join us?
                 </h3>
                 <div className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 hover:scale-x-100 transition-transform origin-left" />
               </div>
               <p className="text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
-                Simply Read the book of the month and join us for the discussion!
+                Click the about us page below to learn more about the club and how to join.
               </p>
-              <Link href="/gallery">
+              <Link href="/about-us">
                 <Button
                   variant="outline"
                   className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden"
                 >
                   <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <ImagePlay className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:rotate-12" />
-                  Check Out the Gallery
+                  <Info className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:rotate-12" />
+                  About Us
                 </Button>
               </Link>
             </motion.div>

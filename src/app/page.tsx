@@ -20,9 +20,17 @@ export default function Home() {
           <h1 className="text-4xl font-bold mb-3 text-green-600 dark:text-white">
             WELCOME TO <span className="text-green-500">THE READING CIRCLE</span>
           </h1>
-          <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 italic">
-            "Whatever came to mind, whatever came to hand, I would read." –Stephen King
-          </p>
+
+            <div className="bg-white bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 
+            p-4 rounded-lg shadow-md border border-green-500">
+                <h3 className="text-xl font-semibold text-green-600 dark:text-green-500">
+                Quote from the book of the month
+                </h3>
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 italic">
+              People are not mirrors—they don’t see you how you see yourself. –Sometimes I Lie
+              </p>
+            </div>
+            
           <p className="text-xl text-gray-700 dark:text-gray-300 mb-6">
             Discover, share, and review your <span className="text-green-500">favorite books</span> with a
             community of <span className="text-green-500">book lovers</span>.
@@ -41,7 +49,7 @@ export default function Home() {
               size="lg"
               className="bg-green-500 hover:bg-green-600 text-white font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:translate-y-1"
             >
-              <Link href="/club-events">Events 👯‍♂️</Link>
+              <Link href="/club-events">Events 📅</Link>
             </Button>
 
             <Button

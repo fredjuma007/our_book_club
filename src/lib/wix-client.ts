@@ -21,11 +21,12 @@ export function setSessionCookie(tokens: any) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
+    domain: window.location.hostname // Ensure cookies are accessible across subdomains
   })
 }
 
 export function clearSessionCookie() {
-  Cookies.remove("session", { path: "/" })
+  Cookies.remove("session", { path: "/", domain: window.location.hostname })
 }
 
 export function getSessionTokens() {

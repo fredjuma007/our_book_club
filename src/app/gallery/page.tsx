@@ -96,7 +96,7 @@ export default function GalleryPage() {
               className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif relative overflow-hidden group"
             >
               <Link className="text-green-700 dark:text-white flex items-center gap-1" href="/club-events">
-                👯‍♂️ <span>Events</span>
+              📅 <span>Events</span>
               </Link>
             </Button>
           </motion.div>

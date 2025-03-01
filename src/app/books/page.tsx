@@ -51,7 +51,7 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
         <div className="flex gap-2">
           <Button variant="outline" className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white">
             <Link className="text-green-700 dark:text-white flex items-center gap-1" href="/club-events">
-              👯‍♂️ <span>Events</span>
+            📅 <span>Events</span>
             </Link>
           </Button>
 
