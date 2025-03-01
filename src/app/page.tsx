@@ -120,7 +120,7 @@ export default function Home() {
               <div className="p-6">
                 <div className="flex items-start gap-6">
                   <Link
-                    href="http://localhost:3000/books/e113461c-75f3-42f8-a2db-765142c9ce05"
+                    href="https://readingcircle.vercel.app/books/e113461c-75f3-42f8-a2db-765142c9ce05"
                     className="relative w-32 h-48 flex-shrink-0"
                   >
                     <Image
@@ -156,9 +156,10 @@ export default function Home() {
                     </Button>
                     {showAbout && (
                       <p className="text-gray-700 dark:text-gray-300 mt-4">
-                        This is a gripping psychological thriller about a woman who wakes up in a hospital bed, unable
-                        to move or speak, and with no memory of how she got there. As she pieces together her memories,
-                        she realizes that someone close to her is hiding a dark secret.
+                        Amber wakes up in a hospital. She can’t move. She can’t speak. She can’t open her eyes. 
+                        She can hear everyone around her, but they have no idea. 
+                        Amber doesn’t remember what happened, but she has a suspicion her husband had something to do with it. 
+                        Alternating between her paralyzed present, the week before her accident, and a series of childhood diaries from twenty years ago, this brilliant psychological thriller Is something really a lie if you believe it's the truth?
                       </p>
                     )}
                   </div>
