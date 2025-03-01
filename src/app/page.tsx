@@ -73,7 +73,7 @@ export default function Home() {
                 size="lg"
                 className="bg-green-600 hover:bg-green-700 text-white gap-2 group relative overflow-hidden"
               >
-                <Link href="/books">
+                <Link href="/gallery">
                   <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
                   <ImagePlay className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
                   View Gallery
