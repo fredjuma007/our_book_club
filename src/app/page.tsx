@@ -10,7 +10,7 @@ import React from "react"
 export default function Home() {
   const [showAbout, setShowAbout] = React.useState(false)
   return (
-    <div className="relative min-h-screen bg-[url('/gallery/Discussion.jpg')] bg-cover bg-fixed bg-center bg-no-repeat text-green-600 dark:text-green-500 overflow-hidden">
+    <div className="relative min-h-screen bg-[url('/picnic.jpg')] bg-cover bg-fixed bg-center bg-no-repeat text-green-600 dark:text-green-500 overflow-hidden">
       {/* Animated particles */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20 animate-fade" />
 
