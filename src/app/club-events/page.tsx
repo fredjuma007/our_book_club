@@ -194,7 +194,9 @@ export default function EventsPage() {
                             className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
                           >
                             <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
-                            <Link href={event.link}>Meeting Link</Link>
+                            <Link href="https://meet.google.com/vhv-hfwz-avi" target="_blank" rel="noopener noreferrer">
+                              Join Discussion
+                            </Link>
                           </Button>
                         </div>
 

@@ -182,7 +182,7 @@ export default function Home() {
                   <span className="text-sm text-gray-600 dark:text-gray-300">100+ members reading</span>
                 </div>
                 <Button asChild size="sm" variant="outline" className="border-green-500">
-                  <Link href="/club-events" target="_blank" rel="noopener noreferrer">
+                  <Link href="https://meet.google.com/vhv-hfwz-avi" target="_blank" rel="noopener noreferrer">
                     Join Discussion
                   </Link>
                 </Button>
