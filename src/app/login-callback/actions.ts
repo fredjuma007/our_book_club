@@ -30,12 +30,17 @@ export async function loginCallbackAction(url: string, redirectUri: string) {
       refreshToken: memberTokens.refreshToken,
     }
 
-    await cookieStore.set("session", JSON.stringify(serializableTokens))
+    // Setting session cookie with expiration and security options
+    await cookieStore.set("session", JSON.stringify(serializableTokens), {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    })
 
     return { success: true }
   } catch (error) {
     console.error("Login callback error:", error)
-    throw error // Re-throw the error to be caught by the client
+    throw error
   }
 }
-
