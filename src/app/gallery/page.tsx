@@ -275,7 +275,7 @@ export default function GalleryPage() {
                 <Button
                   variant="outline"
                   onClick={() => setSelectedImageIndex(null)}
-                  className="absolute top-4 right-4 text-white border-green-700 hover:bg-green-700 hover:text-white group"
+                  className="absolute top-4 right-4 text-black border-green-700 hover:bg-green-700 hover:text-white group"
                 >
                   <X className="w-4 h-4 transition-transform duration-200 group-hover:rotate-90" />
                 </Button>

@@ -6,6 +6,7 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { BookOpen, Calendar, ImagePlay, Quote, Sparkles, Users } from "lucide-react"
 import React from "react"
+import Footer from "@/components/footer"
 
 export default function Home() {
   const [showAbout, setShowAbout] = React.useState(false)
@@ -81,22 +82,22 @@ export default function Home() {
                   View Gallery
                 </Link>
               </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-green-600 text-green-700 hover:bg-green-50 gap-2 group"
-              >
-                <Link href="/club-events">
-                  <Calendar className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-                  Join Events
-                </Link>
-              </Button>
                 <Button
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-green-600 text-green-700 hover:bg-green-50 gap-2 group"
+                className="border-green-600 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700 gap-2 group"
+                >
+                <Link href="/club-events">
+                  <Calendar className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+                  Join Events
+                </Link>
+                </Button>
+                <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-green-600 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700 gap-2 group"
                 >
                 <Link href="/about-us">
                   <Users className="w-5 h-5" />
@@ -212,24 +213,7 @@ export default function Home() {
         </main>
 
         {/* Footer */}
-        <footer className="relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-green-200 dark:border-green-800">
-          <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              © {new Date().getFullYear()} The Reading Circle
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              Developed by{" "}
-              <Link
-                href="https://jumaportfolio.netlify.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-green-600 hover:text-green-700 hover:underline"
-              >
-                Fred Juma
-              </Link>
-            </p>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </div>
   )
