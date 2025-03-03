@@ -5,7 +5,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { BookOpen, Sparkles } from "lucide-react"
-import Footer from "@/components/footer"
 
 export default function AboutUs() {
   return (
@@ -197,7 +196,6 @@ export default function AboutUs() {
     
           </div>
         </motion.div>
-         <Footer />
       </div>
     </div>
   )
