@@ -25,7 +25,9 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
     ? books.filter(
         (book) =>
           book?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          book?.author?.toLowerCase().includes(searchQuery.toLowerCase()),
+          book?.author?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          book?.genre?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          book?.recommender?.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : books
 
@@ -50,7 +52,8 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
               <Sparkles className="absolute -right-8 -top-8 w-6 h-6 text-green-700/40" />
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
-              Explore the books we have read and reviewed
+              Explore the books we have read and currently reading. 
+              Drop a review and share your ratings with the community!
             </p>
           </div>
         </div>
@@ -71,7 +74,7 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
             <Input
               name="search"
               type="text"
-              placeholder="Search by title or author"
+              placeholder="Enter Title, Author or Genre"
               defaultValue={searchQuery}
               className="dark:bg-gray-800 dark:text-white border-2 border-green-700"
             />

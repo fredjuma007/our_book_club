@@ -138,6 +138,15 @@ export default function EventsPage() {
               <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               Calendar View
             </Button>
+
+            <Button
+              variant="outline"
+              className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif relative overflow-hidden group"
+            >
+              <Link className="text-green-700 dark:text-white flex items-center gap-1" href="/gallery">
+                📷 <span>Gallery</span>
+              </Link>
+            </Button>
           </motion.div>
         </div>
 

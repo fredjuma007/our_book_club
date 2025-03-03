@@ -51,12 +51,13 @@ export default function Home() {
                   <Sparkles className="absolute -right-8 -top-4 w-6 h-6 text-green-500/40 animate-spin-slow" />
                 </span>
               </h2>
-                <p className="text-xl text-gray-700 dark:text-gray-300 max-w-lg">
-                Discover, share, and review your favorite 
-                <span className="text-green-600 dark:text-green-400">
+              <p className="text-xl text-gray-700 dark:text-gray-300 max-w-lg">
+                  Discover, share, and review your favorite{" "}
+                  <span className="text-green-600 dark:text-green-400">
                   books
                   </span> with a community of <span className="text-green-600 dark:text-green-400">book lovers</span>
-                </p>
+              </p>
+
             </div>
 
             <div className="flex flex-wrap gap-4">
@@ -90,7 +91,7 @@ export default function Home() {
                 >
                 <Link href="/club-events">
                   <Calendar className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-                  Join Events
+                  Check Events
                 </Link>
                 </Button>
                 <Button
