@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { BookOpen, Sparkles } from "lucide-react"
-import Footer from "@/components/footer"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 export default function AboutUs() {
   return (
@@ -95,14 +95,106 @@ export default function AboutUs() {
               <p className="text-gray-600 dark:text-gray-300 font-serif">
                 At The Reading Circle, we believe in fostering a sense of community, respect, and empathy among our
                 members. We encourage open and honest discussions, and we value diverse perspectives and experiences.
+                Click below to read our club guidelines and learn more about how we ensure a positive and enriching
+                experience for all our members.
               </p>
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="link"
+                    className="text-green-700 hover:text-green-800 dark:text-green-500 dark:hover:text-green-400 p-0 mt-4 font-serif"
+                  >
+                    Read Club Guidelines 📜
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-[#fffaf0] dark:bg-gray-800 border-green-700 max-h-[80vh] overflow-hidden flex flex-col">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
+                      Welcome to The Reading Circle!✨
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div
+                    className="text-gray-600 dark:text-gray-300 font-serif space-y-4 mt-4 overflow-y-auto pr-2 custom-scrollbar"
+                    style={{
+                      scrollbarWidth: "thin",
+                      scrollbarColor: "#15803d #f8f5f0",
+                    }}
+                  >
+                    <p>
+                      We're excited to have you join us on this literary journey! To ensure we all get the most out of
+                      our shared reading experience, we've set a few guidelines for active participation:
+                    </p>
+
+                    <div className="space-y-4 mt-2">
+                      <div className="flex gap-3">
+                        <span className="font-bold">1.</span>
+                        <div>
+                          <h3 className="font-bold">Read Before Meetings📖</h3>
+                          <p>
+                            Each member is expected to read the selected book before our discussions. Our goal is to
+                            dive deep into the themes, characters, and plotlines, and this can only happen when everyone
+                            is prepared.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <span className="font-bold">2.</span>
+                        <div>
+                          <h3 className="font-bold">Engage in Discussions 💭</h3>
+                          <p>
+                            We encourage open, thoughtful dialogue. Share your opinions, ask questions, and explore
+                            different perspectives. Whether you loved or disliked the book, your voice matters.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <span className="font-bold">3.</span>
+                        <div>
+                          <h3 className="font-bold">Weekly/Bi-weekly Check-ins 🔄</h3>
+                          <p>
+                            To help keep us all on track, we'll have check-ins where members can share their progress,
+                            thoughts, or challenges. This way, we stay connected with the book throughout the month.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <span className="font-bold">4.</span>
+                        <div>
+                          <h3 className="font-bold">Contribute Beyond Reading 💬</h3>
+                          <p>
+                            You can lead discussions, suggest books, or even host a session. We value everyone's input
+                            and want to ensure everyone gets a chance to shine.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <span className="font-bold">5.</span>
+                        <div>
+                          <h3 className="font-bold">Be Respectful 🫡</h3>
+                          <p>
+                            We thrive on diversity in opinions, but let's always maintain respect and kindness in our
+                            conversations.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="mt-4">
+                      We believe that our book club is not just about reading—it's about growing through conversation
+                      and collaboration. By staying engaged, we'll all make this a rewarding experience!
+                    </p>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
 
-          <div
-            className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border 
-            border-green-700 p-6 md:p-8"
-          >
+          <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700 p-6 md:p-8">
             <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6">Meet the Team</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="flex items-center gap-4">
@@ -150,10 +242,7 @@ export default function AboutUs() {
           <div className="text-center mt-12 space-y-6">
             <div className="relative inline-block">
               <h3 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">Join Our Community</h3>
-              <div
-                className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 hover:scale-x-100 
-              transition-transform origin-left"
-              />
+              <div className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 hover:scale-x-100 transition-transform origin-left" />
             </div>
             <p className="text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
               Become a part of our vibrant community of book lovers. Participate in discussions, attend events, and
@@ -185,6 +274,38 @@ export default function AboutUs() {
           </div>
         </motion.div>
       </div>
+
+      <style jsx global>{`
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+      }
+      
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f8f5f0;
+        border-radius: 10px;
+      }
+      
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #15803d;
+        border-radius: 10px;
+      }
+      
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #166534;
+      }
+      
+      .dark .custom-scrollbar::-webkit-scrollbar-track {
+        background: #1f2937;
+      }
+      
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #22c55e;
+      }
+      
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #16a34a;
+      }
+    `}</style>
     </div>
   )
 }
