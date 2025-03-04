@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronLeft, ChevronRight, Camera, X, ImageIcon, Sparkles, Grid2x2, Grid3x3 } from "lucide-react"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export default function GalleryPage() {
   const [layout, setLayout] = useState<"grid" | "masonry">("grid")
@@ -298,6 +299,7 @@ export default function GalleryPage() {
           </motion.div>
         )}
       </AnimatePresence>
+      <ScrollToTop />
     </div>
   )
 }

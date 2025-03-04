@@ -9,6 +9,7 @@ import { convertWixImageToUrl } from "@/lib/wix-client";
 import { notFound } from "next/navigation";
 import { loginAction } from "@/app/actions";
 import type { Metadata } from "next";
+import { ScrollToTop } from "@/components/scroll-to-top";
 
 interface Review {
   _id: string;
@@ -215,6 +216,8 @@ export default async function Page({ params }: PageProps) {
             </div>
           </CardContent>
         </Card>
+        {/* Scroll to Top Button */}
+        <ScrollToTop />
       </div>
     );
   } catch (error) {

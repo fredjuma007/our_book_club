@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { ReviewCard } from "@/components/review-card"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export default async function ReviewsPage() {
   const member = await getMember()
@@ -133,6 +134,8 @@ export default async function ReviewsPage() {
           {books.map(({ review, book }) => (
             <ReviewCard key={review?._id} review={review} book={book} />
           ))}
+          {/* Scroll to Top Button */}
+                  <ScrollToTop />
         </div>
       </div>
     </div>

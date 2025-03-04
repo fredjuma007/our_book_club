@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { redirect } from "next/navigation"
 import { getServerClient } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
+import { ScrollToTop } from "@/components/scroll-to-top"
 
 export default async function Home({ searchParams }: { searchParams: { search?: string } }) {
   const client = await getServerClient()
@@ -159,6 +160,7 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
               </CardFooter>
             </Card>
           ))}
+          <ScrollToTop />
         </div>
       </div>
     </div>
