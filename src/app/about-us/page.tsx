@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { BookOpen, Sparkles } from "lucide-react"
+import Footer from "@/components/footer"
 
 export default function AboutUs() {
   return (
@@ -64,47 +65,45 @@ export default function AboutUs() {
           transition={{ duration: 0.4 }}
           className="space-y-8"
         >
-          <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border 
-          border-green-700 p-6 md:p-8">
-            <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6">
-            Our Vision
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 font-serif">
-            Our vision is to build a vibrant community of readers who are passionate about sharing their love for
-            books. We aim to create a welcoming and inclusive environment where everyone feels valued and inspired to
-            explore new genres and authors.
-            </p>
-          </div>
+          {/* Three Column Content for Vision, Book Selection, and Community Values */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700 p-6 md:p-8">
+              <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6">Our Vision</h2>
+              <p className="text-gray-600 dark:text-gray-300 font-serif">
+                Our vision is to build a vibrant community of readers who are passionate about sharing their love for
+                books. We aim to create a welcoming and inclusive environment where everyone feels valued and inspired
+                to explore new genres and authors.
+              </p>
+            </div>
 
-            <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border 
-            border-green-700 p-6 md:p-8">
+            <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700 p-6 md:p-8">
               <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6">
                 How We Select & Review Books
               </h2>
               <p className="text-gray-600 dark:text-gray-300 font-serif">
-                Our book club members nominate books they would like to read lead by the Book & Review moderator,
-                and then we vote on the selections. 
-                We aim to choose a diverse range of genres and authors to keep our discussions engaging and thought-provoking.
-
-                Different members take turns leading the discussion each month, and we encourage everyone to share their thoughts and insights.
+                Our book club members nominate books they would like to read lead by the Book & Review moderator, and
+                then we vote on the selections. We aim to choose a diverse range of genres and authors to keep our
+                discussions engaging and thought-provoking. Different members take turns leading the discussion each
+                month, and we encourage everyone to share their thoughts and insights.
               </p>
             </div>
 
-            <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border
-            border-green-700 p-6 md:p-8">
-                <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6">
-                    Our Community Values
-                </h2>
-                <p className="text-gray-600 dark:text-gray-300 font-serif">
-                    At The Reading Circle, we believe in fostering a sense of community, respect, and empathy among our
-                    members. We encourage open and honest discussions, and we value diverse perspectives and experiences.
-                </p>
+            <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700 p-6 md:p-8">
+              <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6">
+                Our Community Values
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300 font-serif">
+                At The Reading Circle, we believe in fostering a sense of community, respect, and empathy among our
+                members. We encourage open and honest discussions, and we value diverse perspectives and experiences.
+              </p>
             </div>
+          </div>
 
-          <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border 
-            border-green-700 p-6 md:p-8">
-            <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6">
-                Meet the Team</h2>
+          <div
+            className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border 
+            border-green-700 p-6 md:p-8"
+          >
+            <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6">Meet the Team</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="flex items-center gap-4">
                 <Image
@@ -115,12 +114,8 @@ export default function AboutUs() {
                   className="rounded-full border-2 border-green-700"
                 />
                 <div>
-                  <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif">
-                    Esther Mboche
-                    </h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-serif">
-                    Founder, Events Coordinator & Moderator
-                    </p>
+                  <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif">Esther Mboche</h3>
+                  <p className="text-gray-600 dark:text-gray-300 font-serif">Founder, Events Coordinator & Moderator</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -132,10 +127,8 @@ export default function AboutUs() {
                   className="rounded-full border-2 border-green-700"
                 />
                 <div>
-                  <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif">
-                    Brenda Frenjo</h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-serif">
-                    Membership & Reviews Moderator</p>
+                  <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif">Brenda Frenjo</h3>
+                  <p className="text-gray-600 dark:text-gray-300 font-serif">Membership & Reviews Moderator</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -147,12 +140,8 @@ export default function AboutUs() {
                   className="rounded-full border-2 border-green-700"
                 />
                 <div>
-                  <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif">
-                    Fred Juma
-                    </h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-serif">
-                    Books & Reviews Moderator
-                    </p>
+                  <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif">Fred Juma</h3>
+                  <p className="text-gray-600 dark:text-gray-300 font-serif">Books & Reviews Moderator</p>
                 </div>
               </div>
             </div>
@@ -160,10 +149,10 @@ export default function AboutUs() {
 
           <div className="text-center mt-12 space-y-6">
             <div className="relative inline-block">
-              <h3 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
-                Join Our Community</h3>
-              <div className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 hover:scale-x-100 
-              transition-transform origin-left" 
+              <h3 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">Join Our Community</h3>
+              <div
+                className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 hover:scale-x-100 
+              transition-transform origin-left"
               />
             </div>
             <p className="text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
@@ -172,7 +161,7 @@ export default function AboutUs() {
             </p>
 
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-6">
-                <Link href="https://wa.me/+254714747231" target="_blank" rel="noopener noreferrer">
+              <Link href="https://wa.me/+254714747231" target="_blank" rel="noopener noreferrer">
                 <Button
                   variant="outline"
                   className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden w-full md:w-auto"
@@ -193,7 +182,6 @@ export default function AboutUs() {
                 </Button>
               </Link>
             </div>
-    
           </div>
         </motion.div>
       </div>
