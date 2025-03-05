@@ -195,50 +195,67 @@ export default function AboutUs() {
             </div>
           </div>
 
-          <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700 p-6 md:p-8">
-            <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6">Meet the Team</h2>
+            <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700 p-6 md:p-8">
+            <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6">
+              Meet the Team 
+              </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="flex items-center gap-4">
-                <Image
-                  src="/gallery/Esther.jpg"
-                  alt="Team Member 1"
-                  width={100}
-                  height={100}
-                  className="rounded-full border-2 border-green-700"
-                />
-                <div>
-                  <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif">Esther Mboche</h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-serif">Founder, Events Coordinator & Moderator</p>
-                </div>
+              <Image
+                src="/gallery/Esther.jpg"
+                alt="Team Member 1"
+                width={100}
+                height={100}
+                className="rounded-full border-2 border-green-700"
+              />
+              <div>
+                <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif">Esther Mboche</h3>
+                <p className="text-gray-600 dark:text-gray-300 font-serif">Founder, Events Coordinator & Moderator</p>
+                <Link href="https://wa.me/+254790964291?text=Hello%20Esther,%20Reaching%20out%20from%20The%20Reading%20Circle%20Website" target="_blank" rel="noopener noreferrer">
+                  <Button variant="link" className="text-green-700 hover:text-green-800 dark:text-green-500 dark:hover:text-green-400 p-0 mt-2 font-serif">
+                  Chat with Esther
+                  </Button>
+                </Link>
+              </div>
               </div>
               <div className="flex items-center gap-4">
-                <Image
-                  src="/gallery/Brenda.jpg"
-                  alt="Team Member 2"
-                  width={100}
-                  height={100}
-                  className="rounded-full border-2 border-green-700"
-                />
-                <div>
-                  <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif">Brenda Frenjo</h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-serif">Membership & Reviews Moderator</p>
-                </div>
+              <Image
+                src="/gallery/Brenda.jpg"
+                alt="Team Member 2"
+                width={100}
+                height={100}
+                className="rounded-full border-2 border-green-700"
+              />
+              <div>
+                <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif">Brenda Frenjo</h3>
+                <p className="text-gray-600 dark:text-gray-300 font-serif">Membership & Reviews Moderator</p>
+                <Link href="https://wa.me/+254714747231?text=Hello%20Brenda,%20Reaching%20out%20from%20The%20Reading%20Circle%20Website" target="_blank" rel="noopener noreferrer">
+                  <Button variant="link" className="text-green-700 hover:text-green-800 dark:text-green-500 dark:hover:text-green-400 p-0 mt-2 font-serif">
+                    Chat with Brenda
+                  </Button>
+                </Link>
+              </div>
               </div>
               <div className="flex items-center gap-4">
-                <Image
-                  src="/gallery/Juma.jpg"
-                  alt="Team Member 3"
-                  width={100}
-                  height={100}
-                  className="rounded-full border-2 border-green-700"
-                />
-                <div>
-                  <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif">Fred Juma</h3>
-                  <p className="text-gray-600 dark:text-gray-300 font-serif">Books & Reviews Moderator</p>
+              <Image
+                src="/gallery/Juma.jpg"
+                alt="Team Member 3"
+                width={100}
+                height={100}
+                className="rounded-full border-2 border-green-700"
+              />
+              <div>
+                <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif">Fred Juma</h3>
+                <p className="text-gray-600 dark:text-gray-300 font-serif">Books & Reviews Moderator</p>
+                  <Link href="https://wa.me/+254710730243?text=Hello%20Fred,%20Reaching%20out%20from%20The%20Reading%20Circle%20Website" target="_blank" rel="noopener noreferrer">
+                    <Button variant="link" className="text-green-700 hover:text-green-800 dark:text-green-500 dark:hover:text-green-400 p-0 mt-2 font-serif">
+                      Chat with Fred
+                    </Button>
+                  </Link>
+                </div>
                 </div>
               </div>
             </div>
-          </div>
 
           <div className="text-center mt-12 space-y-6">
             <div className="relative inline-block">
@@ -251,7 +268,10 @@ export default function AboutUs() {
             </p>
 
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-6">
-              <Link href="https://wa.me/+254714747231" target="_blank" rel="noopener noreferrer">
+                <Link 
+                href="https://wa.me/+254714747231?text=Hello20%2Reading%2Circle20%Memebership20%Admin20%I%20would%20like%20to%20join%20your%20community." 
+                target="_blank" 
+                rel="noopener noreferrer">
                 <Button
                   variant="outline"
                   className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden w-full md:w-auto"
