@@ -268,19 +268,19 @@ export default function AboutUs() {
             </p>
 
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-6">
-                <Link 
-                href="https://wa.me/+254714747231?text=Hello20%2Reading%2Circle20%Memebership20%Admin20%I%20would%20like%20to%20join%20your%20community." 
-                target="_blank" 
-                rel="noopener noreferrer">
-                <Button
-                  variant="outline"
-                  className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden w-full md:w-auto"
-                >
-                  <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <BookOpen className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:rotate-12" />
-                  JOIN US!
-                </Button>
-              </Link>
+                  <Link 
+                  href="https://wa.me/+254714747231?text=Hello%20Reading%20Circle%20Membership%20Admin,%20I%20would%20like%20to%20join%20your%20community." 
+                  target="_blank" 
+                  rel="noopener noreferrer">
+                  <Button
+                    variant="outline"
+                    className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden w-full md:w-auto"
+                  >
+                    <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <BookOpen className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:rotate-12" />
+                    JOIN US!
+                  </Button>
+                  </Link>
               <Link href="/club-events">
                 <Button
                   variant="outline"
