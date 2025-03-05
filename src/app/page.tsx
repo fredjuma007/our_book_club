@@ -148,8 +148,12 @@ export default function Home() {
                   </Link>
                   <div className="flex-1 space-y-4">
                     <div>
-                      <h3 className="text-2xl font-bold text-green-800 dark:text-green-400">Sometimes I Lie</h3>
-                      <p className="text-gray-600 dark:text-gray-300">by Alice Feeney</p>
+                      <h3 className="text-2xl font-bold text-green-800 dark:text-green-400">
+                        Sometimes I Lie
+                        </h3>
+                      <p className="text-gray-600 dark:text-gray-300">
+                        by Alice Feeney
+                        </p>
                     </div>
                     <div className="relative">
                       <Quote className="absolute -left-6 -top-2 w-4 h-4 text-green-400/30" />
@@ -180,8 +184,8 @@ export default function Home() {
               </div>
               <div className="bg-green-50 dark:bg-gray-700/50 p-4 flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-gray-600 dark:text-gray-300">100+ members reading</span>
+                  <Calendar className="w-4 h-4 text-green-600" />
+                  <span className="text-sm text-gray-600 dark:text-gray-300">29th March</span>
                 </div>
                 <Button asChild size="sm" variant="outline" className="border-green-500">
                   <Link href="https://meet.google.com/vhv-hfwz-avi" target="_blank" rel="noopener noreferrer">
@@ -200,7 +204,7 @@ export default function Home() {
                   className="relative aspect-square rounded-lg overflow-hidden group"
                 >
                   <Image
-                    src={`/gallery/${filename}`} // Reference images correctly from public folder
+                    src={`/gallery/${filename}`} 
                     alt={`Gallery image ${index + 1}`}
                     width={300}
                     height={300}

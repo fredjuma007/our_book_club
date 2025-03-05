@@ -16,6 +16,7 @@ import {
   Sparkles,
   Info, 
 } from 'lucide-react';
+import Footer from "@/components/footer";
 
 export default function EventsPage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -332,6 +333,7 @@ export default function EventsPage() {
             </div>
           </motion.div>
         )}
+        <Footer />
       </div>
     </div>
   );

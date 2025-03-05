@@ -6,6 +6,7 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { BookOpen, Sparkles } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import Footer from "@/components/footer"
 
 export default function AboutUs() {
   return (
@@ -273,6 +274,7 @@ export default function AboutUs() {
             </div>
           </div>
         </motion.div>
+        <Footer />
       </div>
 
       <style jsx global>{`
