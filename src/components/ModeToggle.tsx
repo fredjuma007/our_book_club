@@ -31,7 +31,7 @@ export function ThemeToggle() {
       whileTap={{ scale: 0.95 }}
     >
       {/* Paper texture */}
-      <div className="absolute inset-0 bg-[url('/paper-texture.png')] bg-repeat opacity-10 dark:opacity-5 mix-blend-overlay" />
+      <div className="absolute inset-0 bg-repeat opacity-10 dark:opacity-5 mix-blend-overlay" />
 
       {/* Book page lines */}
       <div className="absolute inset-0 bg-[linear-gradient(transparent_4px,rgba(22,163,74,0.1)_5px)] bg-[size:100%_5px] opacity-20 dark:opacity-10" />
@@ -42,13 +42,13 @@ export function ThemeToggle() {
       {/* Book bookmark decoration */}
       {mounted && isDark && (
         <div className="absolute -top-1 right-2 w-3 h-5 bg-green-600 rounded-b-sm shadow-sm transform-gpu rotate-3 origin-top z-0">
-          <div className="absolute inset-0 bg-[url('/paper-texture.png')] bg-repeat mix-blend-overlay opacity-20" />
+          <div className="absolute inset-0 bg-repeat mix-blend-overlay opacity-20" />
         </div>
       )}
 
       {mounted && !isDark && (
         <div className="absolute -top-1 left-2 w-3 h-5 bg-green-600 rounded-b-sm shadow-sm transform-gpu -rotate-3 origin-top z-0">
-          <div className="absolute inset-0 bg-[url('/paper-texture.png')] bg-repeat mix-blend-overlay opacity-20" />
+          <div className="absolute inset-0 bg-repeat mix-blend-overlay opacity-20" />
         </div>
       )}
 
@@ -68,7 +68,7 @@ export function ThemeToggle() {
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
       >
         {/* Book page effect on thumb */}
-        <div className="absolute inset-0 bg-[url('/paper-texture.png')] bg-repeat opacity-10 mix-blend-overlay" />
+        <div className="absolute inset-0 bg-repeat opacity-10 mix-blend-overlay" />
 
         {/* Only render the correct icon after mounting to prevent hydration mismatch */}
         {mounted && (isDark ? <Moon className="h-4 w-4 text-white" /> : <Sun className="h-4 w-4 text-white" />)}

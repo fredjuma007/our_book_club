@@ -4,6 +4,7 @@ import Link from "next/link"
 import { loginAction, logoutAction } from "./actions"
 import { getMember, getServerClient } from "@/lib/wix"
 import { ThemeToggle } from "@/components/ModeToggle"
+import { MobileMenu } from "@/components/mobile-menu"
 
 export async function Header() {
   const [member, client] = await Promise.all([getMember(), getServerClient()])
@@ -14,7 +15,7 @@ export async function Header() {
       {/* Fixed Header */}
       <div className="fixed top-0 left-0 w-full z-50 overflow-hidden">
         {/* Paper texture background */}
-        <div className="absolute inset-0 bg-[url('/paper-texture.png')] bg-repeat opacity-10 dark:opacity-5" />
+        <div className="absolute inset-0 bg-repeat opacity-10 dark:opacity-5" />
 
         {/* Main background */}
         <div className="absolute inset-0 bg-white/90 dark:bg-gray-900/90 opacity-95" />
@@ -32,7 +33,7 @@ export async function Header() {
 
         {/* Book bookmark */}
         <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-10 bg-green-600 dark:bg-green-700 rounded-b-sm shadow-md transform-gpu rotate-3 origin-top z-10 hidden md:block">
-          <div className="absolute inset-0 bg-[url('/paper-texture.png')] bg-repeat mix-blend-overlay opacity-20" />
+          <div className="absolute inset-0 bg-repeat mix-blend-overlay opacity-20" />
         </div>
 
         <div className="container mx-auto flex justify-between items-center px-4 md:px-8 py-3 relative">
@@ -90,12 +91,13 @@ export async function Header() {
             </Link>
           </Button>
 
-          {/* Mode Toggle */}
-          <ThemeToggle />
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-4 md:gap-6 relative z-10">
+            {/* Mode Toggle */}
+            <ThemeToggle />
 
-          <div className="flex items-center gap-4 md:gap-6 relative z-10">
             {/* Navigation Links */}
-            <div className="md:flex items-center gap-6">
+            <div className="flex items-center gap-6">
               <Button
                 asChild
                 variant="ghost"
@@ -168,6 +170,17 @@ export async function Header() {
               )}
             </div>
           </div>
+
+          {/* Mobile Navigation */}
+          <div className="flex md:hidden items-center gap-2 z-10">
+            <ThemeToggle />
+            <MobileMenu
+              isLoggedIn={isLoggedIn}
+              memberNickname={member?.nickname}
+              loginAction={loginAction}
+              logoutAction={logoutAction}
+            />
+          </div>
         </div>
       </div>
 
@@ -176,3 +189,4 @@ export async function Header() {
     </>
   )
 }
+
