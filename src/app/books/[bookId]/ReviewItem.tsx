@@ -46,10 +46,10 @@ export function ReviewItem({ id, name, rating, review, likes = 0, isLoggedIn, bo
 
   const paragraphs = review.split("\n")
 
-  // Show only first 3 paragraphs or first 300 characters, whichever comes first
-  const isLongReview = paragraphs.length > 3 || review.length > 300
+  // Show only first paragraph or first 300 characters, whichever comes first
+  const isLongReview = paragraphs.length > 1 || review.length > 300
 
-  const displayParagraphs = isExpanded ? paragraphs : paragraphs.length > 3 ? paragraphs.slice(0, 3) : paragraphs
+  const displayParagraphs = isExpanded ? paragraphs : paragraphs.length > 1 ? paragraphs.slice(0, 1) : paragraphs
 
   async function handleLikeToggle() {
     if (!isLoggedIn) {
