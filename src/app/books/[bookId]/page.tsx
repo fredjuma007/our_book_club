@@ -1,67 +1,68 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
-import { BookIcon, ChevronLeft, StarIcon } from "lucide-react";
-import { PostReviewForm } from "./post-review-form";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { getServerClient, getMember } from "@/lib/wix";
-import { convertWixImageToUrl } from "@/lib/wix-client";
-import { notFound } from "next/navigation";
-import { loginAction } from "@/app/actions";
-import type { Metadata } from "next";
-import { ScrollToTop } from "@/components/scroll-to-top";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from "next/image"
+import { BookIcon, ChevronLeft, StarIcon } from "lucide-react"
+import { PostReviewForm } from "./post-review-form"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { getServerClient, getMember } from "@/lib/wix"
+import { convertWixImageToUrl } from "@/lib/wix-client"
+import { notFound } from "next/navigation"
+import { loginAction } from "@/app/actions"
+import type { Metadata } from "next"
+import { ScrollToTop } from "@/components/scroll-to-top"
+import { ReviewItem } from "./ReviewItem"
+import { Toaster } from "@/components/ui/toaster"
 
 interface Review {
-  _id: string;
-  name: string;
-  rating: number;
-  review: string;
-  bookId: string;
+  _id: string
+  name: string
+  rating: number
+  review: string
+  bookId: string
+  likes?: number
 }
 
 interface Book {
-  _id: string;
-  title: string;
-  author: string;
-  publisher?: string; // This will be used as the recommender
-  description?: string;
-  image?: any;
-  goodreadsUrl?: string;
-  genre?: string;
-  reviewDate?: string;
+  _id: string
+  title: string
+  author: string
+  publisher?: string // This will be used as the recommender
+  description?: string
+  image?: any
+  goodreadsUrl?: string
+  genre?: string
+  reviewDate?: string
 }
 
 interface PageProps {
-  params: { bookId: string };
+  params: { bookId: string }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   return {
     title: `Book Details - ${params.bookId}`,
-  };
+  }
 }
 
 export default async function Page({ params }: PageProps) {
-  const [client, member] = await Promise.all([getServerClient(), getMember()]);
-  const isLoggedIn = await client.auth.loggedIn();
+  const [client, member] = await Promise.all([getServerClient(), getMember()])
+  const isLoggedIn = await client.auth.loggedIn()
 
   try {
     const [bookResponse, reviewsResponse] = await Promise.all([
       client.items.getDataItem(params.bookId, { dataCollectionId: "Books" }),
       client.items.queryDataItems({ dataCollectionId: "Reviews" }).eq("bookId", params.bookId).find(),
-    ]);
+    ])
 
-    const book = bookResponse?.data as Book | undefined;
-    const reviews = reviewsResponse.items.map((item) => item.data as Review);
+    const book = bookResponse?.data as Book | undefined
+    const reviews = reviewsResponse.items.map((item) => item.data as Review)
 
     // Calculate average rating
     const averageRating =
-  reviews.length > 0
-    ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
-    : 0;
+      reviews.length > 0 ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length : 0
 
     if (!book) {
-      return notFound();
+      return notFound()
     }
 
     return (
@@ -83,7 +84,11 @@ export default async function Page({ params }: PageProps) {
 
         {/* Back Button */}
         <div>
-          <Button variant="outline" className="bg-green-700 text-white hover:bg-green-800 transition-all font-serif" asChild>
+          <Button
+            variant="outline"
+            className="bg-green-700 text-white hover:bg-green-800 transition-all font-serif"
+            asChild
+          >
             <Link href="/books">
               <ChevronLeft className="mr-1" /> Back to books
             </Link>
@@ -115,29 +120,31 @@ export default async function Page({ params }: PageProps) {
                 </div>
               )}
               <div className="flex flex-col justify-between space-y-4">
-                
                 {/* Average Rating */}
-              <div className="flex items-center gap-2">
-                <p className="text-lg font-semibold text-green-700 dark:text-green-400">Club Average Rating:</p>
-                <div className="flex">
-                  {Array.from({ length: Math.floor(averageRating) }).map((_, i) => (
-                    <StarIcon key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                  ))}
-                  {averageRating % 1 !== 0 && <StarIcon className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-50" />}
+                <div className="flex items-center gap-2">
+                  <p className="text-lg font-semibold text-green-700 dark:text-green-400">Club Average Rating:</p>
+                  <div className="flex">
+                    {Array.from({ length: Math.floor(averageRating) }).map((_, i) => (
+                      <StarIcon key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                    ))}
+                    {averageRating % 1 !== 0 && (
+                      <StarIcon className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-50" />
+                    )}
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300">({averageRating.toFixed(1)} / 5)</p>
                 </div>
-                <p className="text-gray-700 dark:text-gray-300">({averageRating.toFixed(1)} / 5)</p>
-              </div>
 
                 {book.publisher && (
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Recommended by <span className="font-medium text-green-700 dark:text-green-400">{book.publisher}</span>
+                    Recommended by{" "}
+                    <span className="font-medium text-green-700 dark:text-green-400">{book.publisher}</span>
                   </p>
                 )}
                 <div className="flex gap-4 text-sm font-medium">
                   {book.genre && (
-                  <span className="px-3 py-1 bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-300 rounded-md">
-                    <span className="text-gray-600 dark:text-gray-400">Genre:</span> {book.genre}
-                  </span>
+                    <span className="px-3 py-1 bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-300 rounded-md">
+                      <span className="text-gray-600 dark:text-gray-400">Genre:</span> {book.genre}
+                    </span>
                   )}
                   {book.reviewDate && (
                     <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md">
@@ -170,7 +177,9 @@ export default async function Page({ params }: PageProps) {
         {/* Review Form */}
         <Card className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">⭐ Rate & Post a Review ⭐</CardTitle>
+            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
+              ⭐ Rate & Post a Review ⭐
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {isLoggedIn && member ? (
@@ -179,7 +188,10 @@ export default async function Page({ params }: PageProps) {
               <div className="text-center space-y-4">
                 <p className="text-gray-600 dark:text-gray-400 font-serif">Please log in to post a review</p>
                 <form action={loginAction}>
-                  <Button variant="outline" className="bg-green-700 text-white hover:bg-green-800 transition-all font-serif">
+                  <Button
+                    variant="outline"
+                    className="bg-green-700 text-white hover:bg-green-800 transition-all font-serif"
+                  >
                     Login to Review
                   </Button>
                 </form>
@@ -197,31 +209,32 @@ export default async function Page({ params }: PageProps) {
             <div className="space-y-6">
               {reviews.length > 0 ? (
                 reviews.map((review) => (
-                  <div key={review._id} className="border-b pb-4 last:border-none transition-all hover:bg-green-50 dark:hover:bg-gray-700 p-4 rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <p className="font-semibold text-green-700 dark:text-green-400">{review.name}</p>
-                      <div className="flex items-center">
-                        {Array.from({ length: Math.floor(review.rating) }).map((_, i) => (
-                          <StarIcon key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                        ))}
-                        {review.rating % 1 !== 0 && <StarIcon className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-50" />}
-                      </div>
-                    </div>
-                    <p className="mt-2 text-gray-700 dark:text-gray-300 font-serif">{review.review}</p>
-                  </div>
+                  <ReviewItem
+                    key={review._id}
+                    id={review._id}
+                    name={review.name}
+                    rating={review.rating}
+                    review={review.review}
+                    likes={review.likes || 0}
+                    isLoggedIn={isLoggedIn}
+                    bookId={params.bookId}
+                  />
                 ))
               ) : (
-                <p className="text-gray-500 dark:text-gray-400 font-serif">No reviews available. Be the first to review this book!</p>
+                <p className="text-gray-500 dark:text-gray-400 font-serif">
+                  No reviews available. Be the first to review this book!
+                </p>
               )}
             </div>
           </CardContent>
         </Card>
         {/* Scroll to Top Button */}
         <ScrollToTop />
+        <Toaster />
       </div>
-    );
+    )
   } catch (error) {
-    console.error("Error fetching book data:", error);
-    return notFound();
+    console.error("Error fetching book data:", error)
+    return notFound()
   }
 }
