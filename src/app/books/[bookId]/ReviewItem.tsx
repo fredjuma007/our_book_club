@@ -1,9 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { StarIcon, ThumbsUp } from "lucide-react"
+import { StarIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { likeReviewAction, unlikeReviewAction } from "@/app/actions"
 import { useToast } from "@/components/ui/use-toast"
 import { ReplySection } from "./reply-section"
 
@@ -29,62 +28,7 @@ export function ReviewItem({
   currentUserId,
 }: ReviewItemProps) {
   const [isExpanded, setIsExpanded] = useState(false)
-  const [likesCount, setLikesCount] = useState(likes)
-  const [isLiking, setIsLiking] = useState(false)
-  const [hasLiked, setHasLiked] = useState(false)
   const [showReplies, setShowReplies] = useState(false)
-  const { toast } = useToast()
-
-  // Super simple like toggle function
-  const handleLikeToggle = async () => {
-    if (!isLoggedIn) {
-      toast({
-        title: "Login Required",
-        description: "Please log in to like reviews",
-        variant: "destructive",
-      })
-      return
-    }
-
-    if (isLiking) return
-    setIsLiking(true)
-
-    try {
-      if (hasLiked) {
-        // Try to unlike
-        try {
-          const result = await unlikeReviewAction(id, bookId)
-          setLikesCount(result.likes)
-          setHasLiked(false)
-        } catch (error) {
-          console.error("Error unliking:", error)
-        }
-      } else {
-        // Try to like
-        try {
-          const result = await likeReviewAction(id, bookId)
-          setLikesCount(result.likes)
-          setHasLiked(true)
-        } catch (error) {
-          // If we get "already liked" error, just set hasLiked to true
-          if (error instanceof Error && error.message.includes("already liked")) {
-            setHasLiked(true)
-          } else {
-            throw error
-          }
-        }
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to update like status",
-        variant: "destructive",
-      })
-      console.error("Error toggling like:", error)
-    } finally {
-      setIsLiking(false)
-    }
-  }
 
   const paragraphs = review.split("\n")
   const isLongReview = paragraphs.length > 3 || review.length > 300
@@ -128,20 +72,7 @@ export function ReviewItem({
       </div>
 
       <div className="mt-3 flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            className={`p-1 rounded-full flex items-center justify-center ${hasLiked ? "text-green-600 dark:text-green-400" : "text-gray-500 dark:text-gray-400"} hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
-            onClick={handleLikeToggle}
-            disabled={isLiking}
-            title={hasLiked ? "Unlike this review" : "Like this review"}
-          >
-            <ThumbsUp className={`w-4 h-4 ${hasLiked ? "fill-green-600 dark:fill-green-400" : ""}`} />
-          </button>
-          <span className="text-sm text-gray-600 dark:text-gray-400">
-            {likesCount > 0 ? `${likesCount} ${likesCount === 1 ? "like" : "likes"}` : ""}
-          </span>
-        </div>
+        {/* Like button and count removed */}
         <Button
           variant="ghost"
           size="sm"
