@@ -39,19 +39,26 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  // Await params before using them
+  const paramsObj = await params
+
   return {
-    title: `Book Details - ${params.bookId}`,
+    title: `Book Details - ${paramsObj.bookId}`,
   }
 }
 
 export default async function Page({ params }: PageProps) {
+  // Await params before using them
+  const paramsObj = await params
+  const bookId = paramsObj.bookId
+
   const [client, member] = await Promise.all([getServerClient(), getMember()])
   const isLoggedIn = await client.auth.loggedIn()
 
   try {
     const [bookResponse, reviewsResponse] = await Promise.all([
-      client.items.getDataItem(params.bookId, { dataCollectionId: "Books" }),
-      client.items.queryDataItems({ dataCollectionId: "Reviews" }).eq("bookId", params.bookId).find(),
+      client.items.getDataItem(bookId, { dataCollectionId: "Books" }),
+      client.items.queryDataItems({ dataCollectionId: "Reviews" }).eq("bookId", bookId).find(),
     ])
 
     const book = bookResponse?.data as Book | undefined
@@ -74,9 +81,9 @@ export default async function Page({ params }: PageProps) {
               <Image
                 src={convertWixImageToUrl(book.image) || "/placeholder.svg"}
                 alt={book.title}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-lg"
+                width={1920}
+                height={1080}
+                className="rounded-lg object-cover w-full h-full"
               />
             </div>
           </div>
@@ -217,7 +224,7 @@ export default async function Page({ params }: PageProps) {
                     review={review.review}
                     likes={review.likes || 0}
                     isLoggedIn={isLoggedIn}
-                    bookId={params.bookId}
+                    bookId={bookId}
                     currentUserId={member?.id ?? undefined}
                   />
                 ))

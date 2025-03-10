@@ -348,7 +348,8 @@ export async function getRepliesAction(reviewId: string) {
       .eq("reviewId", reviewId)
       .find()
 
-    console.log("Replies response:", JSON.stringify(repliesResponse, null, 2))
+    // Only log in development if needed
+    // console.log("Replies response:", JSON.stringify(repliesResponse, null, 2))
 
     // Map the items with correct ID access
     return {
