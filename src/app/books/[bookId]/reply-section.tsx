@@ -133,7 +133,7 @@ export function ReplySection({ reviewId, bookId, isLoggedIn, currentUserId }: Re
         }}
       >
         <MessageCircle className="w-4 h-4 mr-1" />
-        Reply
+        Comment
       </Button>
 
       {isReplying && (
@@ -157,14 +157,14 @@ export function ReplySection({ reviewId, bookId, isLoggedIn, currentUserId }: Re
               Cancel
             </Button>
             <Button type="submit" variant="default" size="sm" className="bg-green-700 hover:bg-green-800 text-white">
-              Post Reply
+              Post Comment
             </Button>
           </div>
         </form>
       )}
 
       {isLoading ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400 italic">Loading replies...</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 italic">Loading comments...</p>
       ) : replies.length > 0 ? (
         replies.map((reply) => (
           <div key={reply._id} className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
@@ -180,7 +180,7 @@ export function ReplySection({ reviewId, bookId, isLoggedIn, currentUserId }: Re
                   onClick={() => handleDeleteReply(reply._id)}
                 >
                   <Trash2 className="w-4 h-4" />
-                  <span className="sr-only">Delete reply</span>
+                  <span className="sr-only">Delete Comment</span>
                 </Button>
               )}
             </div>
@@ -188,7 +188,7 @@ export function ReplySection({ reviewId, bookId, isLoggedIn, currentUserId }: Re
           </div>
         ))
       ) : (
-        <p className="text-sm text-gray-500 dark:text-gray-400 italic">No replies yet. Be the first to reply!</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 italic">No comments yet. Be the first to comment!</p>
       )}
     </div>
   )

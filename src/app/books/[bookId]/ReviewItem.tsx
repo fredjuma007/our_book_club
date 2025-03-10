@@ -22,7 +22,6 @@ export function ReviewItem({
   name,
   rating,
   review,
-  likes = 0,
   isLoggedIn,
   bookId,
   currentUserId,
@@ -79,7 +78,7 @@ export function ReviewItem({
           onClick={() => setShowReplies(!showReplies)}
           className="text-gray-600 dark:text-gray-400 hover:text-green-700 hover:bg-green-50 dark:hover:text-green-400 dark:hover:bg-gray-700"
         >
-          {showReplies ? "Hide Replies" : "Show Replies"}
+          {showReplies ? "Hide Comments" : "Show Comments"}
         </Button>
       </div>
 
