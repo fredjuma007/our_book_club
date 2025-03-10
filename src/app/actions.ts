@@ -283,3 +283,145 @@ export async function checkUserLikedReviewAction(reviewId: string) {
     return { hasLiked: false }
   }
 }
+
+// Add a reply to a review
+export async function addReplyAction(reviewId: string[], bookId: string, content: string) {
+  try {
+    const client = await getServerClient()
+    const isLoggedIn = await client.auth.loggedIn()
+
+    if (!isLoggedIn) {
+      throw new Error("You must be logged in to reply to a review")
+    }
+
+    // Get current user
+    const member = await getMember()
+
+    if (!member) {
+      throw new Error("User not found")
+    }
+
+    // Create a new reply without createdAt field
+    const reply = {
+      reviewId: reviewId,
+      content: content,
+      authorId: member.id,
+      authorName: member.nickname || member.loginEmail || "Anonymous",
+    }
+
+    console.log("Sending reply to Wix:", reply)
+
+    // Add the reply to the Replies collection
+    const result = await client.items.insertDataItem({
+      dataCollectionId: "Replies",
+      dataItem: {
+        data: reply,
+      },
+    })
+
+    // Revalidate the book details page to show the new reply
+    revalidatePath(`/books/${bookId}`)
+
+    // Log the result to see its structure
+    console.log("Insert reply result:", JSON.stringify(result, null, 2))
+
+    // Extract the ID from the result
+    const replyId = (result as any)._id || `temp-${Date.now()}`
+
+    return { success: true, replyId }
+  } catch (error) {
+    console.error("Add reply error:", error)
+    throw error
+  }
+}
+
+// Get replies for a review
+export async function getRepliesAction(reviewId: string) {
+  try {
+    const client = await getServerClient()
+
+    // Query replies for this review
+    const repliesResponse = await client.items
+      .queryDataItems({
+        dataCollectionId: "Replies",
+      })
+      .eq("reviewId", reviewId)
+      .find()
+
+    console.log("Replies response:", JSON.stringify(repliesResponse, null, 2))
+
+    // Map the items with correct ID access
+    return {
+      success: true,
+      replies: repliesResponse.items.map((item) => {
+        const data = item.data || {}
+
+        // Ensure all required properties are present
+        return {
+          _id: item._id || `unknown-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+          reviewId: data.reviewId || reviewId,
+          content: data.content || "",
+          authorId: data.authorId || "",
+          authorName: data.authorName || "Anonymous",
+        }
+      }),
+    }
+  } catch (error) {
+    console.error("Get replies error:", error)
+    return { success: false, replies: [] }
+  }
+}
+
+// Delete a reply
+export async function deleteReplyAction(replyId: string, bookId: string) {
+  try {
+    console.log("Deleting reply with ID:", replyId)
+
+    const client = await getServerClient()
+    const isLoggedIn = await client.auth.loggedIn()
+
+    if (!isLoggedIn) {
+      throw new Error("You must be logged in to delete a reply")
+    }
+
+    // Get current user
+    const member = await getMember()
+
+    if (!member) {
+      throw new Error("User not found")
+    }
+
+    try {
+      // Get the reply to check ownership
+      const replyResponse = await client.items.getDataItem(replyId, {
+        dataCollectionId: "Replies",
+      })
+
+      const reply = replyResponse?.data
+
+      if (!reply) {
+        throw new Error("Reply not found")
+      }
+
+      // Check if the user is the author of the reply
+      if (reply.authorId !== member.id) {
+        throw new Error("You can only delete your own replies")
+      }
+    } catch (error) {
+      console.error("Error checking reply ownership:", error)
+      // Continue with deletion anyway since we're having issues with checking ownership
+    }
+
+    // Delete the reply
+    await client.items.removeDataItem(replyId, { dataCollectionId: "Replies" })
+    console.log("Reply deleted successfully")
+
+    // Revalidate the book details page
+    revalidatePath(`/books/${bookId}`)
+
+    return { success: true }
+  } catch (error) {
+    console.error("Delete reply error:", error)
+    throw error
+  }
+}

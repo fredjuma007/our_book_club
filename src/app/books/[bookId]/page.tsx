@@ -218,6 +218,7 @@ export default async function Page({ params }: PageProps) {
                     likes={review.likes || 0}
                     isLoggedIn={isLoggedIn}
                     bookId={params.bookId}
+                    currentUserId={member?.id ?? undefined}
                   />
                 ))
               ) : (

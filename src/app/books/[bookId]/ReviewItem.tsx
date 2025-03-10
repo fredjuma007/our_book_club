@@ -5,6 +5,7 @@ import { StarIcon, ThumbsUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { likeReviewAction, unlikeReviewAction, checkUserLikedReviewAction } from "@/app/actions"
 import { useToast } from "@/components/ui/use-toast"
+import { ReplySection } from "./reply-section"
 
 interface ReviewItemProps {
   id: string
@@ -14,9 +15,19 @@ interface ReviewItemProps {
   likes?: number
   isLoggedIn: boolean
   bookId: string
+  currentUserId?: string
 }
 
-export function ReviewItem({ id, name, rating, review, likes = 0, isLoggedIn, bookId }: ReviewItemProps) {
+export function ReviewItem({
+  id,
+  name,
+  rating,
+  review,
+  likes = 0,
+  isLoggedIn,
+  bookId,
+  currentUserId,
+}: ReviewItemProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [likesCount, setLikesCount] = useState(likes)
   const [isLiking, setIsLiking] = useState(false)
@@ -46,10 +57,10 @@ export function ReviewItem({ id, name, rating, review, likes = 0, isLoggedIn, bo
 
   const paragraphs = review.split("\n")
 
-  // Show only first paragraph or first 300 characters, whichever comes first
-  const isLongReview = paragraphs.length > 1 || review.length > 300
+  // Show only first 3 paragraphs or first 300 characters, whichever comes first
+  const isLongReview = paragraphs.length > 3 || review.length > 300
 
-  const displayParagraphs = isExpanded ? paragraphs : paragraphs.length > 1 ? paragraphs.slice(0, 1) : paragraphs
+  const displayParagraphs = isExpanded ? paragraphs : paragraphs.length > 3 ? paragraphs.slice(0, 3) : paragraphs
 
   async function handleLikeToggle() {
     if (!isLoggedIn) {
@@ -137,21 +148,28 @@ export function ReviewItem({ id, name, rating, review, likes = 0, isLoggedIn, bo
         )}
       </div>
 
-      {/* Thumbs up section */}
-      <div className="mt-3 flex items-center gap-2">
-        <button
-          type="button"
-          className={`p-1 rounded-full flex items-center justify-center ${hasLiked ? "text-green-600 dark:text-green-400" : "text-gray-500 dark:text-gray-400"} hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
-          onClick={handleLikeToggle}
-          disabled={isLiking || isLoading}
-          title={hasLiked ? "Unlike this review" : "Like this review"}
-        >
-          <ThumbsUp className={`w-4 h-4 ${hasLiked ? "fill-green-600 dark:fill-green-400" : ""}`} />
-        </button>
-        <span className="text-sm text-gray-600 dark:text-gray-400">
-          {likesCount > 0 ? `${likesCount} ${likesCount === 1 ? "like" : "likes"}` : ""}
-        </span>
+      {/* Interaction section */}
+      <div className="mt-3 flex items-center gap-4">
+        {/* Thumbs up section */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className={`p-1 rounded-full flex items-center justify-center ${hasLiked ? "text-green-600 dark:text-green-400" : "text-gray-500 dark:text-gray-400"} hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
+            onClick={handleLikeToggle}
+            disabled={isLiking || isLoading}
+            title={hasLiked ? "Unlike this review" : "Like this review"}
+          >
+            <ThumbsUp className={`w-4 h-4 ${hasLiked ? "fill-green-600 dark:fill-green-400" : ""}`} />
+          </button>
+          <span className="text-sm text-gray-600 dark:text-gray-400">
+            {likesCount > 0 ? `${likesCount} ${likesCount === 1 ? "like" : "likes"}` : ""}
+          </span>
+        </div>
       </div>
+
+      {/* Reply section */}
+      <ReplySection reviewId={id} bookId={bookId} isLoggedIn={isLoggedIn} currentUserId={currentUserId} />
     </div>
   )
 }
+
