@@ -214,25 +214,24 @@ export default async function Page({ params }: PageProps) {
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
-              {reviews.length > 0 ? (
+                {reviews.length > 0 ? (
                 reviews.map((review) => (
                   <ReviewItem
-                    key={review._id}
-                    id={review._id}
-                    name={review.name}
-                    rating={review.rating}
-                    review={review.review}
-                    likes={review.likes || 0}
-                    isLoggedIn={isLoggedIn}
-                    bookId={bookId}
-                    currentUserId={member?.id ?? undefined}
+                  key={review._id}
+                  id={review._id}
+                  name={review.name}
+                  rating={review.rating}
+                  review={review.review}
+                  isLoggedIn={isLoggedIn}
+                  bookId={bookId}
+                  currentUserId={member?.id ?? undefined}
                   />
                 ))
-              ) : (
+                ) : (
                 <p className="text-gray-500 dark:text-gray-400 font-serif">
                   No reviews available. Be the first to review this book!
                 </p>
-              )}
+                )}
             </div>
           </CardContent>
         </Card>
