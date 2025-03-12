@@ -80,14 +80,16 @@ export async function updateReviewAction(
       dataCollectionId: "Reviews",
       dataItem: {
         data: {
-          // Wrap merged data inside 'data' property
           ...existingReview, // Preserve existing fields
           ...updatedData, // Merge new data
         },
       },
     })
 
+    // Revalidate all possible paths where reviews might be displayed
     revalidatePath("/reviews")
+    revalidatePath("/books")
+    revalidatePath("/books/[bookId]", "page")
   } catch (error) {
     console.error("Update review error:", error)
     throw error
@@ -104,183 +106,79 @@ export async function deleteReviewAction(reviewId: string) {
       throw new Error("Invalid review ID")
     }
 
+    // Get the review to find its bookId for revalidation
+    const review = await client.items.getDataItem(reviewId, { dataCollectionId: "Reviews" }).then((res) => res.data)
+
+    const bookId = review?.bookId
+
     // deleting an item
     await client.items.removeDataItem(reviewId, { dataCollectionId: "Reviews" })
 
+    // Revalidate all possible paths where reviews might be displayed
     revalidatePath("/reviews")
+    revalidatePath("/books")
+
+    if (bookId) {
+      revalidatePath(`/books/${bookId}`)
+    }
+
+    revalidatePath("/books/[bookId]", "page")
   } catch (error) {
     console.error("Delete review error:", error)
     throw error
   }
 }
 
-// Like a review
-export async function likeReviewAction(reviewId: string, bookId: string) {
+// Create a new server action for posting reviews
+export async function createReviewAction(formData: FormData) {
   try {
-    console.log("Like review action called for review:", reviewId, "book:", bookId)
     const client = await getServerClient()
-    const isLoggedIn = await client.auth.loggedIn()
-
-    if (!isLoggedIn) {
-      throw new Error("You must be logged in to like a review")
-    }
-
-    // Get the current review
-    const reviewResponse = await client.items.getDataItem(reviewId, {
-      dataCollectionId: "Reviews",
-    })
-
-    const existingReview = reviewResponse?.data
-
-    if (!existingReview) {
-      throw new Error("Review not found")
-    }
-
-    // Get current user
     const member = await getMember()
-    const userId = member?.id
 
-    if (!userId) {
-      throw new Error("User ID not found")
+    if (!member) {
+      throw new Error("You must be logged in to post a review")
     }
 
-    // Initialize or get the likedBy array
-    const likedBy = existingReview.likedBy || []
+    const bookId = formData.get("bookId") as string
+    const name = formData.get("name") as string
+    const rating = Number.parseFloat(formData.get("rating") as string)
+    const review = formData.get("review") as string
 
-    // Check if user already liked this review
-    if (likedBy.includes(userId)) {
-      throw new Error("You have already liked this review")
+    if (!bookId || !name || !rating ) {
+      throw new Error("Missing required fields")
     }
 
-    // Update likes count and add user to likedBy array
-    const currentLikes = existingReview.likes || 0
+    console.log("Creating review with member ID:", member.id)
 
-    // Update the review with new likes count
-    await client.items.updateDataItem(reviewId, {
+    // Insert the review with multiple user ID fields to ensure compatibility
+    const result = await client.items.insertDataItem({
       dataCollectionId: "Reviews",
       dataItem: {
         data: {
-          ...existingReview,
-          likes: currentLikes + 1,
-          likedBy: [...likedBy, userId],
+          bookId,
+          name,
+          rating,
+          review,
+          userId: member.id,
+          memberId: member.id,
+          authorId: member.id,
+          createdBy: member.id,
+          userEmail: member.loginEmail || "",
         },
       },
     })
 
-    // Revalidate the book details page to show updated likes
+    console.log("Review creation result:", result)
+
+    // Revalidate all paths
+    revalidatePath("/reviews")
+    revalidatePath("/books")
     revalidatePath(`/books/${bookId}`)
 
-    return { success: true, likes: currentLikes + 1, hasLiked: true }
+    return { success: true, reviewId: (result as any)._id }
   } catch (error) {
-    console.error("Like review error:", error)
-    throw error
-  }
-}
-
-// Unlike a review
-export async function unlikeReviewAction(reviewId: string, bookId: string) {
-  try {
-    console.log("Unlike review action called for review:", reviewId, "book:", bookId)
-    const client = await getServerClient()
-    const isLoggedIn = await client.auth.loggedIn()
-
-    if (!isLoggedIn) {
-      throw new Error("You must be logged in to unlike a review")
-    }
-
-    // Get the current review
-    const reviewResponse = await client.items.getDataItem(reviewId, {
-      dataCollectionId: "Reviews",
-    })
-
-    const existingReview = reviewResponse?.data
-
-    if (!existingReview) {
-      throw new Error("Review not found")
-    }
-
-    // Get current user
-    const member = await getMember()
-    const userId = member?.id
-
-    if (!userId) {
-      throw new Error("User ID not found")
-    }
-
-    // Initialize or get the likedBy array
-    const likedBy = existingReview.likedBy || []
-
-    // Check if user has liked this review
-    if (!likedBy.includes(userId)) {
-      throw new Error("You haven't liked this review yet")
-    }
-
-    // Update likes count and remove user from likedBy array
-    const currentLikes = existingReview.likes || 0
-
-    if (currentLikes <= 0) {
-      throw new Error("Like count cannot be negative")
-    }
-
-    // Update the review with new likes count
-    await client.items.updateDataItem(reviewId, {
-      dataCollectionId: "Reviews",
-      dataItem: {
-        data: {
-          ...existingReview,
-          likes: currentLikes - 1,
-          likedBy: likedBy.filter((id: string) => id !== userId),
-        },
-      },
-    })
-
-    // Revalidate the book details page to show updated likes
-    revalidatePath(`/books/${bookId}`)
-
-    return { success: true, likes: currentLikes - 1, hasLiked: false }
-  } catch (error) {
-    console.error("Unlike review error:", error)
-    throw error
-  }
-}
-
-// Check if user has liked a review
-export async function checkUserLikedReviewAction(reviewId: string) {
-  try {
-    const client = await getServerClient()
-    const isLoggedIn = await client.auth.loggedIn()
-
-    if (!isLoggedIn) {
-      return { hasLiked: false }
-    }
-
-    // Get the current review
-    const reviewResponse = await client.items.getDataItem(reviewId, {
-      dataCollectionId: "Reviews",
-    })
-
-    const existingReview = reviewResponse?.data
-
-    if (!existingReview) {
-      return { hasLiked: false }
-    }
-
-    // Get current user
-    const member = await getMember()
-    const userId = member?.id
-
-    if (!userId) {
-      return { hasLiked: false }
-    }
-
-    // Check if user has liked this review
-    const likedBy = existingReview.likedBy || []
-    const hasLiked = likedBy.includes(userId)
-
-    return { hasLiked }
-  } catch (error) {
-    console.error("Check user liked review error:", error)
-    return { hasLiked: false }
+    console.error("Create review error:", error)
+    return { success: false, error: (error as Error).message }
   }
 }
 
@@ -321,6 +219,8 @@ export async function addReplyAction(reviewId: string[], bookId: string, content
 
     // Revalidate the book details page to show the new reply
     revalidatePath(`/books/${bookId}`)
+    revalidatePath("/books/[bookId]", "page")
+    revalidatePath("/reviews")
 
     // Log the result to see its structure
     console.log("Insert reply result:", JSON.stringify(result, null, 2))
@@ -419,6 +319,8 @@ export async function deleteReplyAction(replyId: string, bookId: string) {
 
     // Revalidate the book details page
     revalidatePath(`/books/${bookId}`)
+    revalidatePath("/books/[bookId]", "page")
+    revalidatePath("/reviews")
 
     return { success: true }
   } catch (error) {
@@ -426,3 +328,4 @@ export async function deleteReplyAction(replyId: string, bookId: string) {
     throw error
   }
 }
+

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { StarIcon, BookOpen, Trash2, PenTool, X, Check } from 'lucide-react'
+import { StarIcon, BookOpen, Trash2, PenTool, X, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -10,18 +10,43 @@ import Link from "next/link"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import { deleteReviewAction, updateReviewAction } from "@/app/actions"
 
-// ... other imports remain the same ...
+// Define proper types for the review and book props
+interface Review {
+  _id: string
+  name?: string
+  rating?: number
+  review?: string
+  bookId?: string
+  _owner?: string
+  // Add any other properties that might be in your review object
+}
 
-export function ReviewCard({ review, book }: any) {
+interface Book {
+  _id?: string
+  title?: string
+  author?: string
+  image?: any
+  // Add any other properties that might be in your book object
+}
+
+interface ReviewCardProps {
+  review: Review
+  book?: Book
+}
+
+export function ReviewCard({ review, book }: ReviewCardProps) {
+  // Log the review object to debug
+  //console.log("Review in ReviewCard:", review)
+
   return (
     <div className="group">
       <div className="p-6 rounded-xl bg-[#fffaf0] dark:bg-gray-800 border border-green-700 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
         <div className="flex flex-col md:flex-row gap-6">
           {/* Book Image Section */}
           <div className="relative">
-            <Link 
-              href={book?._id ? `/books/${book._id}` : "#"} 
-              className={`block relative group/image ${!book?._id ? 'pointer-events-none' : ''}`}
+            <Link
+              href={book?._id ? `/books/${book._id}` : "#"}
+              className={`block relative group/image ${!book?._id ? "pointer-events-none" : ""}`}
             >
               {book?.image ? (
                 <Image
@@ -54,31 +79,35 @@ export function ReviewCard({ review, book }: any) {
   )
 }
 
-function ReviewContent({ review, book }: any) {
-    const [isEditing, setIsEditing] = useState(false)
-    const [editedReview, setEditedReview] = useState({
-      rating: review?.rating,
-      review: review?.review,
-      name: review?.name,
-      // Ensure we keep any other required fields
-      bookId: review?.bookId, // Important: Keep the book reference
-      _owner: review?._owner, // Keep the owner reference if needed
-    })
-  
-    const handleSave = async () => {
-      try {
-        await updateReviewAction(review?._id, {
-          rating: editedReview.rating,
-          review: editedReview.review,
-          name: editedReview.name,
-        })
-        setIsEditing(false)
-      } catch (error) {
-        console.error("Failed to update review:", error)
-        // Optionally add user feedback here
-        alert("Failed to update review. Please try again.")
+function ReviewContent({ review, book }: { review: Review; book?: Book }) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedReview, setEditedReview] = useState({
+    rating: review?.rating || 3,
+    review: review?.review || "",
+    name: review?.name || "",
+    // Ensure we keep any other required fields
+    bookId: review?.bookId, // Important: Keep the book reference
+    _owner: review?._owner, // Keep the owner reference if needed
+  })
+
+  const handleSave = async () => {
+    try {
+      if (!review._id) {
+        throw new Error("Review ID is missing")
       }
+
+      await updateReviewAction(review._id, {
+        rating: editedReview.rating,
+        review: editedReview.review,
+        name: editedReview.name,
+      })
+      setIsEditing(false)
+    } catch (error) {
+      console.error("Failed to update review:", error)
+      // Optionally add user feedback here
+      alert("Failed to update review. Please try again.")
     }
+  }
 
   if (isEditing) {
     return (
@@ -100,7 +129,7 @@ function ReviewContent({ review, book }: any) {
               max="5"
               step="0.5"
               value={editedReview.rating}
-              onChange={(e) => setEditedReview({ ...editedReview, rating: parseFloat(e.target.value) })}
+              onChange={(e) => setEditedReview({ ...editedReview, rating: Number.parseFloat(e.target.value) })}
               className="w-20 font-serif"
             />
             <StarIcon className="w-5 h-5 text-yellow-400" />
@@ -115,12 +144,7 @@ function ReviewContent({ review, book }: any) {
         />
 
         <div className="flex justify-end gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsEditing(false)}
-            className="font-serif group"
-          >
+          <Button variant="outline" size="sm" onClick={() => setIsEditing(false)} className="font-serif group">
             <X className="w-4 h-4 mr-2 transition-transform group-hover:scale-110" />
             Cancel
           </Button>
@@ -146,10 +170,10 @@ function ReviewContent({ review, book }: any) {
           <p className="text-gray-600 dark:text-gray-400 font-serif">{review?.name}</p>
         </div>
         <div className="flex gap-1">
-          {[...Array(Math.floor(review?.rating))].map((_, i) => (
+          {[...Array(Math.floor(review?.rating || 0))].map((_, i) => (
             <StarIcon key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
           ))}
-          {review?.rating % 1 !== 0 && (
+          {(review?.rating || 0) % 1 !== 0 && (
             <StarIcon key="half" className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-50" />
           )}
         </div>
@@ -169,7 +193,9 @@ function ReviewContent({ review, book }: any) {
         </Button>
         <form
           action={async () => {
-            await deleteReviewAction(review?._id);
+            if (review?._id) {
+              await deleteReviewAction(review._id)
+            }
           }}
         >
           <Button

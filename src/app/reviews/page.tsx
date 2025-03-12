@@ -1,11 +1,32 @@
 import { Button } from "@/components/ui/button"
 import { getMember, getServerClient } from "@/lib/wix"
-import { BookOpen, BookMarked, PenTool, Sparkles } from 'lucide-react'
+import { BookOpen, BookMarked, PenTool, Sparkles } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { ReviewCard } from "@/components/review-card"
 import { ScrollToTop } from "@/components/scroll-to-top"
+
+// Define proper types to match the ReviewCard component
+interface Review {
+  _id: string
+  name?: string
+  rating?: number
+  review?: string
+  bookId?: string
+  userId?: string
+}
+
+interface Book {
+  _id?: string
+  title?: string
+  author?: string
+  image?: any
+}
+
+// Force dynamic rendering and disable caching
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 export default async function ReviewsPage() {
   const member = await getMember()
@@ -15,37 +36,73 @@ export default async function ReviewsPage() {
   }
 
   const client = await getServerClient()
-  const reviews = await client.items
+
+  // Log the member ID to verify we're querying for the right user
+  //console.log(`[SERVER] Fetching reviews for member ID: ${member.id} at ${new Date().toISOString()}`)
+
+  // Get all reviews to examine their structure
+  const allReviewsResponse = await client.items
     .queryDataItems({
       dataCollectionId: "Reviews",
     })
-    .eq("_owner", member.id)
     .find()
-    .then((res) => res.items.map((item) => item.data))
+
+  // Log a sample of reviews to understand their structure
+  if (allReviewsResponse.items.length > 0) {
+    //console.log(`[SERVER] Sample review structure:`, JSON.stringify(allReviewsResponse.items[0], null, 2))
+  }
+
+  // Filter reviews on the server side based on the data structure
+  const userReviews = allReviewsResponse.items.filter((item) => {
+    // Check if the review belongs to the current user
+    // Look for userId in the data object
+    return item.data?.userId === member.id || item.data?.authorId === member.id || item.data?.memberId === member.id
+  })
+
+  //console.log(`[SERVER] Found ${userReviews.length} reviews for user ${member.id}`)
+
+  // Map the reviews properly, preserving the _id field and ensuring they match the Review type
+  const reviews = userReviews.map((item) => {
+    // Ensure we have both the _id and all data properties
+    return {
+      _id: item._id || "", // Provide a default empty string to satisfy the type
+      ...(item.data || {}),
+    } as Review // Explicitly cast to Review type
+  })
+
+  // Log the processed reviews
+  //console.log(`[SERVER] Processed ${reviews.length} reviews`)
 
   // Filter out reviews with missing bookIds and fetch book data
   const books = await Promise.all(
     reviews
-      .filter(review => review?.bookId) // Only process reviews with valid bookIds
+      .filter((review) => review?.bookId) // Only process reviews with valid bookIds
       .map(async (review) => {
         try {
-          const book = await client.items
-            .getDataItem(review?.bookId ?? "Unknown", { dataCollectionId: "Books" })
-            .then((res) => res.data)
+          const bookResponse = await client.items.getDataItem(review.bookId!, { dataCollectionId: "Books" })
+
+          // Ensure the book data matches the Book type
+          const book: Book = {
+            _id: bookResponse.data?._id || review.bookId,
+            title: bookResponse.data?.title || "Unknown Title",
+            author: bookResponse.data?.author,
+            image: bookResponse.data?.image,
+          }
+
           return { review, book }
         } catch (error) {
-          console.error(`Failed to fetch book for review ${review?._id}:`, error)
-          // Return the review with a placeholder book object
+          console.error(`Failed to fetch book for review ${review._id}:`, error)
+          // Return the review with a placeholder book object that matches the Book type
           return {
             review,
             book: {
-              _id: review?.bookId ?? "Unknown",
+              _id: review.bookId,
               title: "Book Not Found",
-              image: null
-            }
+              image: null,
+            } as Book,
           }
         }
-      })
+      }),
   )
 
   return (
@@ -92,7 +149,7 @@ export default async function ReviewsPage() {
               className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif relative overflow-hidden group"
             >
               <Link className="text-green-700 dark:text-white flex items-center gap-1" href="/club-events">
-              📅 <span>Events</span>
+                📅 <span>Events</span>
               </Link>
             </Button>
           </div>
@@ -104,6 +161,29 @@ export default async function ReviewsPage() {
 
       {/* Main Content */}
       <div className="max-w-screen-xl mx-auto px-4 lg:px-8 pb-16 relative">
+        
+        {/* Debug Information (only in development) */}
+        {/*{process.env.NODE_ENV === "development" && (
+          <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+            <h3 className="font-bold text-yellow-800">Debug Information</h3>
+            <p>Member ID: {member.id}</p>
+            <p>Total reviews in system: {allReviewsResponse.items.length}</p>
+            <p>Filtered user reviews: {userReviews.length}</p>
+            <p>Processed reviews: {reviews.length}</p>
+            <p>Books with reviews: {books.length}</p>*/}
+
+            {/* Display sample review data structure */}
+            {/*{allReviewsResponse.items.length > 0 && (
+              <div className="mt-2">
+                <p className="font-semibold">Sample review data fields:</p>
+                <pre className="text-xs bg-gray-100 p-2 rounded overflow-auto max-h-40">
+                  {JSON.stringify(Object.keys(allReviewsResponse.items[0].data || {}), null, 2)}
+                </pre>
+              </div>
+            )}
+          </div>
+        )}*/}
+
         {/* No Reviews Fallback */}
         {reviews.length === 0 && (
           <div className="flex flex-col items-center justify-center gap-6 p-12 rounded-xl bg-[#fffaf0] dark:bg-gray-800 border border-green-700 shadow-lg">
@@ -132,10 +212,10 @@ export default async function ReviewsPage() {
         {/* Reviews List */}
         <div className="space-y-6">
           {books.map(({ review, book }) => (
-            <ReviewCard key={review?._id} review={review} book={book} />
+            <ReviewCard key={review._id} review={review} book={book} />
           ))}
           {/* Scroll to Top Button */}
-                  <ScrollToTop />
+          <ScrollToTop />
         </div>
       </div>
     </div>

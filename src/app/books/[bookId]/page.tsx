@@ -13,6 +13,10 @@ import { ScrollToTop } from "@/components/scroll-to-top"
 import { ReviewItem } from "./ReviewItem"
 import { Toaster } from "@/components/ui/toaster"
 
+// This forces the page to be dynamically rendered and not cached
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 interface Review {
   _id: string
   name: string
@@ -56,13 +60,43 @@ export default async function Page({ params }: PageProps) {
   const isLoggedIn = await client.auth.loggedIn()
 
   try {
+    // Add a cache-busting timestamp to ensure fresh data
+    const timestamp = Date.now()
+
     const [bookResponse, reviewsResponse] = await Promise.all([
-      client.items.getDataItem(bookId, { dataCollectionId: "Books" }),
-      client.items.queryDataItems({ dataCollectionId: "Reviews" }).eq("bookId", bookId).find(),
+      client.items.getDataItem(bookId, {
+        dataCollectionId: "Books",
+      }),
+      client.items
+        .queryDataItems({
+          dataCollectionId: "Reviews",
+        })
+        .eq("bookId", bookId)
+        .find(),
     ])
 
+    /*console.log(
+      `[SERVER] Fetched reviews at ${new Date().toISOString()}:`,
+      JSON.stringify(
+        reviewsResponse.items.map((item) => ({ id: item._id, data: item.data })),
+        null,
+        2,
+      ),
+    )*/
+
     const book = bookResponse?.data as Book | undefined
-    const reviews = reviewsResponse.items.map((item) => item.data as Review)
+
+    // Extract reviews with proper mapping
+    const reviews = reviewsResponse.items.map((item) => {
+      const reviewData = item.data || {}
+      return {
+        _id: item._id,
+        name: reviewData.name || "Anonymous",
+        rating: reviewData.rating || 3,
+        review: reviewData.review || "",
+        bookId: reviewData.bookId || bookId,
+      } as Review
+    })
 
     // Calculate average rating
     const averageRating =
@@ -210,28 +244,30 @@ export default async function Page({ params }: PageProps) {
         {/* Reviews Section */}
         <Card className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">Reviews</CardTitle>
+            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
+              Reviews ({reviews.length})
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
-                {reviews.length > 0 ? (
+              {reviews.length > 0 ? (
                 reviews.map((review) => (
                   <ReviewItem
-                  key={review._id}
-                  id={review._id}
-                  name={review.name}
-                  rating={review.rating}
-                  review={review.review}
-                  isLoggedIn={isLoggedIn}
-                  bookId={bookId}
-                  currentUserId={member?.id ?? undefined}
+                    key={review._id}
+                    id={review._id}
+                    name={review.name}
+                    rating={review.rating}
+                    review={review.review}
+                    isLoggedIn={isLoggedIn}
+                    bookId={bookId}
+                    currentUserId={member?.id ?? undefined}
                   />
                 ))
-                ) : (
+              ) : (
                 <p className="text-gray-500 dark:text-gray-400 font-serif">
                   No reviews available. Be the first to review this book!
                 </p>
-                )}
+              )}
             </div>
           </CardContent>
         </Card>
