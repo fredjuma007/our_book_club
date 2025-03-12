@@ -133,7 +133,7 @@ export function ReplySection({ reviewId, bookId, isLoggedIn, currentUserId }: Re
         }}
       >
         <MessageCircle className="w-4 h-4 mr-1" />
-        Comment
+        Comment on this review
       </Button>
 
       {isReplying && (

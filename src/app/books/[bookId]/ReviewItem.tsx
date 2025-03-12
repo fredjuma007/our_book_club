@@ -71,7 +71,6 @@ export function ReviewItem({
       </div>
 
       <div className="mt-3 flex items-center gap-4">
-        {/* Like button and count removed */}
         <Button
           variant="ghost"
           size="sm"

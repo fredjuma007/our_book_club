@@ -49,11 +49,11 @@ export function PostReviewForm({ bookId, userName }: { bookId: string; userName:
         router.refresh()
 
         // Revalidate the reviews page
-        try {
+        /*try {
           await fetch("/api/revalidate-reviews", { method: "POST" })
         } catch (error) {
           console.error("Error revalidating reviews:", error)
-        }
+        }*/
 
         // Add a small delay and then force a hard refresh if needed
         setTimeout(() => {
