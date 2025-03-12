@@ -52,12 +52,10 @@ export default function Home() {
                 </span>
               </h2>
               <p className="text-xl text-gray-700 dark:text-gray-300 max-w-lg">
-                  Discover, share, and review your favorite{" "}
-                  <span className="text-green-600 dark:text-green-400">
-                  books
-                  </span> with a community of <span className="text-green-600 dark:text-green-400">book lovers</span>
+                Discover, share, and review your favorite{" "}
+                <span className="text-green-600 dark:text-green-400">books</span> with a community of{" "}
+                <span className="text-green-600 dark:text-green-400">book lovers</span>
               </p>
-
             </div>
 
             <div className="flex flex-wrap gap-4">
@@ -83,28 +81,28 @@ export default function Home() {
                   View Gallery
                 </Link>
               </Button>
-                <Button
+              <Button
                 asChild
                 size="lg"
                 variant="outline"
                 className="border-green-600 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700 gap-2 group"
-                >
+              >
                 <Link href="/club-events">
                   <Calendar className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
                   Check Events
                 </Link>
-                </Button>
-                <Button
+              </Button>
+              <Button
                 asChild
                 size="lg"
                 variant="outline"
                 className="border-green-600 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700 gap-2 group"
-                >
+              >
                 <Link href="/about-us">
                   <Users className="w-5 h-5" />
                   About
                 </Link>
-                </Button>
+              </Button>
             </div>
 
             {/* Stats */}
@@ -148,12 +146,8 @@ export default function Home() {
                   </Link>
                   <div className="flex-1 space-y-4">
                     <div>
-                      <h3 className="text-2xl font-bold text-green-800 dark:text-green-400">
-                        Sometimes I Lie
-                        </h3>
-                      <p className="text-gray-600 dark:text-gray-300">
-                        by Alice Feeney
-                        </p>
+                      <h3 className="text-2xl font-bold text-green-800 dark:text-green-400">Sometimes I Lie</h3>
+                      <p className="text-gray-600 dark:text-gray-300">by Alice Feeney</p>
                     </div>
                     <div className="relative">
                       <Quote className="absolute -left-6 -top-2 w-4 h-4 text-green-400/30" />
@@ -173,25 +167,33 @@ export default function Home() {
                     </Button>
                     {showAbout && (
                       <p className="text-gray-700 dark:text-gray-300 mt-4">
-                        Amber wakes up in a hospital. She can’t move. She can’t speak. She can’t open her eyes. 
-                        She can hear everyone around her, but they have no idea. 
-                        Amber doesn’t remember what happened, but she has a suspicion her husband had something to do with it. 
-                        Alternating between her paralyzed present, the week before her accident, and a series of childhood diaries from twenty years ago, this brilliant psychological thriller Is something really a lie if you believe it's the truth?
+                        Amber wakes up in a hospital. She can't move. She can't speak. She can't open her eyes. She can
+                        hear everyone around her, but they have no idea. Amber doesn't remember what happened, but she
+                        has a suspicion her husband had something to do with it. Alternating between her paralyzed
+                        present, the week before her accident, and a series of childhood diaries from twenty years ago,
+                        this brilliant psychological thriller Is something really a lie if you believe it's the truth?
                       </p>
                     )}
                   </div>
                 </div>
               </div>
-              <div className="bg-green-50 dark:bg-gray-700/50 p-4 flex justify-between items-center">
+              <div className="bg-green-50 dark:bg-gray-700/50 p-4 flex flex-wrap gap-2 justify-between items-center">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-green-600" />
                   <span className="text-sm text-gray-600 dark:text-gray-300">29th March</span>
                 </div>
-                <Button asChild size="sm" variant="outline" className="border-green-500">
-                  <Link href="https://meet.google.com/vhv-hfwz-avi" target="_blank" rel="noopener noreferrer">
-                    Join Discussion
-                  </Link>
-                </Button>
+                <div className="flex gap-2">
+                  <Button asChild size="sm" className="bg-green-600 hover:bg-green-700">
+                    <Link href="/downloads/sometimes-i-lie-(Reading-Circle_BOM).epub" download>
+                      Download (ePub)  
+                    </Link>
+                  </Button>
+                  <Button asChild size="sm" variant="outline" className="border-green-500">
+                    <Link href="https://meet.google.com/vhv-hfwz-avi" target="_blank" rel="noopener noreferrer">
+                      Join Discussion
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -204,7 +206,7 @@ export default function Home() {
                   className="relative aspect-square rounded-lg overflow-hidden group"
                 >
                   <Image
-                    src={`/gallery/${filename}`} 
+                    src={`/gallery/${filename}`}
                     alt={`Gallery image ${index + 1}`}
                     width={300}
                     height={300}
