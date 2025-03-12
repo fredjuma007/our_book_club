@@ -28,7 +28,7 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
           book?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           book?.author?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           book?.genre?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          book?.recommender?.toLowerCase().includes(searchQuery.toLowerCase())
+          book?.recommender?.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : books
 
@@ -53,8 +53,8 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
               <Sparkles className="absolute -right-8 -top-8 w-6 h-6 text-green-700/40" />
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
-              Explore the books we have read and currently reading. 
-              Drop a review and share your ratings with the community!
+              Explore the books we have read and currently reading. Drop a review and share your ratings with the
+              community!
             </p>
           </div>
         </div>
@@ -87,6 +87,18 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
               <Search className="w-4 h-4 mr-2" />
               Search
             </Button>
+            {searchQuery && (
+              <Button
+                variant="outline"
+                className="text-green-700 border-green-700 hover:bg-green-200 dark:hover:bg-green-900 dark:text-white"
+                asChild
+              >
+                <Link href="/books">
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  All Books
+                </Link>
+              </Button>
+            )}
           </form>
           <div className="flex gap-2">
             <Button variant="outline" className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white">
@@ -129,10 +141,7 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
               </CardHeader>
               <CardContent className="flex flex-col items-center pt-2">
                 {book?.image ? (
-                  <Link
-                    href={`/books/${book?._id}`}
-                    className="relative w-full h-64 flex items-center justify-center"
-                  >
+                  <Link href={`/books/${book?._id}`} className="relative w-full h-64 flex items-center justify-center">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 rounded-lg" />
                     <Image
                       width={150}
@@ -166,4 +175,3 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
     </div>
   )
 }
-
