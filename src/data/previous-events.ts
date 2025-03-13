@@ -38,7 +38,7 @@ export const previousEvents: Event[] = [
     location: "The Piano Building, Westlands",
     moderators: ["Brenda Frenjo"],
     description: "A physical book club meeting discussing the book of the month",
-    imageUrl: "/gallery/Sinners.jpg",
+    imageUrl: "/gallery/sinners.jpg",
     link: "",
     eventDate: "July 27, 2024",
     bookTitle: "Sinners",
