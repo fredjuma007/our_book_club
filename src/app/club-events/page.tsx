@@ -1,83 +1,29 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
-import { Calendar } from "@/components/ui/calendar";
-import React from "react";
-import { motion } from "framer-motion";
-import { 
-  BookOpen, 
-  MapPin,
-  Clock,
-  ImagePlay,
-  BookMarked,
-  CalendarCheck,
-  Sparkles,
-  Info, 
-} from 'lucide-react';
-import Footer from "@/components/footer";
+import { Button } from "@/components/ui/button"
+import Image from "next/image"
+import Link from "next/link"
+import { Calendar } from "@/components/ui/calendar"
+import React from "react"
+import { motion } from "framer-motion"
+import { BookOpen, MapPin, Clock, BookMarked, CalendarCheck, Sparkles, Info } from "lucide-react"
+import Footer from "@/components/footer"
+import { events } from "@/data/events"
 
 export default function EventsPage() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
-  const [activeSection, setActiveSection] = React.useState<string>("upcoming");
-
-  // Events data
-  const events = [
-    {
-      id: 1,
-      title: "Book Club Meeting",
-      date: new Date(2025, 2, 29),
-      time: "7:00 PM - 9:00 PM",
-      location: "Virtual",
-      moderators: ["Christine Karori", "Immanuel Njogu"],
-      description: "Join us for our monthly book club meeting to discuss the latest read!",
-      imageUrl: "/sometimes i lie.jpg",
-      link: "",
-      eventDate: "March 29, 2025",
-      bookTitle: "Sometimes I Lie",
-      type: "Book Discussion"
-    },
-    {
-      id: 2,
-      title: "Children's home visit",
-      date: new Date(2025, 3, 19),
-      time: "TBA",
-      location: "Children's Home (TBA)",
-      moderators: ["Club Member", "Club Member"],
-      description: "Join us for a visit to the children's home to spend time with the kids and donate stuff!",
-      imageUrl: "/childrens-home.webp",
-      link: "",
-      eventDate: "May 31, 2025",
-      bookTitle: "TBA",
-      type: "Community Service"
-    },
-    {
-      id: 3,
-      title: "Book Club Meeting",
-      date: new Date(2025, 4, 31),
-      time: "7:00 PM - 9:00 PM",
-      location: "Virtual",
-      moderators: ["Club Member", "Club Member"],
-      description: "Join us for our monthly book club meeting to discuss the latest read!",
-      imageUrl: "/gallery/Esther.jpg",
-      link: "",
-      eventDate: "May 31, 2025",
-      bookTitle: "TBA",
-      type: "Book Discussion"
-    },
-  ];
+  const [date, setDate] = React.useState<Date | undefined>(new Date())
+  const [activeSection, setActiveSection] = React.useState<string>("upcoming")
 
   // Create a set of event dates for easy comparison
-  const eventDates = new Set(events.map((event) => event.date.toDateString()));
+  const eventDates = new Set(events.map((event) => event.date.toDateString()))
 
   const modifiers = {
     highlighted: (day: Date) => eventDates.has(day.toDateString()),
-  };
+  }
 
   const modifiersClassNames = {
     highlighted: "bg-green-700 text-white rounded-full",
-  };
+  }
 
   return (
     <div className="min-h-screen bg-[#f5f0e1] dark:bg-gray-900 selection:bg-green-700/30">
@@ -85,7 +31,7 @@ export default function EventsPage() {
       <div className="relative overflow-hidden">
         {/* Animated Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20" />
-        
+
         <div className="max-w-screen-xl mx-auto py-16 px-4 lg:px-8 relative">
           {/* Floating Books */}
           <motion.div
@@ -213,15 +159,17 @@ export default function EventsPage() {
                           <h3 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif group-hover:text-green-700 dark:group-hover:text-green-400 transition-colors">
                             {event.title}
                           </h3>
-                          <Button
-                            variant="secondary"
-                            className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
-                          >
-                            <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
-                            <Link href="https://meet.google.com/vhv-hfwz-avi" target="_blank" rel="noopener noreferrer">
-                              Join Discussion
-                            </Link>
-                          </Button>
+                          {event.link && (
+                            <Button
+                              variant="secondary"
+                              className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
+                            >
+                              <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                              <Link href={event.link} target="_blank" rel="noopener noreferrer">
+                                Join Discussion
+                              </Link>
+                            </Button>
+                          )}
                         </div>
 
                         {/* Event Details */}
@@ -235,18 +183,16 @@ export default function EventsPage() {
                             {event.location}
                           </div>
                           <div className="flex items-center gap-2 group/item">
-                          <CalendarCheck className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
+                            <CalendarCheck className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
                             {event.eventDate}
-                          </div> 
+                          </div>
                           <div className="flex items-center gap-2 group/item">
                             <BookOpen className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
                             {event.bookTitle}
                           </div>
                         </div>
 
-                        <p className="text-gray-600 dark:text-gray-300 font-serif">
-                          {event.description}
-                        </p>
+                        <p className="text-gray-600 dark:text-gray-300 font-serif">{event.description}</p>
 
                         {/* Moderators */}
                         <div className="flex items-center gap-4">
@@ -306,9 +252,7 @@ export default function EventsPage() {
             transition={{ duration: 0.4 }}
             className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700 p-6 md:p-8"
           >
-            <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6">
-              Event Calendar
-            </h2>
+            <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6">Event Calendar</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[0, 1, 2].map((monthOffset) => (
                 <motion.div
@@ -319,7 +263,10 @@ export default function EventsPage() {
                   className="bg-white dark:bg-gray-900 rounded-lg p-4 border border-green-700/30 hover:border-green-700 transition-colors duration-300"
                 >
                   <h3 className="text-center mb-4 text-green-700 dark:text-green-400 font-serif">
-                    {new Date(new Date().setMonth(new Date().getMonth() + monthOffset)).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                    {new Date(new Date().setMonth(new Date().getMonth() + monthOffset)).toLocaleString("default", {
+                      month: "long",
+                      year: "numeric",
+                    })}
                   </h3>
                   <Calendar
                     mode="single"
@@ -350,5 +297,6 @@ export default function EventsPage() {
         <Footer />
       </div>
     </div>
-  );
+  )
 }
+

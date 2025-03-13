@@ -4,218 +4,560 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { BookOpen, Calendar, ImagePlay, Quote, Sparkles, Users } from "lucide-react"
-import React from "react"
+import {
+  BookOpen,
+  Calendar,
+  ImagePlay,
+  Quote,
+  Sparkles,
+  Users,
+  ChevronDown,
+  Star,
+  BookMarked,
+  MapPin,
+  Clock,
+} from "lucide-react"
+import React, { useEffect, useState } from "react"
 import Footer from "@/components/footer"
+import { events } from "@/data/events"
 
 export default function Home() {
   const [showAbout, setShowAbout] = React.useState(false)
+  const [activeSection, setActiveSection] = useState("hero")
+
+  // Handle scroll and set active section
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ["hero", "features", "events", "testimonials"]
+      const scrollPosition = window.scrollY + 200
+
+      for (const section of sections) {
+        const element = document.getElementById(section)
+        if (element) {
+          const offsetTop = element.offsetTop
+          const offsetHeight = element.offsetHeight
+
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(section)
+            break
+          }
+        }
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId)
+    if (section) {
+      window.scrollTo({
+        top: section.offsetTop - 80,
+        behavior: "smooth",
+      })
+    }
+  }
+
   return (
-    <div className="relative min-h-screen bg-[url('/picnic.jpg')] bg-cover bg-fixed bg-center bg-no-repeat text-green-600 dark:text-green-500 overflow-hidden">
+    <div className="relative bg-[url('/picnic.jpg')] bg-cover bg-fixed bg-center bg-no-repeat text-green-600 dark:text-green-500 overflow-x-hidden">
       {/* Animated particles */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20 animate-fade" />
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20 animate-fade" />
 
       {/* Main overlay */}
-      <div className="absolute inset-0 bg-white/60 dark:bg-black/70 backdrop-blur-sm" />
+      <div className="fixed inset-0 bg-white/60 dark:bg-black/70 backdrop-blur-sm" />
 
-      <div className="relative min-h-screen flex flex-col">
-        {/* Header Section */}
-        <header className="pt-8 px-4 md:px-8">
-          <motion.div className="max-w-7xl mx-auto flex items-center justify-center gap-4">
-            <div className="relative group">
-              <Image
-                src="/logo.jpeg"
-                alt="Reading Circle Logo"
-                width={80}
-                height={80}
-                className="rounded-full border-2 border-green-500 shadow-lg transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute -inset-2 rounded-full bg-green-500/20 scale-0 group-hover:scale-100 transition-transform duration-300" />
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif">
-              The Reading Circle
-            </h1>
-          </motion.div>
-        </header>
+      {/* Navigation dots */}
+      <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col gap-4">
+        {["hero", "features", "events", "testimonials"].map((section) => (
+          <button
+            key={section}
+            onClick={() => scrollToSection(section)}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              activeSection === section ? "bg-green-600 scale-125" : "bg-green-300 hover:bg-green-400"
+            }`}
+            aria-label={`Scroll to ${section} section`}
+          />
+        ))}
+      </div>
 
-        {/* Main Content */}
-        <main className="flex-grow grid md:grid-cols-2 gap-8 px-4 md:px-8 py-12">
-          {/* Left Column */}
-          <motion.div className="flex flex-col justify-center gap-6">
-            <div className="space-y-4">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-green-800 dark:text-green-400 font-serif leading-tight">
-                Where Books Come
-                <br />
-                <span className="block text-green-600 relative">
-                  To Life
-                  <Sparkles className="absolute -right-8 -top-4 w-6 h-6 text-green-500/40 animate-spin-slow" />
-                </span>
-              </h2>
-              <p className="text-xl text-gray-700 dark:text-gray-300 max-w-lg">
+      <div className="relative">
+        {/* Hero Section */}
+        <section id="hero" className="min-h-screen py-8">
+          {/* Header Section */}
+          <header className="px-4 md:px-8 mb-12">
+            <motion.div className="max-w-7xl mx-auto flex items-center justify-center gap-4">
+              <div className="relative group">
+                <Image
+                  src="/logo.jpeg"
+                  alt="Reading Circle Logo"
+                  width={80}
+                  height={80}
+                  className="rounded-full border-2 border-green-500 shadow-lg transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute -inset-2 rounded-full bg-green-500/20 scale-0 group-hover:scale-100 transition-transform duration-300" />
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif">
+                The Reading Circle
+              </h1>
+            </motion.div>
+          </header>
+
+          <div className="container mx-auto grid md:grid-cols-2 gap-8 px-4 md:px-8">
+            {/* Left Column */}
+            <motion.div
+              className="flex flex-col justify-center gap-6"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="space-y-4">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-green-800 dark:text-green-400 font-serif leading-tight">
+                  Where Books Come
+                  <br />
+                  <span className="block text-green-600 relative">
+                    To Life
+                    <Sparkles className="absolute -right-8 -top-4 w-6 h-6 text-green-500/40 animate-spin-slow" />
+                  </span>
+                </h2>
+                <p className="text-xl text-gray-700 dark:text-gray-300 max-w-lg">
                   Discover, share, and review your favorite{" "}
-                  <span className="text-green-600 dark:text-green-400">
-                  books
-                  </span> with a community of <span className="text-green-600 dark:text-green-400">book lovers</span>
-              </p>
+                  <span className="text-green-600 dark:text-green-400">books</span> with a community of{" "}
+                  <span className="text-green-600 dark:text-green-400">book lovers</span>
+                </p>
+              </div>
 
-            </div>
-
-            <div className="flex flex-wrap gap-4">
-              <Button
-                asChild
-                size="lg"
-                className="bg-green-600 hover:bg-green-700 text-white gap-2 group relative overflow-hidden"
-              >
-                <Link href="/books">
-                  <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
-                  <BookOpen className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
-                  Explore Books
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                className="bg-green-600 hover:bg-green-700 text-white gap-2 group relative overflow-hidden"
-              >
-                <Link href="/gallery">
-                  <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
-                  <ImagePlay className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
-                  View Gallery
-                </Link>
-              </Button>
+              <div className="flex flex-wrap gap-4">
                 <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-green-600 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700 gap-2 group"
+                  asChild
+                  size="lg"
+                  className="bg-green-600 hover:bg-green-700 text-white gap-2 group relative overflow-hidden"
                 >
-                <Link href="/club-events">
-                  <Calendar className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-                  Check Events
-                </Link>
-                </Button>
-                <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-green-600 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700 gap-2 group"
-                >
-                <Link href="/about-us">
-                  <Users className="w-5 h-5" />
-                  About
-                </Link>
-                </Button>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mt-8">
-              {[
-                { label: "Members", value: "100+", icon: Users },
-                { label: "Books Read", value: "13", icon: BookOpen },
-                { label: "Events", value: "3+", icon: Calendar },
-              ].map((stat) => (
-                <div
-                  key={stat.label}
-                  className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 rounded-lg text-center group hover:bg-green-50 dark:hover:bg-gray-700/80 transition-all duration-300 hover:-translate-y-1"
-                >
-                  <stat.icon className="w-6 h-6 mx-auto mb-2 text-green-600 transition-transform duration-300 group-hover:scale-110" />
-                  <div className="font-bold text-xl text-green-800 dark:text-green-400">{stat.value}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-300">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Right Column */}
-          <motion.div className="flex flex-col justify-center gap-6">
-            {/* Book of the Month Card */}
-            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-green-200 dark:border-green-900 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-              <div className="p-6">
-                <div className="flex items-start gap-6">
-                  <Link
-                    href="https://readingcircle.vercel.app/books/e113461c-75f3-42f8-a2db-765142c9ce05"
-                    className="relative w-32 h-48 flex-shrink-0"
-                  >
-                    <Image
-                      src="/sometimes i lie.jpg"
-                      alt="Sometimes I Lie Book Cover"
-                      fill
-                      className="rounded-lg shadow-lg object-cover transition-all duration-300 group-hover:scale-105 group-hover:rotate-2"
-                    />
-                    <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                      Book of the Month
-                    </div>
+                  <Link href="/books">
+                    <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
+                    <BookOpen className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
+                    Explore Books
                   </Link>
-                  <div className="flex-1 space-y-4">
-                    <div>
-                      <h3 className="text-2xl font-bold text-green-800 dark:text-green-400">
-                        Sometimes I Lie
-                        </h3>
-                      <p className="text-gray-600 dark:text-gray-300">
-                        by Alice Feeney
-                        </p>
-                    </div>
-                    <div className="relative">
-                      <Quote className="absolute -left-6 -top-2 w-4 h-4 text-green-400/30" />
-                      <p className="text-lg text-gray-700 dark:text-gray-300 italic pl-6">
-                        "People are not mirrors—they don't see you how you see yourself."
-                      </p>
-                    </div>
-                    <Button
-                      variant="link"
-                      className="text-green-600 hover:text-green-700 p-0 group"
-                      onClick={() => setShowAbout(!showAbout)}
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-green-600 hover:bg-green-700 text-white gap-2 group relative overflow-hidden"
+                >
+                  <Link href="/gallery">
+                    <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
+                    <ImagePlay className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
+                    View Gallery
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="border-green-600 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700 gap-2 group"
+                >
+                  <Link href="/club-events">
+                    <Calendar className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+                    Check Events
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="border-green-600 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700 gap-2 group"
+                >
+                  <Link href="/about-us">
+                    <Users className="w-5 h-5" />
+                    About
+                  </Link>
+                </Button>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-4 mt-8">
+                {[
+                  { label: "Members", value: "100+", icon: Users },
+                  { label: "Books Read", value: "13", icon: BookOpen },
+                  { label: "Events", value: "3+", icon: Calendar },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-4 rounded-lg text-center group hover:bg-green-50 dark:hover:bg-gray-700/80 transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <stat.icon className="w-6 h-6 mx-auto mb-2 text-green-600 transition-transform duration-300 group-hover:scale-110" />
+                    <div className="font-bold text-xl text-green-800 dark:text-green-400">{stat.value}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+
+              <motion.div
+                className="mt-12 flex justify-center md:justify-start"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2, duration: 0.8 }}
+              >
+                <button
+                  onClick={() => scrollToSection("features")}
+                  className="text-green-600 dark:text-green-400 flex flex-col items-center gap-2 group"
+                >
+                  <span className="text-sm font-medium">Scroll to discover more</span>
+                  <ChevronDown className="w-6 h-6 animate-bounce" />
+                </button>
+              </motion.div>
+            </motion.div>
+
+            {/* Right Column */}
+            <motion.div
+              className="flex flex-col justify-center gap-6"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              {/* Book of the Month Card */}
+              <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-green-200 dark:border-green-900 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                <div className="p-6">
+                  <div className="flex items-start gap-6">
+                    <Link
+                      href="https://readingcircle.vercel.app/books/e113461c-75f3-42f8-a2db-765142c9ce05"
+                      className="relative w-32 h-48 flex-shrink-0"
                     >
-                      About Book{""}
-                      <span className="transition-transform duration-300 group-hover:translate-x-1 inline-block">
-                        →
-                      </span>
-                    </Button>
-                    {showAbout && (
-                      <p className="text-gray-700 dark:text-gray-300 mt-4">
-                        Amber wakes up in a hospital. She can’t move. She can’t speak. She can’t open her eyes. 
-                        She can hear everyone around her, but they have no idea. 
-                        Amber doesn’t remember what happened, but she has a suspicion her husband had something to do with it. 
-                        Alternating between her paralyzed present, the week before her accident, and a series of childhood diaries from twenty years ago, this brilliant psychological thriller Is something really a lie if you believe it's the truth?
-                      </p>
-                    )}
+                      <Image
+                        src="/sometimes i lie.jpg"
+                        alt="Sometimes I Lie Book Cover"
+                        fill
+                        className="rounded-lg shadow-lg object-cover transition-all duration-300 group-hover:scale-105 group-hover:rotate-2"
+                      />
+                      <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                        Book of the Month
+                      </div>
+                    </Link>
+                    <div className="flex-1 space-y-4">
+                      <div>
+                        <h3 className="text-2xl font-bold text-green-800 dark:text-green-400">Sometimes I Lie</h3>
+                        <p className="text-gray-600 dark:text-gray-300">by Alice Feeney</p>
+                      </div>
+                      <div className="relative">
+                        <Quote className="absolute -left-6 -top-2 w-4 h-4 text-green-400/30" />
+                        <p className="text-lg text-gray-700 dark:text-gray-300 italic pl-6">
+                          "People are not mirrors—they don't see you how you see yourself."
+                        </p>
+                      </div>
+                      <Button
+                        variant="link"
+                        className="text-green-600 hover:text-green-700 p-0 group"
+                        onClick={() => setShowAbout(!showAbout)}
+                      >
+                        About Book{""}
+                        <span className="transition-transform duration-300 group-hover:translate-x-1 inline-block">
+                          →
+                        </span>
+                      </Button>
+                      {showAbout && (
+                        <p className="text-gray-700 dark:text-gray-300 mt-4">
+                          Amber wakes up in a hospital. She can't move. She can't speak. She can't open her eyes. She
+                          can hear everyone around her, but they have no idea. Amber doesn't remember what happened, but
+                          she has a suspicion her husband had something to do with it. Alternating between her paralyzed
+                          present, the week before her accident, and a series of childhood diaries from twenty years
+                          ago, this brilliant psychological thriller Is something really a lie if you believe it's the
+                          truth?
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="bg-green-50 dark:bg-gray-700/50 p-4 flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-gray-600 dark:text-gray-300">29th March</span>
+                <div className="bg-green-50 dark:bg-gray-700/50 p-4 flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-green-600" />
+                    <span className="text-sm text-gray-600 dark:text-gray-300">29th March</span>
+                  </div>
+                  <Button asChild size="sm" variant="outline" className="border-green-500">
+                    <Link href="https://meet.google.com/vhv-hfwz-avi" target="_blank" rel="noopener noreferrer">
+                      Join Discussion
+                    </Link>
+                  </Button>
                 </div>
-                <Button asChild size="sm" variant="outline" className="border-green-500">
-                  <Link href="https://meet.google.com/vhv-hfwz-avi" target="_blank" rel="noopener noreferrer">
-                    Join Discussion
-                  </Link>
-                </Button>
               </div>
-            </div>
 
-            {/* Gallery Preview */}
-            <div className="grid grid-cols-3 gap-3">
-              {["bottles.jpg", "sinners.jpg", "Discussion.jpg"].map((filename, index) => (
+              {/* Gallery Preview */}
+              <div className="grid grid-cols-3 gap-3">
+                {["bottles.jpg", "sinners.jpg", "Discussion.jpg"].map((filename, index) => (
+                  <motion.div
+                    key={index}
+                    whileHover={{ y: -5 }}
+                    className="relative aspect-square rounded-lg overflow-hidden group"
+                  >
+                    <Image
+                      src={`/gallery/${filename}`}
+                      alt={`Gallery image ${index + 1}`}
+                      width={300}
+                      height={300}
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-green-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section id="features" className="py-20 relative">
+          <div className="container mx-auto px-4 md:px-8">
+            <motion.div
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif mb-4">
+                Why Join Our Reading Circle?
+              </h2>
+              <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+                Discover the benefits of being part of our literary community
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: BookMarked,
+                  title: "Curated Book Selection",
+                  description:
+                    "Each month, we carefully select thought-provoking books across various genres to expand your literary horizons.",
+                },
+                {
+                  icon: Users,
+                  title: "Vibrant Community",
+                  description:
+                    "Connect with fellow book enthusiasts who share your passion for reading and thoughtful discussion.",
+                },
+                {
+                  icon: Calendar,
+                  title: "Regular Meetups",
+                  description:
+                    "Join our scheduled in-person and virtual discussions to share insights and perspectives.",
+                },
+      
+              ].map((feature, index) => (
                 <motion.div
                   key={index}
-                  whileHover={{ y: -5 }}
-                  className="relative aspect-square rounded-lg overflow-hidden group"
+                  className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-green-100 dark:border-green-900/50"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <Image
-                    src={`/gallery/${filename}`} 
-                    alt={`Gallery image ${index + 1}`}
-                    width={300}
-                    height={300}
-                    className="object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-green-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4">
+                    <feature.icon className="w-6 h-6 text-green-600 dark:text-green-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-green-800 dark:text-green-400 mb-2">{feature.title}</h3>
+                  <p className="text-gray-700 dark:text-gray-300">{feature.description}</p>
                 </motion.div>
               ))}
             </div>
-          </motion.div>
-        </main>
+          </div>
+        </section>
+
+        {/* Events Section */}
+        <section id="events" className="py-20 relative">
+          <div className="container mx-auto px-4 md:px-8">
+            <motion.div
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif mb-4">
+                Upcoming Events
+              </h2>
+              <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+                Join us for these exciting literary gatherings
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {events.map((event, index) => (
+                <motion.div
+                  key={event.id}
+                  className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-green-100 dark:border-green-900/50"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <div className="relative h-48">
+                    <Image src={event.imageUrl || "/placeholder.svg"} alt={event.title} fill className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                      <div className="p-4">
+                        <h3 className="text-xl font-bold text-white mb-1">{event.title}</h3>
+                        <p className="text-green-300">
+                          {event.bookTitle !== "TBA" ? `${event.bookTitle}` : "Book to be announced"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+                      {event.type}
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Calendar className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      <span className="text-gray-700 dark:text-gray-300">{event.eventDate}</span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      <span className="text-gray-700 dark:text-gray-300">{event.time}</span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-4">
+                      <MapPin className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      <span className="text-gray-700 dark:text-gray-300">{event.location}</span>
+                    </div>
+                    {event.link && (
+                      <Button asChild className="w-full bg-green-600 hover:bg-green-700 text-white">
+                        <Link href={event.link} target="_blank" rel="noopener noreferrer">
+                          Join Discussion
+                        </Link>
+                      </Button>
+                    )}
+                    {!event.link && (
+                      <Button asChild className="w-full bg-green-600 hover:bg-green-700 text-white">
+                        <Link href="/register-event">Register Interest</Link>
+                      </Button>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              className="mt-12 text-center"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-green-600 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700"
+              >
+                <Link href="/club-events">View All Events</Link>
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section id="testimonials" className="py-20 relative">
+          <div className="container mx-auto px-4 md:px-8">
+            <motion.div
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif mb-4">
+                What Our Members Say
+              </h2>
+              <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+                Hear from our community of book lovers
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[
+                {
+                  name: "Esther Ndunge",
+                  role: "Member since 2024",
+                  quote:
+                    "The Reading Circle has introduced me to books I would have never picked up on my own. The discussions are always insightful and I've made wonderful friends.",
+                  avatar: "/gallery/Ndunge.jpg",
+                },
+                {
+                  name: "John King'ori",
+                  role: "Member since 2024",
+                  quote:
+                    "I love how diverse our book selections are. From thrillers to literary fiction to memoirs, there's always something new to discover and discuss.",
+                  avatar: "/gallery/Jey.jpg",
+                },
+                {
+                  name: "Purity Migwi",
+                  role: "Member since 2024",
+                  quote:
+                    "The Reading Circle has been a great way for me to connect with other book lovers. I've learned so much from our discussions and I look forward to each meeting.",
+                  avatar: "/gallery/maya.jpg",
+                },
+              ].map((testimonial, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-green-100 dark:border-green-900/50"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <div className="relative mb-6">
+                    <Quote className="absolute -left-2 -top-2 w-8 h-8 text-green-200 dark:text-green-800" />
+                    <p className="text-gray-700 dark:text-gray-300 italic pl-6 relative z-10">"{testimonial.quote}"</p>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src={testimonial.avatar || "/placeholder.svg"}
+                      alt={testimonial.name}
+                      width={50}
+                      height={50}
+                      className="rounded-full object-cover"
+                    />
+                    <div>
+                      <h4 className="font-bold text-green-800 dark:text-green-400">{testimonial.name}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{testimonial.role}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              className="mt-16 text-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-8 shadow-lg border border-green-100 dark:border-green-900/50 max-w-3xl mx-auto"
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h3 className="text-2xl font-bold text-green-800 dark:text-green-400 mb-4">
+                Ready to Join Our Reading Circle?
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 mb-6">
+                Become part of our growing community of book lovers. Sign up today to participate in our next
+                discussion!
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button asChild size="lg" className="bg-green-600 hover:bg-green-700 text-white">
+                    <Link href="https://wa.me/+254714747231?text=Hello%20Reading%20Circle%20Membership%20Admin,%20I%20would%20like%20to%20join%20your%20community" 
+                    target="_blank" 
+                    rel="noopener noreferrer">
+                      Join Now
+                    </Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="border-green-600 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700"
+                >
+                  <Link href="/about-us">Learn More</Link>
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        </section>
 
         {/* Footer */}
         <Footer />
