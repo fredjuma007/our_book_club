@@ -40,7 +40,7 @@ export type Event = {
       description: "Join us for a visit to the children's home to spend time with the kids and donate stuff!",
       imageUrl: "/childrens-home.webp",
       link: "",
-      eventDate: "TBA",
+      eventDate: "April",
       bookTitle: "TBA",
       type: "Community Service",
     },
