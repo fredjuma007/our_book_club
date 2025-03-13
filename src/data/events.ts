@@ -59,5 +59,3 @@ export type Event = {
       type: "Book Discussion",
     },
   ]
-  
-  
