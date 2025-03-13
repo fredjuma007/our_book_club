@@ -426,7 +426,10 @@ export default function Home() {
                     )}
                     {!event.link && (
                       <Button asChild className="w-full bg-green-600 hover:bg-green-700 text-white">
-                        <Link href="/register-event">Register Interest</Link>
+                        <Link href="https://wa.me/+254790964291?text=Hello%20Reading%20Circle%20Event%20Coordinator,%20I'm%20contacting%20from%20the%20website.%20I%20would%20like%20to%20know%20more%20about%20the%20upcoming%20bookclub%20events%20and%20discussions" 
+                        target="_blank" 
+                        rel="noopener noreferrer">
+                          Inquire More</Link>
                       </Button>
                     )}
                   </div>
