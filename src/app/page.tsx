@@ -488,7 +488,7 @@ export default function Home() {
                   role: "Member since 2024",
                   quote:
                     "I love how diverse our book selections are. From thrillers to literary fiction to memoirs, there's always something new to discover and discuss.",
-                  avatar: "/gallery/Jey.jpg",
+                  avatar: "/gallery/jey.jpg",
                 },
                 {
                   name: "Purity Migwi",
