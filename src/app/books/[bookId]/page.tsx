@@ -1,6 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
-import { BookIcon, ChevronLeft, StarIcon } from "lucide-react"
+import { BookIcon, ChevronLeft, StarIcon, BookOpen, Calendar, User, MessageCircle } from "lucide-react"
 import { PostReviewForm } from "./post-review-form"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -12,6 +11,8 @@ import type { Metadata } from "next"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { ReviewItem } from "./ReviewItem"
 import { Toaster } from "@/components/ui/toaster"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import ShareButton from "@/components/sharebutton"
 
 // This forces the page to be dynamically rendered and not cached
 export const dynamic = "force-dynamic"
@@ -75,15 +76,6 @@ export default async function Page({ params }: PageProps) {
         .find(),
     ])
 
-    /*console.log(
-      `[SERVER] Fetched reviews at ${new Date().toISOString()}:`,
-      JSON.stringify(
-        reviewsResponse.items.map((item) => ({ id: item._id, data: item.data })),
-        null,
-        2,
-      ),
-    )*/
-
     const book = bookResponse?.data as Book | undefined
 
     // Extract reviews with proper mapping
@@ -107,116 +99,166 @@ export default async function Page({ params }: PageProps) {
     }
 
     return (
-      <div className="relative max-w-screen-lg mx-auto py-12 px-4 lg:px-8 space-y-12 dark:text-white">
-        {/* Background Image */}
-        {book.image && (
-          <div className="absolute inset-0 w-full h-full -z-10">
-            <div className="relative w-full h-full opacity-30 blur-md">
-              <Image
-                src={convertWixImageToUrl(book.image) || "/placeholder.svg"}
-                alt={book.title}
-                width={1920}
-                height={1080}
-                className="rounded-lg object-cover w-full h-full"
-              />
-            </div>
-          </div>
-        )}
+      <div className="min-h-screen bg-[#f5f0e1] dark:bg-gray-900 selection:bg-green-700/30">
+        {/* Hero Section with Book Cover */}
+        <div className="relative overflow-hidden">
+          {/* Animated Background Pattern */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20" />
 
-        {/* Back Button */}
-        <div>
-          <Button
-            variant="outline"
-            className="bg-green-700 text-white hover:bg-green-800 transition-all font-serif"
-            asChild
-          >
-            <Link href="/books">
-              <ChevronLeft className="mr-1" /> Back to books
-            </Link>
-          </Button>
-        </div>
-
-        {/* Book Details */}
-        <Card className="relative rounded-lg shadow-lg bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold text-green-800 dark:text-green-500 font-serif">
-              {book.title}
-              <p className="text-lg font-semibold text-green-700 dark:text-green-400">By {book.author}</p>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col lg:flex-row gap-8">
-              {book.image ? (
+          {/* Background Image Overlay */}
+          {book.image && (
+            <div className="absolute inset-0 w-full h-full">
+              <div className="relative w-full h-full opacity-60">
                 <Image
-                  width={200}
-                  height={300}
                   src={convertWixImageToUrl(book.image) || "/placeholder.svg"}
                   alt={book.title}
-                  className="w-[200px] h-[300px] rounded-lg object-cover shadow-md border border-green-700 transition-transform hover:scale-105"
+                  fill
+                  className="object-cover"
                 />
-              ) : (
-                <div className="flex-shrink-0 flex flex-col items-center justify-center w-[200px] h-[300px] rounded-lg bg-gray-100 dark:bg-gray-700 border border-green-700">
-                  <BookIcon className="w-10 h-10 text-gray-600 dark:text-gray-300" />
-                  <p className="text-gray-600 dark:text-gray-300">No Image</p>
-                </div>
-              )}
-              <div className="flex flex-col justify-between space-y-4">
-                {/* Average Rating */}
-                <div className="flex items-center gap-2">
-                  <p className="text-lg font-semibold text-green-700 dark:text-green-400">Club Average Rating:</p>
-                  <div className="flex">
-                    {Array.from({ length: Math.floor(averageRating) }).map((_, i) => (
-                      <StarIcon key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                    ))}
-                    {averageRating % 1 !== 0 && (
-                      <StarIcon className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-50" />
-                    )}
-                  </div>
-                  <p className="text-gray-700 dark:text-gray-300">({averageRating.toFixed(1)} / 5)</p>
-                </div>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-b from-[#f5f0e1]/80 to-[#f5f0e1] dark:from-gray-900/80 dark:to-gray-900"></div>
+            </div>
+          )}
 
-                {book.publisher && (
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Recommended by{" "}
-                    <span className="font-medium text-green-700 dark:text-green-400">{book.publisher}</span>
-                  </p>
+          <div className="max-w-screen-xl mx-auto py-16 px-4 lg:px-8 relative">
+            {/* Back Button */}
+            <div className="mb-8">
+              <Button
+                variant="outline"
+                className="border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden"
+                asChild
+              >
+                <Link href="/books">
+                  <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <ChevronLeft className="mr-1 transition-transform duration-300 group-hover:-translate-x-1" />
+                  Back to Books
+                </Link>
+              </Button>
+            </div>
+
+            {/* Book Header */}
+            <div className="flex flex-col md:flex-row gap-8 items-start">
+              {/* Book Cover */}
+              <div className="relative">
+                {book.image ? (
+                  <div className="relative w-[200px] h-[300px] group">
+                    <Image
+                      width={200}
+                      height={300}
+                      src={convertWixImageToUrl(book.image) || "/placeholder.svg"}
+                      alt={book.title}
+                      className="rounded-lg object-cover shadow-lg border-2 border-green-700 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-1"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                ) : (
+                  <div className="flex-shrink-0 flex flex-col items-center justify-center w-[200px] h-[300px] rounded-lg bg-[#fffaf0] dark:bg-gray-800 border-2 border-green-700 shadow-lg">
+                    <BookIcon className="w-16 h-16 text-green-700/50" />
+                    <p className="text-green-700 dark:text-green-400 font-serif mt-2">No Cover Available</p>
+                  </div>
                 )}
-                <div className="flex gap-4 text-sm font-medium">
+
+                {/* Rating Badge */}
+                <div className="absolute -bottom-4 -right-4 bg-green-700 text-white rounded-full w-16 h-16 flex flex-col items-center justify-center shadow-lg border-2 border-white dark:border-gray-800">
+                  <span className="text-lg font-bold">{averageRating.toFixed(1)}</span>
+                  <div className="flex">
+                    <StarIcon className="w-3 h-3 fill-yellow-300" />
+                    <StarIcon className="w-3 h-3 fill-yellow-300" />
+                    <StarIcon className="w-3 h-3 fill-yellow-300" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Book Info */}
+              <div className="flex-1 space-y-4">
+                <h1 className="text-4xl font-bold text-green-800 dark:text-green-500 font-serif relative inline-block group">
+                  {book.title}
+                  <span className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                </h1>
+                <h2 className="text-2xl text-green-700 dark:text-green-400 font-serif">by {book.author}</h2>
+
+                <div className="flex flex-wrap gap-3 mt-4">
                   {book.genre && (
-                    <span className="px-3 py-1 bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-300 rounded-md">
-                      <span className="text-gray-600 dark:text-gray-400">Genre:</span> {book.genre}
+                    <span className="px-3 py-1 bg-green-700/10 text-green-800 dark:text-green-400 rounded-full text-sm font-serif border border-green-700/30 flex items-center gap-1">
+                      <BookOpen className="w-4 h-4" />
+                      {book.genre}
                     </span>
                   )}
                   {book.reviewDate && (
-                    <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md">
-                      Review Date: {book.reviewDate}
+                    <span className="px-3 py-1 bg-green-700/10 text-green-800 dark:text-green-400 rounded-full text-sm font-serif border border-green-700/30 flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      {book.reviewDate}
                     </span>
                   )}
+                  {book.publisher && (
+                    <span className="px-3 py-1 bg-green-700/10 text-green-800 dark:text-green-400 rounded-full text-sm font-serif border border-green-700/30 flex items-center gap-1">
+                      <User className="w-4 h-4" />
+                      Recommended by {book.publisher}
+                    </span>
+                  )}
+                  <span className="px-3 py-1 bg-green-700/10 text-green-800 dark:text-green-400 rounded-full text-sm font-serif border border-green-700/30 flex items-center gap-1">
+                    <MessageCircle className="w-4 h-4" />
+                    {reviews.length} {reviews.length === 1 ? "Review" : "Reviews"}
+                  </span>
                 </div>
-                <p className="text-gray-700 dark:text-gray-300 font-serif leading-relaxed">
-                  {book.description || "No description available for this book."}
-                </p>
 
-                {/* Add to Reading List Button */}
-                {book.goodreadsUrl ? (
-                  <a
-                    href={book.goodreadsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md transition-all shadow-md"
+                {/* Action Buttons */}
+                <div className="flex flex-wrap gap-3 mt-6">
+                  {book.goodreadsUrl && (
+                    <Button
+                      asChild
+                      className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
+                    >
+                      <a href={book.goodreadsUrl} target="_blank" rel="noopener noreferrer">
+                        <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                        View on Goodreads
+                      </a>
+                    </Button>
+                  )}
+                  <Button
+                    variant="outline"
+                    className="border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden"
+                    asChild
                   >
-                    View on Goodreads &rarr;
-                  </a>
-                ) : (
-                  <p className="text-sm text-gray-500 italic">Goodreads link not available</p>
-                )}
+                    <a href="#post-review">
+                      <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <StarIcon className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:rotate-12" />
+                      Write a Review
+                    </a>
+                  </Button>
+                  <ShareButton />
+                  
+                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Review Form */}
-        <Card className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
+          {/* Decorative Bottom Wave */}
+          <div className="absolute bottom-0 left-0 right-0 h-16 bg-[#fffaf0] dark:bg-gray-800 transform -skew-y-2" />
+        </div>
+
+        {/* Main Content */}
+        <div className="max-w-screen-xl mx-auto px-4 lg:px-8 py-12 relative space-y-12">
+          {/* Book Description */}
+          <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700 overflow-hidden transition-all duration-300 hover:shadow-xl p-6 md:p-8 group relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+            <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-4 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2 text-green-700" />
+              About This Book
+            </h2>
+
+            <div className="prose prose-green dark:prose-invert max-w-none font-serif">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {book.description || "No description available for this book."}
+              </p>
+            </div>
+          </div>
+
+          {/* Review Form */}
+        <Card
+          id="post-review" 
+          className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
               ⭐ Rate & Post a Review ⭐
@@ -241,7 +283,7 @@ export default async function Page({ params }: PageProps) {
           </CardContent>
         </Card>
 
-        {/* Reviews Section */}
+           {/* Reviews Section */}
         <Card className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
@@ -274,6 +316,7 @@ export default async function Page({ params }: PageProps) {
         {/* Scroll to Top Button */}
         <ScrollToTop />
         <Toaster />
+      </div>
       </div>
     )
   } catch (error) {

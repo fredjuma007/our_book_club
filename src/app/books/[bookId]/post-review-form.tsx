@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
-import { Loader2 } from "lucide-react"
+import { Loader2, Star } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { createReviewAction } from "@/app/actions"
 
@@ -20,6 +20,7 @@ const initialReview = {
 export function PostReviewForm({ bookId, userName }: { bookId: string; userName: string }) {
   const [newReview, setNewReview] = useState({ ...initialReview, name: userName })
   const [isLoading, setIsLoading] = useState(false)
+  const [hoverRating, setHoverRating] = useState(0)
   const { toast } = useToast()
   const router = useRouter()
 
@@ -43,17 +44,11 @@ export function PostReviewForm({ bookId, userName }: { bookId: string; userName:
         toast({
           title: "Your review has been posted",
           description: "Thank you for your feedback!",
+          className: "bg-green-700 text-white",
         })
 
         // Force a refresh of all routes that display reviews
         router.refresh()
-
-        // Revalidate the reviews page
-        /*try {
-          await fetch("/api/revalidate-reviews", { method: "POST" })
-        } catch (error) {
-          console.error("Error revalidating reviews:", error)
-        }*/
 
         // Add a small delay and then force a hard refresh if needed
         setTimeout(() => {
@@ -75,47 +70,96 @@ export function PostReviewForm({ bookId, userName }: { bookId: string; userName:
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-      <Input
-        placeholder="Your name"
-        value={newReview.name}
-        onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
-        required
-      />
-      <div className="flex items-center space-x-2">
-        <label htmlFor="rating" className="text-sm font-medium text-green-600 dark:text-green-500">
-          Rating:
-        </label>
-        <Input
-          id="rating"
-          type="number"
-          step="0.1" // Allow decimals
-          min="1"
-          max="5"
-          value={newReview.rating}
-          onChange={(e) =>
-            setNewReview({
-              ...newReview,
-              rating: e.target.value === "" ? 0 : Number.parseFloat(e.target.value), // Ensure decimal support
-            })
-          }
-          className="w-20"
-          required
-        />
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm rounded-lg p-6 border border-green-700/30">
+        <div className="mb-4">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-green-700 dark:text-green-400 mb-1 font-serif"
+          >
+            Your Name
+          </label>
+          <Input
+            id="name"
+            placeholder="Your name"
+            value={newReview.name}
+            onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
+            required
+            className="border-green-700/30 focus:border-green-700 focus:ring-green-700/20 bg-white/80 dark:bg-gray-800/80 font-serif"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-green-700 dark:text-green-400 mb-1 font-serif">
+            Your Rating
+          </label>
+          <div className="flex items-center gap-2">
+            <div className="flex">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  type="button"
+                  className="focus:outline-none transition-transform hover:scale-110"
+                  onMouseEnter={() => setHoverRating(star)}
+                  onMouseLeave={() => setHoverRating(0)}
+                  onClick={() => setNewReview({ ...newReview, rating: star })}
+                >
+                  <Star
+                    className={`w-6 h-6 ${
+                      (hoverRating || newReview.rating) >= star
+                        ? "text-yellow-400 fill-yellow-400"
+                        : "text-gray-300 dark:text-gray-600"
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+            <Input
+              type="number"
+              step="0.1"
+              min="1"
+              max="5"
+              value={newReview.rating}
+              onChange={(e) =>
+                setNewReview({
+                  ...newReview,
+                  rating: e.target.value === "" ? 0 : Number.parseFloat(e.target.value),
+                })
+              }
+              className="w-20 border-green-700/30 focus:border-green-700 focus:ring-green-700/20 bg-white/80 dark:bg-gray-800/80 font-serif ml-2"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="review"
+            className="block text-sm font-medium text-green-700 dark:text-green-400 mb-1 font-serif"
+          >
+            Your Review
+          </label>
+          <Textarea
+            id="review"
+            placeholder="Write your review here..."
+            value={newReview.review}
+            onChange={(e) => setNewReview({ ...newReview, review: e.target.value })}
+            className="min-h-[120px] border-green-700/30 focus:border-green-700 focus:ring-green-700/20 bg-white/80 dark:bg-gray-800/80 font-serif"
+          />
+        </div>
       </div>
-      <Textarea
-        placeholder="Write your review here..."
-        value={newReview.review}
-        onChange={(e) => setNewReview({ ...newReview, review: e.target.value })}
-      />
-      <Button
-        disabled={isLoading}
-        type="submit"
-        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white dark:bg-green-500 dark:hover:bg-green-600"
-      >
-        {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-        Post Review
-      </Button>
+
+      <div className="flex justify-end">
+        <Button
+          disabled={isLoading}
+          type="submit"
+          className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
+        >
+          <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+          {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Star className="h-4 w-4 mr-2" />}
+          Post Review
+        </Button>
+      </div>
     </form>
   )
 }

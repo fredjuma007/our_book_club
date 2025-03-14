@@ -10,6 +10,7 @@ import { convertWixImageToUrl } from "@/lib/wix-client"
 import { ScrollToTop } from "@/components/scroll-to-top"
 
 export default async function Home({ searchParams }: { searchParams: { search?: string } }) {
+  await searchParams;
   const client = await getServerClient()
 
   const books = await client.items
@@ -20,8 +21,7 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
       console.error("Error fetching books:", error)
       return []
     })
-
-  const searchQuery = searchParams.search || ""
+  const searchQuery = (await searchParams).search || ""
   const filteredBooks = searchQuery
     ? books.filter(
         (book) =>
