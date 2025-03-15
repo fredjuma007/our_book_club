@@ -125,8 +125,9 @@ export default function Home() {
                     />
                     <div className="absolute -inset-2 rounded-full bg-green-500/20 scale-0 group-hover:scale-100 transition-transform duration-300" />
                   </div>
-                  <h1 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif">
+                  <h1 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif relative inline-block group">
                     The Reading Circle
+                    <span className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                   </h1>
                 </div>
                 <div className="relative">
