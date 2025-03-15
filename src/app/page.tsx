@@ -19,11 +19,32 @@ import {
   Info,
 } from "lucide-react"
 import React, { useEffect, useState } from "react"
+import Footer from "@/components/footer"
 import { events } from "@/data/events"
+import { galleryItems } from "@/data/gallery"
 
 export default function Home() {
   const [showAbout, setShowAbout] = React.useState(false)
   const [activeSection, setActiveSection] = useState("hero")
+
+  // Get featured gallery items for the homepage preview
+  // const featuredGalleryItems = galleryItems.filter((item) => item.featured).slice(0, 3)
+  const [randomGalleryItems, setRandomGalleryItems] = useState<typeof galleryItems>([])
+
+  // Select random gallery items on component mount
+  useEffect(() => {
+    // Create a copy of the gallery items array
+    const shuffled = [...galleryItems]
+
+    // Shuffle the array using Fisher-Yates algorithm
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+
+    // Take the first 3 items
+    setRandomGalleryItems(shuffled.slice(0, 3))
+  }, [])
 
   // Handle scroll and set active section
   useEffect(() => {
@@ -83,26 +104,7 @@ export default function Home() {
 
       <div className="relative">
         {/* Hero Section */}
-        <section id="hero" className="min-h-screen py-8">
-          {/* Header Section */}
-          <header className="px-4 md:px-8 mb-12">
-            <motion.div className="max-w-7xl mx-auto flex items-center justify-center gap-4">
-              <div className="relative group">
-                <Image
-                  src="/logo.jpeg"
-                  alt="Reading Circle Logo"
-                  width={80}
-                  height={80}
-                  className="rounded-full border-2 border-green-500 shadow-lg transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="absolute -inset-2 rounded-full bg-green-500/20 scale-0 group-hover:scale-100 transition-transform duration-300" />
-              </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif">
-                The Reading Circle
-              </h1>
-            </motion.div>
-          </header>
-
+        <section id="hero" className="min-h-screen py-12">
           <div className="container mx-auto grid md:grid-cols-2 gap-8 px-4 md:px-8">
             {/* Left Column */}
             <motion.div
@@ -111,21 +113,30 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <div className="space-y-4">
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-green-800 dark:text-green-400 font-serif leading-tight relative group">
-                  Where Books Come
-                  <br />
-                  <span className="block text-green-600 relative">
-                    To Life
-                    <Sparkles className="absolute -right-8 -top-4 w-6 h-6 text-green-500/40 animate-spin-slow" />
-                  </span>
-                  <span className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-                </h2>
-                <p className="text-xl text-gray-700 dark:text-gray-300 max-w-lg">
-                  Discover, share, and review your favorite{" "}
-                  <span className="text-green-600 dark:text-green-400">books</span> with a community of{" "}
-                  <span className="text-green-600 dark:text-green-400">book lovers</span>
-                </p>
+              <div className="space-y-6">
+                <div className="flex items-center gap-4 mb-2">
+                  <div className="relative group">
+                    <Image
+                      src="/logo.jpeg"
+                      alt="Reading Circle Logo"
+                      width={80}
+                      height={80}
+                      className="rounded-full border-2 border-green-500 shadow-lg transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute -inset-2 rounded-full bg-green-500/20 scale-0 group-hover:scale-100 transition-transform duration-300" />
+                  </div>
+                  <h1 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif">
+                    The Reading Circle
+                  </h1>
+                </div>
+                <div className="relative">
+                  <Sparkles className="absolute -right-8 -top-4 w-6 h-6 text-green-500/40 animate-spin-slow" />
+                  <p className="text-xl text-gray-700 dark:text-gray-300 max-w-lg">
+                    Discover, share, and review your favorite{" "}
+                    <span className="text-green-600 dark:text-green-400">books</span> with a community of{" "}
+                    <span className="text-green-600 dark:text-green-400">book lovers</span>
+                  </p>
+                </div>
               </div>
 
               <div className="flex flex-wrap gap-4">
@@ -196,18 +207,27 @@ export default function Home() {
               </div>
 
               <motion.div
-                className="mt-12 flex justify-center md:justify-start"
+                className="mt-1 w-full flex justify-center md:justify-start"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.2, duration: 0.8 }}
               >
-                <button
-                  onClick={() => scrollToSection("features")}
-                  className="text-green-700 dark:text-green-400 flex flex-col items-center gap-2 group font-serif"
+                {/* Scroll to discover more button */}
+                <motion.div
+                  className="mt-1 w-full flex justify-center md:justify-start"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.2, duration: 0.8 }}
                 >
-                  <span className="text-sm font-medium">Scroll to discover more</span>
-                  <ChevronDown className="w-6 h-6 animate-bounce" />
-                </button>
+                  <button
+                    onClick={() => scrollToSection("features")}
+                    className="w-full text-green-700 dark:text-green-400 flex flex-col items-center gap-3 group font-serif bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm px-6 py-4 rounded-xl border border-green-700/30 hover:border-green-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  >
+                    <span className="text-base md:text-lg font-medium">Scroll to discover more</span>
+                    <ChevronDown className="w-8 h-8 animate-bounce text-green-600 dark:text-green-500" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+                  </button>
+                </motion.div>
               </motion.div>
             </motion.div>
 
@@ -293,20 +313,25 @@ export default function Home() {
 
               {/* Gallery Preview */}
               <div className="grid grid-cols-3 gap-3">
-                {["bottles.jpg", "sinners.jpg", "Discussion.jpg"].map((filename, index) => (
+                {randomGalleryItems.map((item, index) => (
                   <motion.div
-                    key={index}
+                    key={item.id || index}
                     whileHover={{ y: -5 }}
                     className="relative aspect-square rounded-lg overflow-hidden group border-2 border-green-700"
                   >
-                    <Image
-                      src={`/gallery/${filename}`}
-                      alt={`Gallery image ${index + 1}`}
-                      width={300}
-                      height={300}
-                      className="object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-green-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <Link href="/gallery">
+                      <Image
+                        src={item.src || "/placeholder.svg"}
+                        alt={item.caption}
+                        width={300}
+                        height={300}
+                        className="object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-green-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-2 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                        <p className="text-white text-xs font-serif line-clamp-1">{item.caption}</p>
+                      </div>
+                    </Link>
                   </motion.div>
                 ))}
               </div>
@@ -615,26 +640,9 @@ export default function Home() {
         </section>
 
         {/* Footer */}
-        <footer className="block md:fixed md:bottom-0 md:left-0 md:w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-green-200 dark:border-green-800 md:block">
-                  <div className="max-w-7xl mx-auto px-2 py-1 md:px-4 md:py-2 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4">
-                      <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
-                          © {new Date().getFullYear()} The Reading Circle
-                      </p>
-                      <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
-                        Developed by{" "}
-                    <Link
-                      href="https://jumaportfolio.netlify.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-green-600 hover:text-green-700 hover:underline"
-                      >
-                        Fred Juma
-                  </Link>
-                      </p>
-                  </div>
-            </footer>
-
+        <Footer />
       </div>
     </div>
   )
 }
+

@@ -7,25 +7,11 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronLeft, ChevronRight, Camera, X, ImageIcon, Sparkles, Grid2x2, Grid3x3 } from "lucide-react"
 import { ScrollToTop } from "@/components/scroll-to-top"
+import { galleryItems } from "@/data/gallery"
 
 export default function GalleryPage() {
   const [layout, setLayout] = useState<"grid" | "masonry">("grid")
-  const images = [
-    { src: "/gallery/sinners.jpg", caption: "First Physical Meeting under name Reading Circle (sinners club)" },
-    { src: "/gallery/sinners (1).jpg", caption: "First Physical Meeting under name Reading Circle (sinners club)" },
-    { src: "/gallery/pathway.jpg", caption: "Open day. Hey we had a booth" },
-    {
-      src: "/gallery/tommorow(3).jpg",
-      caption: "November 2024 BOM review, collaboration with Lit Nomads, former Sparkle",
-    },
-    { src: "/gallery/paint n sip.jpg", caption: "Painting session with Lit Nomads" },
-    { src: "/gallery/paint n sip (1).jpg", caption: "Painting session with Lit Nomads" },
-    { src: "/gallery/Discussion.jpg", caption: "Moderators During A book Review" },
-    { src: "/gallery/picnic.jpg", caption: "A beautiful day at the picnic" },
-    { src: "/gallery/picnic notes.jpg", caption: "A beautiful day at the picnic" },
-    { src: "/gallery/bottles.jpg", caption: "Enjoying the great outdoors" },
-    { src: "/gallery/picnic bottles.jpg", caption: "Group fun and laughter" },
-  ]
+  const images = galleryItems
 
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null)
 
@@ -98,7 +84,7 @@ export default function GalleryPage() {
               className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif relative overflow-hidden group"
             >
               <Link className="text-green-700 dark:text-white flex items-center gap-1" href="/club-events">
-              📅 <span>Events</span>
+                📅 <span>Events</span>
               </Link>
             </Button>
           </motion.div>
@@ -193,7 +179,7 @@ export default function GalleryPage() {
           {images.map((image, index) => (
             <motion.div
               layout
-              key={index}
+              key={image.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -278,9 +264,9 @@ export default function GalleryPage() {
                   onClick={() => setSelectedImageIndex(null)}
                   className="absolute top-4 right-4 border-primary hover:bg-primary 
                   hover:text-primary-foreground group dark:border-primary dark:hover:bg-primary 
-                  dark:hover:text-primary-foreground">
-                  <X className="w-4 h-4 transition-transform duration-200 group-hover:rotate-90" 
-                  />
+                  dark:hover:text-primary-foreground"
+                >
+                  <X className="w-4 h-4 transition-transform duration-200 group-hover:rotate-90" />
                 </Button>
 
                 {/* Image Counter */}
