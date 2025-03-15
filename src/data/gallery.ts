@@ -100,7 +100,7 @@ export type GalleryItem = {
     },
     {
       id: 16,
-      src: "/gallery/Maya.jpg",
+      src: "/gallery/maya.jpg",
       caption: "Painting session with Lit Nomads",
       featured: true,
     },
