@@ -190,61 +190,6 @@ export default function Home() {
                 </Button>
               </div>
 
-              {/* Mobile Book of the Month */}
-              <div className="md:hidden mt-6">
-                <div className="bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700">
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="p-6 relative">
-                    <div className="flex items-start gap-6">
-                      <Link
-                        href="https://readingcircle.vercel.app/books/e113461c-75f3-42f8-a2db-765142c9ce05"
-                        className="relative w-24 h-36 flex-shrink-0 group/cover"
-                      >
-                        <Image
-                          src="/sometimes i lie.jpg"
-                          alt="Sometimes I Lie Book Cover"
-                          fill
-                          className="rounded-lg shadow-lg object-cover transition-transform duration-300 group-hover/cover:scale-105 group-hover/cover:rotate-2 border-2 border-green-700"
-                        />
-                        <div className="absolute -top-2 -right-2 bg-green-700 text-white text-xs px-2 py-1 rounded-full">
-                          Book of the Month
-                        </div>
-                      </Link>
-                      <div className="flex-1 space-y-2">
-                        <div>
-                          <h3 className="text-xl font-bold text-green-800 dark:text-green-400 font-serif">
-                            Sometimes I Lie
-                          </h3>
-                          <p className="text-gray-600 dark:text-gray-300 font-serif">by Alice Feeney</p>
-                        </div>
-                        <div className="relative">
-                          <Quote className="absolute -left-6 -top-2 w-4 h-4 text-green-400/30" />
-                          <p className="text-sm text-gray-700 dark:text-gray-300 italic pl-6 font-serif line-clamp-2">
-                            "People are not mirrors—they don't see you how you see yourself."
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-green-50 dark:bg-gray-700/50 p-4 flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-green-700" />
-                      <span className="text-sm text-gray-600 dark:text-gray-300 font-serif">29th March</span>
-                    </div>
-                    <Button
-                      asChild
-                      size="sm"
-                      className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
-                    >
-                      <Link href="https://meet.google.com/vhv-hfwz-avi" target="_blank" rel="noopener noreferrer">
-                        <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
-                        Join Discussion
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
               {/* Stats - Desktop Only */}
               <div className="hidden md:grid grid-cols-3 gap-4 mt-8">
                 {[
