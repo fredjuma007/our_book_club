@@ -126,44 +126,46 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
           </div>
 
           {/* Book of the Month */}
-          <div className="pt-2 pb-1 border-b border-green-100 dark:border-green-900">
+            <div className="pt-2 pb-1 border-b border-green-100 dark:border-green-900">
             <h3 className="text-sm font-serif font-medium text-green-600 dark:text-green-400 mb-3 flex items-center">
               <BookOpen className="h-4 w-4 mr-2" />
               Book of the Month
             </h3>
 
-            <div className="relative bg-green-50 dark:bg-green-900/40 rounded-md p-3 border border-green-100 dark:border-green-800 mb-4">
+            <Link href="https://readingcircle.vercel.app/books/e113461c-75f3-42f8-a2db-765142c9ce05" className="relative block">
+              <div className="relative bg-green-50 dark:bg-green-900/40 rounded-md p-3 border border-green-100 dark:border-green-800 mb-4 hover:bg-green-100/50 dark:hover:bg-green-800/50 transition-colors">
               {/* Paper texture */}
               <div className="absolute inset-0 bg-repeat opacity-10 dark:opacity-5 rounded-md" />
 
               <div className="flex gap-3">
                 <div className="relative w-16 h-24 flex-shrink-0">
-                  <div className="absolute inset-0 shadow-md rounded-sm overflow-hidden">
-                    <Image
-                      src="/sometimes i lie.jpg"
-                      width={64}
-                      height={96}
-                      alt="Book cover"
-                      className="object-cover"
-                    />
-                  </div>
-                  {/* Book edge effect */}
-                  <div className="absolute top-0 bottom-0 right-0 w-[2px] bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600"></div>
+                <div className="absolute inset-0 shadow-md rounded-sm overflow-hidden">
+                  <Image
+                  src="/sometimes i lie.jpg"
+                  width={64}
+                  height={96}
+                  alt="Book cover"
+                  className="object-cover"
+                  />
+                </div>
+                {/* Book edge effect */}
+                <div className="absolute top-0 bottom-0 right-0 w-[2px] bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600"></div>
                 </div>
 
                 <div className="flex-1">
-                  <h4 className="text-sm font-serif font-medium text-gray-900 dark:text-gray-100 line-clamp-2">
-                    Sometimes I Lie
-                  </h4>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Alice Feeney</p>
-                  <div className="flex items-center mt-2 text-xs text-gray-500 dark:text-gray-500">
-                    <Calendar className="h-3 w-3 mr-1" />
-                    <span>Review: March 29, 2025</span>
-                  </div>
+                <h4 className="text-sm font-serif font-medium text-gray-900 dark:text-gray-100 line-clamp-2">
+                  Sometimes I Lie
+                </h4>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Alice Feeney</p>
+                <div className="flex items-center mt-2 text-xs text-gray-500 dark:text-gray-500">
+                  <Calendar className="h-3 w-3 mr-1" />
+                  <span>Review: March 29, 2025</span>
+                </div>
                 </div>
               </div>
+              </div>
+            </Link>
             </div>
-          </div>
 
           {/* Upcoming Event */}
           {upcomingEvent && (
