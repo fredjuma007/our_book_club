@@ -104,35 +104,35 @@ export default function Home() {
 
       <div className="relative">
         {/* Hero Section */}
-        <section id="hero" className="min-h-screen py-12">
+        <section id="hero" className="min-h-screen py-6 md:py-12">
           <div className="container mx-auto grid md:grid-cols-2 gap-8 px-4 md:px-8">
             {/* Left Column */}
             <motion.div
-              className="flex flex-col justify-center gap-6"
+              className="flex flex-col justify-center gap-3 md:gap-6"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <div className="space-y-6">
+              <div className="space-y-3 md:space-y-6">
                 <div className="flex items-center gap-4 mb-2">
                   <div className="relative group">
                     <Image
                       src="/logo.jpeg"
                       alt="Reading Circle Logo"
-                      width={80}
-                      height={80}
-                      className="rounded-full border-2 border-green-500 shadow-lg transition-transform duration-300 group-hover:scale-105"
+                      width={60}
+                      height={60}
+                      className="w-[60px] h-[60px] md:w-[80px] md:h-[80px] rounded-full border-2 border-green-500 shadow-lg transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute -inset-2 rounded-full bg-green-500/20 scale-0 group-hover:scale-100 transition-transform duration-300" />
                   </div>
-                  <h1 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif relative inline-block group">
+                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-green-800 dark:text-green-400 font-serif relative inline-block group">
                     The Reading Circle
                     <span className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                   </h1>
                 </div>
                 <div className="relative">
                   <Sparkles className="absolute -right-8 -top-4 w-6 h-6 text-green-500/40 animate-spin-slow" />
-                  <p className="text-xl text-gray-700 dark:text-gray-300 max-w-lg">
+                  <p className="text-base md:text-xl text-gray-700 dark:text-gray-300 max-w-lg">
                     Discover, share, and review your favorite{" "}
                     <span className="text-green-600 dark:text-green-400">books</span> with a community of{" "}
                     <span className="text-green-600 dark:text-green-400">book lovers</span>
@@ -191,7 +191,7 @@ export default function Home() {
               </div>
 
               {/* Mobile Book of the Month */}
-              <div className="md:hidden mt-4">
+              <div className="md:hidden mt-2">
                 <div className="bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700">
                   <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="p-3 relative">
@@ -388,14 +388,14 @@ export default function Home() {
 
               {/* Scroll to discover more - Mobile Only */}
               <motion.div
-                className="mt-8 w-full flex justify-center md:hidden"
+                className="mt-4 w-full flex justify-center md:hidden"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.2, duration: 0.8 }}
               >
                 <button
                   onClick={() => scrollToSection("features")}
-                  className="w-full text-green-700 dark:text-green-400 flex flex-col items-center gap-3 group font-serif bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm px-6 py-4 rounded-xl border border-green-700/30 hover:border-green-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  className="w-full text-green-700 dark:text-green-400 flex flex-col items-center gap-2 md:gap-3 group font-serif bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm px-4 py-3 md:px-6 md:py-4 rounded-xl border border-green-700/30 hover:border-green-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                 >
                   <span className="text-base md:text-lg font-medium">Scroll to discover more</span>
                   <ChevronDown className="w-8 h-8 animate-bounce text-green-600 dark:text-green-500" />
