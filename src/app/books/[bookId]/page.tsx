@@ -131,7 +131,7 @@ export default async function Page({ params }: PageProps) {
                 <Link href="/books">
                   <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <ChevronLeft className="mr-1 transition-transform duration-300 group-hover:-translate-x-1" />
-                  Back to Books
+                  All Books
                 </Link>
               </Button>
             </div>
@@ -250,7 +250,7 @@ export default async function Page({ params }: PageProps) {
 
             <div className="prose prose-green dark:prose-invert max-w-none font-serif">
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                {book.description || "No description available for this book."}
+          {book.description || "No description available for this book."}
               </p>
             </div>
           </div>
@@ -287,7 +287,7 @@ export default async function Page({ params }: PageProps) {
         <Card className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
-              Reviews ({reviews.length})
+              Reviews
             </CardTitle>
           </CardHeader>
           <CardContent>

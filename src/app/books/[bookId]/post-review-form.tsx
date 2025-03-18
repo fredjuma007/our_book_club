@@ -13,7 +13,7 @@ import { createReviewAction } from "@/app/actions"
 
 const initialReview = {
   name: "",
-  rating: 3.5,
+  rating: 0.5,
   review: "",
 }
 

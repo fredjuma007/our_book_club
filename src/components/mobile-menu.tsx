@@ -3,8 +3,9 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { BookOpen, Calendar, Menu, X } from "lucide-react"
+import { BookOpen, Calendar, Menu, X, MapPin, Clock } from "lucide-react"
 import Image from "next/image"
+import { events } from "@/data/events"
 
 interface MobileMenuProps {
   isLoggedIn: boolean
@@ -15,6 +16,9 @@ interface MobileMenuProps {
 
 export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutAction }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
+
+  // Get the first upcoming event
+  const upcomingEvent = events.length > 0 ? events[0] : null
 
   return (
     <div className="relative">
@@ -122,13 +126,13 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
           </div>
 
           {/* Book of the Month */}
-          <div className="pt-2 pb-1">
+          <div className="pt-2 pb-1 border-b border-green-100 dark:border-green-900">
             <h3 className="text-sm font-serif font-medium text-green-600 dark:text-green-400 mb-3 flex items-center">
               <BookOpen className="h-4 w-4 mr-2" />
               Book of the Month
             </h3>
 
-            <div className="relative bg-green-50 dark:bg-green-900/40 rounded-md p-3 border border-green-100 dark:border-green-800">
+            <div className="relative bg-green-50 dark:bg-green-900/40 rounded-md p-3 border border-green-100 dark:border-green-800 mb-4">
               {/* Paper texture */}
               <div className="absolute inset-0 bg-repeat opacity-10 dark:opacity-5 rounded-md" />
 
@@ -160,6 +164,86 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
               </div>
             </div>
           </div>
+
+          {/* Upcoming Event */}
+          {upcomingEvent && (
+            <div className="pt-2 pb-1">
+              <h3 className="text-sm font-serif font-medium text-green-600 dark:text-green-400 mb-3 flex items-center">
+                <Calendar className="h-4 w-4 mr-2" />
+                Upcoming Event
+              </h3>
+
+              <div className="relative bg-green-50 dark:bg-green-900/40 rounded-md overflow-hidden border border-green-100 dark:border-green-800">
+                {/* Paper texture */}
+                <div className="absolute inset-0 bg-repeat opacity-10 dark:opacity-5 rounded-md" />
+
+                <div className="relative h-32">
+                  <Image
+                    src={upcomingEvent.imageUrl || "/placeholder.svg"}
+                    alt={upcomingEvent.title}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                    <div className="p-2">
+                      <h4 className="text-sm font-bold text-white font-serif">{upcomingEvent.title}</h4>
+                      <p className="text-green-300 font-serif text-xs">
+                        {upcomingEvent.bookTitle !== "TBA" ? upcomingEvent.bookTitle : "Book to be announced"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="absolute top-2 right-2 bg-green-700/90 text-white text-xs px-2 py-0.5 rounded-full font-serif backdrop-blur-sm">
+                    {upcomingEvent.type}
+                  </div>
+                </div>
+
+                <div className="p-2">
+                  <div className="grid grid-cols-2 gap-1 text-gray-600 dark:text-gray-300 font-serif text-xs">
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3 text-green-700" />
+                      <span>{upcomingEvent.eventDate}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-green-700" />
+                      <span>{upcomingEvent.time}</span>
+                    </div>
+                    <div className="flex items-center gap-1 col-span-2">
+                      <MapPin className="w-3 h-3 text-green-700" />
+                      <span>{upcomingEvent.location}</span>
+                    </div>
+                  </div>
+
+                  {upcomingEvent.link ? (
+                    <Button
+                      asChild
+                      size="sm"
+                      className="w-full mt-2 bg-green-700 hover:bg-green-800 text-white text-xs transition-all duration-300 font-serif relative overflow-hidden group/btn"
+                    >
+                      <Link href={upcomingEvent.link} target="_blank" rel="noopener noreferrer">
+                        <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                        Join Discussion
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      size="sm"
+                      className="w-full mt-2 bg-green-700 hover:bg-green-800 text-white text-xs transition-all duration-300 font-serif relative overflow-hidden group/btn"
+                    >
+                      <Link
+                        href="https://wa.me/+254790964291?text=Hello%20Reading%20Circle%20Event%20Coordinator,%20I'm%20contacting%20from%20the%20website.%20I%20would%20like%20to%20know%20more%20about%20the%20upcoming%20bookclub%20events%20and%20discussions"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                        Inquire More
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

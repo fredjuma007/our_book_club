@@ -140,6 +140,7 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* Button Links */}
               <div className="flex flex-wrap gap-4">
                 <Button
                   asChild
@@ -189,8 +190,63 @@ export default function Home() {
                 </Button>
               </div>
 
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 mt-8">
+              {/* Mobile Book of the Month */}
+              <div className="md:hidden mt-6">
+                <div className="bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700">
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="p-6 relative">
+                    <div className="flex items-start gap-6">
+                      <Link
+                        href="https://readingcircle.vercel.app/books/e113461c-75f3-42f8-a2db-765142c9ce05"
+                        className="relative w-24 h-36 flex-shrink-0 group/cover"
+                      >
+                        <Image
+                          src="/sometimes i lie.jpg"
+                          alt="Sometimes I Lie Book Cover"
+                          fill
+                          className="rounded-lg shadow-lg object-cover transition-transform duration-300 group-hover/cover:scale-105 group-hover/cover:rotate-2 border-2 border-green-700"
+                        />
+                        <div className="absolute -top-2 -right-2 bg-green-700 text-white text-xs px-2 py-1 rounded-full">
+                          Book of the Month
+                        </div>
+                      </Link>
+                      <div className="flex-1 space-y-2">
+                        <div>
+                          <h3 className="text-xl font-bold text-green-800 dark:text-green-400 font-serif">
+                            Sometimes I Lie
+                          </h3>
+                          <p className="text-gray-600 dark:text-gray-300 font-serif">by Alice Feeney</p>
+                        </div>
+                        <div className="relative">
+                          <Quote className="absolute -left-6 -top-2 w-4 h-4 text-green-400/30" />
+                          <p className="text-sm text-gray-700 dark:text-gray-300 italic pl-6 font-serif line-clamp-2">
+                            "People are not mirrors—they don't see you how you see yourself."
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-green-50 dark:bg-gray-700/50 p-4 flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-green-700" />
+                      <span className="text-sm text-gray-600 dark:text-gray-300 font-serif">29th March</span>
+                    </div>
+                    <Button
+                      asChild
+                      size="sm"
+                      className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
+                    >
+                      <Link href="https://meet.google.com/vhv-hfwz-avi" target="_blank" rel="noopener noreferrer">
+                        <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                        Join Discussion
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats - Desktop Only */}
+              <div className="hidden md:grid grid-cols-3 gap-4 mt-8">
                 {[
                   { label: "Members", value: "100+", icon: Users },
                   { label: "Books Read", value: "13", icon: BookOpen },
@@ -207,28 +263,21 @@ export default function Home() {
                 ))}
               </div>
 
+              {/* Desktop Scroll to Discover More */}
               <motion.div
-                className="mt-1 w-full flex justify-center md:justify-start"
+                className="mt-8 w-full hidden md:flex justify-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.2, duration: 0.8 }}
               >
-                {/* Scroll to discover more button */}
-                <motion.div
-                  className="mt-1 w-full flex justify-center md:justify-start"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.2, duration: 0.8 }}
+                <button
+                  onClick={() => scrollToSection("features")}
+                  className="w-full text-green-700 dark:text-green-400 flex flex-col items-center gap-3 group font-serif bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm px-6 py-4 rounded-xl border border-green-700/30 hover:border-green-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                 >
-                  <button
-                    onClick={() => scrollToSection("features")}
-                    className="w-full text-green-700 dark:text-green-400 flex flex-col items-center gap-3 group font-serif bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm px-6 py-4 rounded-xl border border-green-700/30 hover:border-green-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-                  >
-                    <span className="text-base md:text-lg font-medium">Scroll to discover more</span>
-                    <ChevronDown className="w-8 h-8 animate-bounce text-green-600 dark:text-green-500" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
-                  </button>
-                </motion.div>
+                  <span className="text-base md:text-lg font-medium">Scroll to discover more</span>
+                  <ChevronDown className="w-8 h-8 animate-bounce text-green-600 dark:text-green-500" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+                </button>
               </motion.div>
             </motion.div>
 
@@ -239,8 +288,8 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              {/* Book of the Month Card */}
-              <div className="bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700">
+              {/* Book of the Month Card - Desktop Only */}
+              <div className="hidden md:block bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700">
                 <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="p-6 relative">
                   <div className="flex items-start gap-6">
@@ -336,6 +385,23 @@ export default function Home() {
                   </motion.div>
                 ))}
               </div>
+
+              {/* Scroll to discover more - Mobile Only */}
+              <motion.div
+                className="mt-8 w-full flex justify-center md:hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2, duration: 0.8 }}
+              >
+                <button
+                  onClick={() => scrollToSection("features")}
+                  className="w-full text-green-700 dark:text-green-400 flex flex-col items-center gap-3 group font-serif bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm px-6 py-4 rounded-xl border border-green-700/30 hover:border-green-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <span className="text-base md:text-lg font-medium">Scroll to discover more</span>
+                  <ChevronDown className="w-8 h-8 animate-bounce text-green-600 dark:text-green-500" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+                </button>
+              </motion.div>
             </motion.div>
           </div>
         </section>
@@ -422,7 +488,7 @@ export default function Home() {
             </motion.div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {events.map((event, index) => (
+              {events.slice(0, 3).map((event, index) => (
                 <motion.div
                   key={event.id}
                   className="bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-green-700/30 hover:border-green-700 group relative"
