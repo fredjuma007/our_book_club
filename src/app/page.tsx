@@ -17,6 +17,8 @@ import {
   Clock,
   CalendarCheck,
   Info,
+  ChevronRight,
+  X,
 } from "lucide-react"
 import React, { useEffect, useState } from "react"
 import Footer from "@/components/footer"
@@ -26,6 +28,7 @@ import { galleryItems } from "@/data/gallery"
 export default function Home() {
   const [showAbout, setShowAbout] = React.useState(false)
   const [activeSection, setActiveSection] = useState("hero")
+  const [showMobileBookDetails, setShowMobileBookDetails] = useState(false)
 
   // Get featured gallery items for the homepage preview
   // const featuredGalleryItems = galleryItems.filter((item) => item.featured).slice(0, 3)
@@ -101,6 +104,72 @@ export default function Home() {
           />
         ))}
       </div>
+
+      {/* Mobile Book Details Modal */}
+      {showMobileBookDetails && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 md:hidden flex items-center justify-center p-4">
+          <div className="bg-[#fffaf0] dark:bg-gray-800/95 rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] overflow-auto">
+            <div className="p-4 relative">
+              <button
+                onClick={() => setShowMobileBookDetails(false)}
+                className="absolute top-2 right-2 w-8 h-8 rounded-full bg-green-700/10 flex items-center justify-center text-green-700 hover:bg-green-700/20 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="flex items-start gap-4 mb-4">
+                <div className="relative w-24 h-36 flex-shrink-0">
+                  <Image
+                    src="/sometimes i lie.jpg"
+                    alt="Sometimes I Lie Book Cover"
+                    fill
+                    className="rounded-lg shadow-lg object-cover border-2 border-green-700"
+                  />
+                  <div className="absolute -top-2 -right-2 bg-green-700 text-white text-xs px-2 py-1 rounded-full">
+                    Book of the Month
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-green-800 dark:text-green-400 font-serif">Sometimes I Lie</h3>
+                  <p className="text-gray-600 dark:text-gray-300 font-serif">by Alice Feeney</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <Calendar className="w-4 h-4 text-green-700" />
+                    <span className="text-sm text-gray-600 dark:text-gray-300 font-serif">29th March</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative mb-4">
+                <Quote className="absolute -left-6 -top-2 w-5 h-5 text-green-400/30" />
+                <p className="text-base text-gray-700 dark:text-gray-300 italic pl-6 font-serif">
+                  "People are not mirrors—they don't see you how you see yourself."
+                </p>
+              </div>
+
+              <div className="mb-4">
+                <h4 className="text-lg font-bold text-green-800 dark:text-green-400 font-serif mb-2">About Book</h4>
+                <p className="text-gray-700 dark:text-gray-300 font-serif">
+                  Amber wakes up in a hospital. She can't move. She can't speak. She can't open her eyes. She can hear
+                  everyone around her, but they have no idea. Amber doesn't remember what happened, but she has a
+                  suspicion her husband had something to do with it. Alternating between her paralyzed present, the week
+                  before her accident, and a series of childhood diaries from twenty years ago, this brilliant
+                  psychological thriller Is something really a lie if you believe it's the truth?
+                </p>
+              </div>
+
+              <Button
+                asChild
+                className="w-full bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
+              >
+                <Link href="https://meet.google.com/vhv-hfwz-avi" target="_blank" rel="noopener noreferrer">
+                  <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                  Join Discussion
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="relative">
         {/* Hero Section */}
@@ -192,14 +261,14 @@ export default function Home() {
 
               {/* Mobile Book of the Month */}
               <div className="md:hidden mt-2">
-                <div className="bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700">
+                <button
+                  onClick={() => setShowMobileBookDetails(true)}
+                  className="w-full text-left bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700"
+                >
                   <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="p-3 relative">
                     <div className="flex items-start gap-3">
-                      <Link
-                        href="https://readingcircle.vercel.app/books/e113461c-75f3-42f8-a2db-765142c9ce05"
-                        className="relative w-16 h-24 flex-shrink-0 group/cover"
-                      >
+                      <div className="relative w-16 h-24 flex-shrink-0 group/cover">
                         <Image
                           src="/sometimes i lie.jpg"
                           alt="Sometimes I Lie Book Cover"
@@ -209,7 +278,7 @@ export default function Home() {
                         <div className="absolute -top-1 -right-1 bg-green-700 text-white text-[10px] px-1.5 py-0.5 rounded-full">
                           Book of the Month
                         </div>
-                      </Link>
+                      </div>
                       <div className="flex-1">
                         <div>
                           <h3 className="text-base font-bold text-green-800 dark:text-green-400 font-serif">
@@ -223,6 +292,10 @@ export default function Home() {
                             "People are not mirrors—they don't see you how you see yourself."
                           </p>
                         </div>
+                        <div className="flex items-center justify-end mt-1 text-green-700 text-xs">
+                          <span>View details</span>
+                          <ChevronRight className="w-3 h-3 ml-1" />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -231,18 +304,12 @@ export default function Home() {
                       <Calendar className="w-3 h-3 text-green-700" />
                       <span className="text-xs text-gray-600 dark:text-gray-300 font-serif">29th March</span>
                     </div>
-                    <Button
-                      asChild
-                      size="sm"
-                      className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn h-7 text-xs px-2"
-                    >
-                      <Link href="https://meet.google.com/vhv-hfwz-avi" target="_blank" rel="noopener noreferrer">
-                        <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
-                        Join Discussion
-                      </Link>
-                    </Button>
+                    <div className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn h-7 text-xs px-2 py-1 rounded-md">
+                      <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                      Join Discussion
+                    </div>
                   </div>
-                </div>
+                </button>
               </div>
 
               {/* Stats - Desktop Only */}
@@ -712,4 +779,3 @@ export default function Home() {
     </div>
   )
 }
-
