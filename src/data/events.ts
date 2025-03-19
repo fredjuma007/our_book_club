@@ -18,7 +18,7 @@ export type Event = {
   export const events: Event[] = [
     {
       id: 1,
-      title: "Book Discussion",
+      title: "Book Club Meeting",
       date: new Date(2025, 2, 29),
       time: "7:00 PM - 9:00 PM",
       location: "Virtual",
@@ -46,7 +46,7 @@ export type Event = {
     },
     {
       id: 3,
-      title: "Book Discussion",
+      title: "Book Club Meeting",
       date: new Date(2025, 4, 3),
       time: "7:00 PM - 9:00 PM",
       location: "Virtual",
@@ -60,7 +60,7 @@ export type Event = {
     },
     {
       id: 4,
-      title: "Book Discussion",
+      title: "Book Club Meeting",
       date: new Date(2025, 4, 31),
       time: "7:00 PM - 9:00 PM",
       location: "Virtual",
