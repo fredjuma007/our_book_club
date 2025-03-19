@@ -10,11 +10,13 @@ the project is a website that catalogues books read by the members of the book c
 
 ## Features
 - Browse books read by the club (incude search by book title)
-- View book detailss
+- View book details
 - Rate books
 - Comment on books
 - View upcoming club events
 - Dark mode
+- Responsive design
+- User authentication
 
 ## Future Features
 - Better User authentication
@@ -36,9 +38,9 @@ the project is a website that catalogues books read by the members of the book c
 ## Screenshots
 
 THE INTERFACE ⬇️⬇️⬇️
-![Alt Text](screenshots/landing_page1.png)
-![Alt Text](screenshots/books_page.png)
-![Alt Text](screenshots/review_page.png)
+![Alt Text](screenshots/homepage.png)
+![Alt Text](screenshots/all_books.png)
+![Alt Text](screenshots/book_info.png)
 
 you can support me by giving a star to this repo ⭐️
 
