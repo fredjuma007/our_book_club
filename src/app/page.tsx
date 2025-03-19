@@ -268,7 +268,10 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="p-3 relative">
                     <div className="flex items-start gap-3">
-                      <div className="relative w-16 h-24 flex-shrink-0 group/cover">
+                        <Link
+                        href="https://readingcircle.vercel.app/books/e113461c-75f3-42f8-a2db-765142c9ce05"
+                        className="relative w-16 h-24 flex-shrink-0 group/cover"
+                        >
                         <Image
                           src="/sometimes i lie.jpg"
                           alt="Sometimes I Lie Book Cover"
@@ -278,7 +281,7 @@ export default function Home() {
                         <div className="absolute -top-1 -right-1 bg-green-700 text-white text-[10px] px-1.5 py-0.5 rounded-full">
                           Book of the Month
                         </div>
-                      </div>
+                        </Link>
                       <div className="flex-1">
                         <div>
                           <h3 className="text-base font-bold text-green-800 dark:text-green-400 font-serif">
