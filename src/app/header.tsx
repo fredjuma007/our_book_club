@@ -5,6 +5,7 @@ import { loginAction, logoutAction } from "./actions"
 import { getMember, getServerClient } from "@/lib/wix"
 import { ThemeToggle } from "@/components/ModeToggle"
 import { MobileMenu } from "@/components/mobile-menu"
+import { HeaderCountdown } from "@/components/header-countdown"
 
 export async function Header() {
   const [member, client] = await Promise.all([getMember(), getServerClient()])
@@ -93,6 +94,17 @@ export async function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-4 md:gap-6 relative z-10">
+            
+            {/* Event Countdown */}
+            <HeaderCountdown
+              eventDate={new Date(2025, 2, 29, 19, 0, 0)}
+              eventTitle="Book Club Meeting"
+              eventTime="7:00 PM - 9:00 PM"
+              eventLink="https://meet.google.com/vhv-hfwz-avi"
+              bookTitle="Sometimes I Lie"
+              bookCover="/sometimes i lie.jpg"
+            />
+
             {/* Mode Toggle */}
             <ThemeToggle />
 
@@ -173,6 +185,17 @@ export async function Header() {
 
           {/* Mobile Navigation */}
           <div className="flex md:hidden items-center gap-2 z-10">
+
+            {/* Mobile Event Countdown */}
+            <HeaderCountdown
+              eventDate={new Date(2025, 2, 29, 19, 0, 0)}
+              eventTitle="Book Club Meeting"
+              eventTime="7:00 PM - 9:00 PM"
+              eventLink="https://meet.google.com/vhv-hfwz-avi"
+              bookTitle="Sometimes I Lie"
+              bookCover="/sometimes i lie.jpg"
+            />
+
             <ThemeToggle />
             <MobileMenu
               isLoggedIn={isLoggedIn}
@@ -189,4 +212,3 @@ export async function Header() {
     </>
   )
 }
-
