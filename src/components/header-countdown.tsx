@@ -97,15 +97,19 @@ export function HeaderCountdown({
         <div className="relative">
           {/* Pulsing effect */}
           <div className="absolute inset-0 rounded-full bg-green-500/30 animate-pulse" />
-          <div className="relative bg-green-700 text-white rounded-full px-2 py-1 text-xs font-mono font-bold flex items-center gap-1">
-            <Calendar className="w-3 h-3" />
+          <div className="relative bg-green-700 text-white rounded-full px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs font-mono font-bold flex items-center gap-1">
+            <Calendar className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
             <span>{timeLeft.days}d</span>
           </div>
         </div>
 
-        <div className="hidden md:flex items-center gap-1 text-green-700 dark:text-green-400 text-xs font-serif">
+        <div className="hidden lg:flex items-center gap-1 text-green-700 dark:text-green-400 text-[10px] sm:text-xs font-serif">
           <span>Next Event</span>
-          {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+          {isExpanded ? (
+            <ChevronUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+          ) : (
+            <ChevronDown className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+          )}
         </div>
       </div>
 
@@ -122,7 +126,12 @@ export function HeaderCountdown({
                 className="absolute pointer-events-auto"
                 style={{
                   top: containerRef.current ? containerRef.current.getBoundingClientRect().bottom + 8 : 0,
-                  left: containerRef.current ? containerRef.current.getBoundingClientRect().left - 200 : 0, // Adjust position to align better
+                  left: containerRef.current
+                    ? Math.max(
+                        10,
+                        Math.min(containerRef.current.getBoundingClientRect().left - 200, window.innerWidth - 290),
+                      )
+                    : 0, // Ensure it stays within viewport
                   width: "280px",
                   maxWidth: "calc(100vw - 2rem)",
                   zIndex: 999,
@@ -174,10 +183,12 @@ export function HeaderCountdown({
                       <div className="grid grid-cols-4 gap-1 text-center">
                         {Object.entries(timeLeft).map(([key, value]) => (
                           <div key={key} className="flex flex-col">
-                            <div className="bg-green-700 text-white rounded-md py-1 px-2 font-mono text-lg font-bold">
+                            <div className="bg-green-700 text-white rounded-md py-0.5 sm:py-1 px-1 sm:px-2 font-mono text-sm sm:text-lg font-bold">
                               {value.toString().padStart(2, "0")}
                             </div>
-                            <span className="text-xs mt-1 text-gray-600 dark:text-gray-300 capitalize">{key}</span>
+                            <span className="text-[10px] sm:text-xs mt-1 text-gray-600 dark:text-gray-300 capitalize">
+                              {key}
+                            </span>
                           </div>
                         ))}
                       </div>

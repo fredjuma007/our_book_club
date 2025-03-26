@@ -38,11 +38,11 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
       {/* Mobile menu panel */}
       <div
         className={`
-        fixed top-[75px] right-0 w-64 max-h-fit bg-white dark:bg-gray-900 
-        shadow-lg z-40 transform transition-transform duration-300 ease-in-out
-        ${isOpen ? "translate-x-0" : "translate-x-full"}
-        border-l border-green-100 dark:border-green-900 rounded-bl-md
-      `}
+    fixed top-[65px] sm:top-[70px] lg:top-[75px] right-0 w-64 sm:w-80 max-h-[calc(100vh-65px)] sm:max-h-[calc(100vh-70px)] lg:max-h-[calc(100vh-75px)] overflow-y-auto
+    bg-white dark:bg-gray-900 shadow-lg z-40 transform transition-transform duration-300 ease-in-out
+    ${isOpen ? "translate-x-0" : "translate-x-full"}
+    border-l border-green-100 dark:border-green-900 rounded-bl-md
+  `}
       >
         {/* Paper texture background */}
         <div className="absolute inset-0 bg-repeat opacity-10 dark:opacity-5 rounded-bl-md" />
@@ -126,52 +126,57 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
           </div>
 
           {/* Book of the Month */}
-            <div className="pt-2 pb-1 border-b border-green-100 dark:border-green-900">
-            <h3 className="text-sm font-serif font-medium text-green-600 dark:text-green-400 mb-3 flex items-center">
-              <BookOpen className="h-4 w-4 mr-2" />
+          <div className="pt-2 pb-1 border-b border-green-100 dark:border-green-900">
+            <h3 className="text-xs sm:text-sm font-serif font-medium text-green-600 dark:text-green-400 mb-2 sm:mb-3 flex items-center">
+              <BookOpen className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
               Book of the Month
             </h3>
 
-            <Link href="https://readingcircle.vercel.app/books/e113461c-75f3-42f8-a2db-765142c9ce05" className="relative block">
-              <div className="relative bg-green-50 dark:bg-green-900/40 rounded-md p-3 border border-green-100 dark:border-green-800 mb-4 hover:bg-green-100/50 dark:hover:bg-green-800/50 transition-colors">
-              {/* Paper texture */}
-              <div className="absolute inset-0 bg-repeat opacity-10 dark:opacity-5 rounded-md" />
+            <Link
+              href="https://readingcircle.vercel.app/books/e113461c-75f3-42f8-a2db-765142c9ce05"
+              className="relative block"
+            >
+              <div className="relative bg-green-50 dark:bg-green-900/40 rounded-md p-2 sm:p-3 border border-green-100 dark:border-green-800 mb-3 sm:mb-4 hover:bg-green-100/50 dark:hover:bg-green-800/50 transition-colors">
+                {/* Paper texture */}
+                <div className="absolute inset-0 bg-repeat opacity-10 dark:opacity-5 rounded-md" />
 
-              <div className="flex gap-3">
-                <div className="relative w-16 h-24 flex-shrink-0">
-                <div className="absolute inset-0 shadow-md rounded-sm overflow-hidden">
-                  <Image
-                  src="/sometimes i lie.jpg"
-                  width={64}
-                  height={96}
-                  alt="Book cover"
-                  className="object-cover"
-                  />
-                </div>
-                {/* Book edge effect */}
-                <div className="absolute top-0 bottom-0 right-0 w-[2px] bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600"></div>
-                </div>
+                <div className="flex gap-2 sm:gap-3">
+                  <div className="relative w-12 h-18 sm:w-16 sm:h-24 flex-shrink-0">
+                    <div className="absolute inset-0 shadow-md rounded-sm overflow-hidden">
+                      <Image
+                        src="/sometimes i lie.jpg"
+                        width={64}
+                        height={96}
+                        alt="Book cover"
+                        className="object-cover"
+                      />
+                    </div>
+                    {/* Book edge effect */}
+                    <div className="absolute top-0 bottom-0 right-0 w-[2px] bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600"></div>
+                  </div>
 
-                <div className="flex-1">
-                <h4 className="text-sm font-serif font-medium text-gray-900 dark:text-gray-100 line-clamp-2">
-                  Sometimes I Lie
-                </h4>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Alice Feeney</p>
-                <div className="flex items-center mt-2 text-xs text-gray-500 dark:text-gray-500">
-                  <Calendar className="h-3 w-3 mr-1" />
-                  <span>Review: March 29, 2025</span>
+                  <div className="flex-1">
+                    <h4 className="text-xs sm:text-sm font-serif font-medium text-gray-900 dark:text-gray-100 line-clamp-2">
+                      Sometimes I Lie
+                    </h4>
+                    <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 mt-0.5 sm:mt-1">
+                      Alice Feeney
+                    </p>
+                    <div className="flex items-center mt-1 sm:mt-2 text-[10px] sm:text-xs text-gray-500 dark:text-gray-500">
+                      <Calendar className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
+                      <span>Review: March 29, 2025</span>
+                    </div>
+                  </div>
                 </div>
-                </div>
-              </div>
               </div>
             </Link>
-            </div>
+          </div>
 
           {/* Upcoming Event */}
           {upcomingEvent && (
             <div className="pt-2 pb-1">
-              <h3 className="text-sm font-serif font-medium text-green-600 dark:text-green-400 mb-3 flex items-center">
-                <Calendar className="h-4 w-4 mr-2" />
+              <h3 className="text-xs sm:text-sm font-serif font-medium text-green-600 dark:text-green-400 mb-2 sm:mb-3 flex items-center">
+                <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                 Upcoming Event
               </h3>
 
@@ -179,7 +184,7 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
                 {/* Paper texture */}
                 <div className="absolute inset-0 bg-repeat opacity-10 dark:opacity-5 rounded-md" />
 
-                <div className="relative h-32">
+                <div className="relative h-24 sm:h-32">
                   <Image
                     src={upcomingEvent.imageUrl || "/placeholder.svg"}
                     alt={upcomingEvent.title}
@@ -187,30 +192,30 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
                     className="object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                    <div className="p-2">
-                      <h4 className="text-sm font-bold text-white font-serif">{upcomingEvent.title}</h4>
-                      <p className="text-green-300 font-serif text-xs">
+                    <div className="p-1.5 sm:p-2">
+                      <h4 className="text-xs sm:text-sm font-bold text-white font-serif">{upcomingEvent.title}</h4>
+                      <p className="text-green-300 font-serif text-[10px] sm:text-xs">
                         {upcomingEvent.bookTitle !== "TBA" ? upcomingEvent.bookTitle : "Book to be announced"}
                       </p>
                     </div>
                   </div>
-                  <div className="absolute top-2 right-2 bg-green-700/90 text-white text-xs px-2 py-0.5 rounded-full font-serif backdrop-blur-sm">
+                  <div className="absolute top-1.5 sm:top-2 right-1.5 sm:right-2 bg-green-700/90 text-white text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full font-serif backdrop-blur-sm">
                     {upcomingEvent.type}
                   </div>
                 </div>
 
-                <div className="p-2">
-                  <div className="grid grid-cols-2 gap-1 text-gray-600 dark:text-gray-300 font-serif text-xs">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-green-700" />
+                <div className="p-1.5 sm:p-2">
+                  <div className="grid grid-cols-2 gap-0.5 sm:gap-1 text-gray-600 dark:text-gray-300 font-serif text-[10px] sm:text-xs">
+                    <div className="flex items-center gap-0.5 sm:gap-1">
+                      <Calendar className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-700" />
                       <span>{upcomingEvent.eventDate}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-green-700" />
+                    <div className="flex items-center gap-0.5 sm:gap-1">
+                      <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-700" />
                       <span>{upcomingEvent.time}</span>
                     </div>
-                    <div className="flex items-center gap-1 col-span-2">
-                      <MapPin className="w-3 h-3 text-green-700" />
+                    <div className="flex items-center gap-0.5 sm:gap-1 col-span-2">
+                      <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-700" />
                       <span>{upcomingEvent.location}</span>
                     </div>
                   </div>
@@ -219,7 +224,7 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
                     <Button
                       asChild
                       size="sm"
-                      className="w-full mt-2 bg-green-700 hover:bg-green-800 text-white text-xs transition-all duration-300 font-serif relative overflow-hidden group/btn"
+                      className="w-full mt-1.5 sm:mt-2 bg-green-700 hover:bg-green-800 text-white text-[10px] sm:text-xs py-1 h-auto sm:h-8 transition-all duration-300 font-serif relative overflow-hidden group/btn"
                     >
                       <Link href={upcomingEvent.link} target="_blank" rel="noopener noreferrer">
                         <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
@@ -230,7 +235,7 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
                     <Button
                       asChild
                       size="sm"
-                      className="w-full mt-2 bg-green-700 hover:bg-green-800 text-white text-xs transition-all duration-300 font-serif relative overflow-hidden group/btn"
+                      className="w-full mt-1.5 sm:mt-2 bg-green-700 hover:bg-green-800 text-white text-[10px] sm:text-xs py-1 h-auto sm:h-8 transition-all duration-300 font-serif relative overflow-hidden group/btn"
                     >
                       <Link
                         href="https://wa.me/+254790964291?text=Hello%20Reading%20Circle%20Event%20Coordinator,%20I'm%20contacting%20from%20the%20website.%20I%20would%20like%20to%20know%20more%20about%20the%20upcoming%20bookclub%20events%20and%20discussions"

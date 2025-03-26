@@ -33,11 +33,11 @@ export async function Header() {
         <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-green-800/20 dark:border-green-700/20 rounded-tr-sm" />
 
         {/* Book bookmark */}
-        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-10 bg-green-600 dark:bg-green-700 rounded-b-sm shadow-md transform-gpu rotate-3 origin-top z-10 hidden md:block">
+        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-10 bg-green-600 dark:bg-green-700 rounded-b-sm shadow-md transform-gpu rotate-3 origin-top z-10 hidden lg:block">
           <div className="absolute inset-0 bg-repeat mix-blend-overlay opacity-20" />
         </div>
 
-        <div className="container mx-auto flex justify-between items-center px-4 md:px-8 py-3 relative">
+        <div className="container mx-auto flex justify-between items-center px-3 sm:px-4 md:px-8 py-2 sm:py-3 relative">
           {/* Logo and Title */}
           <Button variant="link" asChild>
             <Link href="/" className="flex items-center gap-3 text-gray-900 dark:text-gray-100 group">
@@ -48,13 +48,13 @@ export async function Header() {
                   width={55}
                   height={55}
                   alt="TheBookClub"
-                  className="rounded-full border-2 border-green-200 dark:border-green-800 shadow-md hover:scale-105 transition-transform duration-300 relative z-10"
+                  className="rounded-full border-2 border-green-200 dark:border-green-800 shadow-md hover:scale-105 transition-transform duration-300 relative z-10 w-[45px] h-[45px] sm:w-[55px] sm:h-[55px]"
                 />
                 <div className="absolute -inset-1 rounded-full bg-green-100 dark:bg-green-800/30 opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
               </div>
               <div className="relative overflow-hidden">
                 <span
-                  className="hidden md:block text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-transparent 
+                  className="hidden sm:block text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-transparent 
                 bg-clip-text bg-gradient-to-r from-green-600 via-green-500 to-green-400 tracking-wide relative group-hover:text-shadow-neon transition-all duration-300"
                 >
                   READING CIRCLE
@@ -93,8 +93,7 @@ export async function Header() {
           </Button>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-4 md:gap-6 relative z-10">
-            
+          <div className="hidden lg:flex items-center gap-2 lg:gap-4 xl:gap-6 relative z-10">
             {/* Event Countdown */}
             <HeaderCountdown
               eventDate={new Date(2025, 2, 29, 19, 0, 0)}
@@ -109,7 +108,7 @@ export async function Header() {
             <ThemeToggle />
 
             {/* Navigation Links */}
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 lg:gap-6">
               <Button
                 asChild
                 variant="ghost"
@@ -184,8 +183,7 @@ export async function Header() {
           </div>
 
           {/* Mobile Navigation */}
-          <div className="flex md:hidden items-center gap-2 z-10">
-
+          <div className="flex lg:hidden items-center gap-2 z-10">
             {/* Mobile Event Countdown */}
             <HeaderCountdown
               eventDate={new Date(2025, 2, 29, 19, 0, 0)}
@@ -208,7 +206,7 @@ export async function Header() {
       </div>
 
       {/* Padding to prevent content overlap */}
-      <div className="pt-[75px]"></div>
+      <div className="pt-[65px] sm:pt-[70px] lg:pt-[75px]"></div>
     </>
   )
 }
