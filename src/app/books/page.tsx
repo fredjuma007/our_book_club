@@ -8,29 +8,75 @@ import { redirect } from "next/navigation"
 import { getServerClient } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import { ScrollToTop } from "@/components/scroll-to-top"
+import { BooksFilter } from "@/components/books-filter"
 
-export default async function Home({ searchParams }: { searchParams: { search?: string } }) {
-  await searchParams;
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: {
+    search?: string
+    author?: string
+    genre?: string
+  }
+}) {
+  await searchParams
   const client = await getServerClient()
 
-  const books = await client.items
+  const booksData = await client.items
     .queryDataItems({ dataCollectionId: "Books" })
     .find()
-    .then((res) => res.items.map((item) => item.data))
+    .then((res) => res.items.map((item) => item.data || {}))
     .catch((error) => {
       console.error("Error fetching books:", error)
       return []
     })
+
+  // Filter out any null or undefined values to satisfy TypeScript
+  const books = booksData.filter(
+    (
+      book,
+    ): book is {
+      _id: string
+      title: string
+      author: string
+      genre: string
+      recommender?: string
+      image?: any
+    } => !!book && typeof book === "object",
+  )
+
   const searchQuery = (await searchParams).search || ""
-  const filteredBooks = searchQuery
-    ? books.filter(
-        (book) =>
-          book?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          book?.author?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          book?.genre?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          book?.recommender?.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
-    : books
+  const authorFilter = (await searchParams).author || ""
+  const genreFilter = (await searchParams).genre || ""
+
+  // Apply all filters
+  let filteredBooks = books.filter((book) => {
+    // Search filter
+    const matchesSearch =
+      !searchQuery ||
+      book?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book?.author?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book?.genre?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book?.recommender?.toLowerCase().includes(searchQuery.toLowerCase())
+
+    // Author filter
+    const matchesAuthor = !authorFilter || authorFilter === "all" || book?.author === authorFilter
+
+    // Genre filter
+    const matchesGenre = !genreFilter || genreFilter === "all" || book?.genre === genreFilter
+
+    return matchesSearch && matchesAuthor && matchesGenre
+  })
+
+  // Sort by newest (recently added) by default
+  filteredBooks = filteredBooks.sort((a, b) => {
+    // Try to use _createdDate if available
+    if (a?._createdDate && b?._createdDate) {
+      return new Date(b._createdDate).getTime() - new Date(a._createdDate).getTime()
+    }
+    // Fallback to title sort if dates aren't available
+    return (a?.title || "").localeCompare(b?.title || "")
+  })
 
   return (
     <div className="min-h-screen bg-[#f5f0e1] dark:bg-gray-900">
@@ -75,7 +121,7 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
             <Input
               name="search"
               type="text"
-              placeholder="Enter Title, Author or Genre"
+              placeholder="Title, Author, Genre"
               defaultValue={searchQuery}
               className="dark:bg-gray-800 dark:text-white border-2 border-green-700"
             />
@@ -114,6 +160,9 @@ export default async function Home({ searchParams }: { searchParams: { search?: 
             </Button>
           </div>
         </div>
+
+        {/* Add the filter component */}
+        <BooksFilter books={booksData || []} initialAuthor={authorFilter} initialGenre={genreFilter} />
 
         {filteredBooks.length === 0 && (
           <div className="border p-12 flex flex-col gap-4 items-center justify-center bg-[#fffaf0] dark:bg-gray-800 rounded-lg shadow-md">
