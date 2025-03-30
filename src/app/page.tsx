@@ -624,7 +624,7 @@ export default function Home() {
                           rel="noopener noreferrer"
                         >
                           <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
-                          Inquire More
+                          Inquire To Donate
                         </Link>
                       </Button>
                     )}

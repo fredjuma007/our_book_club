@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
+import { events } from "@/data/events" // Import events data
 
 type HeaderCountdownProps = {
   eventDate: Date
@@ -17,13 +18,30 @@ type HeaderCountdownProps = {
 }
 
 export function HeaderCountdown({
-  eventDate = new Date(2025, 2, 29, 19, 0, 0), // March 29, 2025, 7:00 PM
-  eventTitle = "Book Club Meeting",
-  eventTime = "7:00 PM - 9:00 PM",
-  eventLink = "https://meet.google.com/vhv-hfwz-avi",
-  bookTitle = "Sometimes I Lie",
-  bookCover = "/sometimes i lie.jpg",
-}: Partial<HeaderCountdownProps>) {
+  initialEventDate = new Date(2025, 2, 29, 19, 0, 0), // March 29, 2025, 7:00 PM
+  initialEventTitle = "Book Club Meeting",
+  initialEventTime = "7:00 PM - 9:00 PM",
+  initialEventLink = "https://meet.google.com/vhv-hfwz-avi",
+  initialBookTitle = "Sometimes I Lie",
+  initialBookCover = "/sometimes i lie.jpg",
+}: {
+  initialEventDate?: Date
+  initialEventTitle?: string
+  initialEventTime?: string
+  initialEventLink?: string
+  initialBookTitle?: string
+  initialBookCover?: string
+}) {
+  // State for current event details
+  const [currentEvent, setCurrentEvent] = useState({
+    eventDate: initialEventDate,
+    eventTitle: initialEventTitle,
+    eventTime: initialEventTime,
+    eventLink: initialEventLink || "",
+    bookTitle: initialBookTitle,
+    bookCover: initialBookCover,
+  })
+
   const [timeLeft, setTimeLeft] = useState<{
     days: number
     hours: number
@@ -32,6 +50,42 @@ export function HeaderCountdown({
   } | null>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  // Find the next upcoming event
+  useEffect(() => {
+    const findNextEvent = () => {
+      const now = new Date()
+
+      // Sort events by date
+      const sortedEvents = [...events].sort((a, b) => +a.date - +b.date)
+
+      // Find the next upcoming event
+      const nextEvent = sortedEvents.find((event) => +event.date > +now)
+
+      if (nextEvent) {
+        setCurrentEvent({
+          eventDate: nextEvent.date,
+          eventTitle: nextEvent.title,
+          eventTime: nextEvent.time,
+          eventLink: nextEvent.link || "",
+          bookTitle: nextEvent.bookTitle,
+          bookCover: nextEvent.imageUrl || "/placeholder.svg",
+        })
+      }
+    }
+
+    // Find next event initially
+    findNextEvent()
+
+    // Check for next event when current one expires
+    const checkInterval = setInterval(() => {
+      if (!timeLeft) {
+        findNextEvent()
+      }
+    }, 60000) // Check every minute
+
+    return () => clearInterval(checkInterval)
+  }, [timeLeft])
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -53,7 +107,7 @@ export function HeaderCountdown({
   // Calculate time remaining
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const difference = +eventDate - +new Date()
+      const difference = +currentEvent.eventDate - +new Date()
 
       if (difference <= 0) {
         // Event has passed
@@ -83,10 +137,10 @@ export function HeaderCountdown({
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [eventDate])
+  }, [currentEvent.eventDate])
 
-  // Don't render if countdown is over
-  if (!timeLeft) {
+  // Don't render if no upcoming events
+  if (!timeLeft && events.every((event) => +event.date < +new Date())) {
     return null
   }
 
@@ -99,7 +153,7 @@ export function HeaderCountdown({
           <div className="absolute inset-0 rounded-full bg-green-500/30 animate-pulse" />
           <div className="relative bg-green-700 text-white rounded-full px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs font-mono font-bold flex items-center gap-1">
             <Calendar className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-            <span>{timeLeft.days}d</span>
+            <span>{timeLeft?.days || 0}d</span>
           </div>
         </div>
 
@@ -159,50 +213,55 @@ export function HeaderCountdown({
                     <div className="flex gap-3 mb-3">
                       <div className="relative w-14 h-20 flex-shrink-0">
                         <Image
-                          src={bookCover || "/placeholder.svg"}
-                          alt={bookTitle}
+                          src={currentEvent.bookCover || "/placeholder.svg"}
+                          alt={currentEvent.bookTitle}
                           fill
                           className="object-cover rounded-md border border-green-700"
                         />
                       </div>
                       <div>
-                        <h4 className="font-serif font-bold text-green-800 dark:text-green-400">{eventTitle}</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 font-serif">{bookTitle}</p>
+                        <h4 className="font-serif font-bold text-green-800 dark:text-green-400">
+                          {currentEvent.eventTitle}
+                        </h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 font-serif">{currentEvent.bookTitle}</p>
                         <div className="flex items-center gap-1 mt-1 text-xs text-gray-600 dark:text-gray-300">
                           <Clock className="w-3 h-3 text-green-700" />
-                          <span>{eventTime}</span>
+                          <span>{currentEvent.eventTime}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Countdown */}
-                    <div className="bg-green-700/10 rounded-lg p-3 mb-3">
-                      <p className="text-xs text-center text-green-800 dark:text-green-400 mb-2 font-serif">
-                        Time remaining until discussion:
-                      </p>
-                      <div className="grid grid-cols-4 gap-1 text-center">
-                        {Object.entries(timeLeft).map(([key, value]) => (
-                          <div key={key} className="flex flex-col">
-                            <div className="bg-green-700 text-white rounded-md py-0.5 sm:py-1 px-1 sm:px-2 font-mono text-sm sm:text-lg font-bold">
-                              {value.toString().padStart(2, "0")}
+                    {timeLeft && (
+                      <div className="bg-green-700/10 rounded-lg p-3 mb-3">
+                        <p className="text-xs text-center text-green-800 dark:text-green-400 mb-2 font-serif">
+                          Time remaining to event:
+                        </p>
+                        <div className="grid grid-cols-4 gap-1 text-center">
+                          {Object.entries(timeLeft).map(([key, value]) => (
+                            <div key={key} className="flex flex-col">
+                              <div className="bg-green-700 text-white rounded-md py-0.5 sm:py-1 px-1 sm:px-2 font-mono text-sm sm:text-lg font-bold">
+                                {value.toString().padStart(2, "0")}
+                              </div>
+                              <span className="text-[10px] sm:text-xs mt-1 text-gray-600 dark:text-gray-300 capitalize">
+                                {key}
+                              </span>
                             </div>
-                            <span className="text-[10px] sm:text-xs mt-1 text-gray-600 dark:text-gray-300 capitalize">
-                              {key}
-                            </span>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
                     {/* Join button */}
                     <Button
                       asChild
                       className="w-full bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
+                      disabled={!currentEvent.eventLink}
                     >
-                      <Link href={eventLink} target="_blank" rel="noopener noreferrer">
+                      <Link href={currentEvent.eventLink || "#"} target="_blank" rel="noopener noreferrer">
                         <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
                         <BookOpen className="w-4 h-4 mr-2" />
-                        Join Discussion
+                        {currentEvent.eventLink ? "Join Discussion" : "Event Details"}
                       </Link>
                     </Button>
                   </div>
