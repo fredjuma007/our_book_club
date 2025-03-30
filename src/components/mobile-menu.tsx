@@ -133,7 +133,7 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
             </h3>
 
             <Link
-              href="https://readingcircle.vercel.app/books/e113461c-75f3-42f8-a2db-765142c9ce05"
+              href="https://readingcircle.vercel.app/books/0ff3b310-acd6-4a8d-b468-6542a9f818e0"
               className="relative block"
             >
               <div className="relative bg-green-50 dark:bg-green-900/40 rounded-md p-2 sm:p-3 border border-green-100 dark:border-green-800 mb-3 sm:mb-4 hover:bg-green-100/50 dark:hover:bg-green-800/50 transition-colors">
@@ -144,7 +144,7 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
                   <div className="relative w-12 h-18 sm:w-16 sm:h-24 flex-shrink-0">
                     <div className="absolute inset-0 shadow-md rounded-sm overflow-hidden">
                       <Image
-                        src="/sometimes i lie.jpg"
+                        src="/the_anxious_generation.jpg"
                         width={64}
                         height={96}
                         alt="Book cover"
