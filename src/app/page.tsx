@@ -86,7 +86,7 @@ export default function Home() {
   }
 
   return (
-    <div className="relative bg-[url('/picnic.jpg')] bg-cover bg-fixed bg-center bg-no-repeat text-blueberry dark:text-sky overflow-x-hidden selection:bg-candy/30">
+    <div className="relative bg-[url('/baby.jpg')] sm:bg-[url('/mum.jpg')] bg-cover bg-fixed bg-center bg-no-repeat text-blueberry dark:text-sky overflow-x-hidden selection:bg-candy/30">
       {/* Animated particles */}
       <div className="fixed inset-0 star-bg animate-fade" />
 
