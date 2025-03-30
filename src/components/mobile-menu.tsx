@@ -157,14 +157,14 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
 
                   <div className="flex-1">
                     <h4 className="text-xs sm:text-sm font-serif font-medium text-gray-900 dark:text-gray-100 line-clamp-2">
-                      Sometimes I Lie
+                      The Anxious Generation
                     </h4>
                     <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 mt-0.5 sm:mt-1">
-                      Alice Feeney
+                    Jonathan Haidt
                     </p>
                     <div className="flex items-center mt-1 sm:mt-2 text-[10px] sm:text-xs text-gray-500 dark:text-gray-500">
                       <Calendar className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
-                      <span>Review: March 29, 2025</span>
+                      <span>Review: May 3, 2025</span>
                     </div>
                   </div>
                 </div>
