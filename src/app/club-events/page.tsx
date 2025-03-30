@@ -6,7 +6,21 @@ import Link from "next/link"
 import { Calendar } from "@/components/ui/calendar"
 import React from "react"
 import { motion } from "framer-motion"
-import { BookOpen, MapPin, Clock, BookMarked, CalendarCheck, Sparkles, Info, History, Archive, CalendarDays, Camera } from "lucide-react"
+import {
+  BookOpen,
+  MapPin,
+  Clock,
+  BookMarked,
+  CalendarCheck,
+  Sparkles,
+  Info,
+  History,
+  Archive,
+  CalendarDays,
+  Camera,
+  Star,
+  BombIcon as Balloon,
+} from "lucide-react"
 import Footer from "@/components/footer"
 import { events } from "@/data/events"
 import { previousEvents } from "@/data/previous-events"
@@ -30,29 +44,39 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f0e1] dark:bg-gray-900 selection:bg-green-700/30">
+    <div className="min-h-screen bg-[#f9f3ff] dark:bg-blueberry selection:bg-candy/30">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         {/* Animated Background Pattern */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20" />
+        <div className="absolute inset-0 star-bg animate-fade" />
 
         <div className="max-w-screen-xl mx-auto py-16 px-4 lg:px-8 relative">
-          {/* Floating Books */}
+          {/* Floating Decorations */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="absolute right-10 top-10 hidden lg:block animate-[bounce_6s_ease-in-out_infinite]"
+            className="absolute right-10 top-10 hidden lg:block animate-float"
           >
-            <BookOpen className="w-16 h-16 text-green-700/30 transform rotate-12" />
+            <BookOpen className="w-16 h-16 text-candy transform rotate-12" />
           </motion.div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="absolute left-20 bottom-10 hidden lg:block animate-[bounce_8s_ease-in-out_infinite]"
+            className="absolute left-20 bottom-10 hidden lg:block animate-float"
+            style={{ animationDelay: "0.5s" }}
           >
-            <BookMarked className="w-12 h-12 text-green-700/20 transform -rotate-12" />
+            <BookMarked className="w-16 h-16 text-sky transform -rotate-12" />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="absolute right-40 bottom-20 hidden lg:block animate-float"
+            style={{ animationDelay: "1s" }}
+          >
+            <Balloon className="w-16 h-16 text-sunshine transform rotate-6" />
           </motion.div>
 
           {/* Header Content */}
@@ -62,13 +86,13 @@ export default function EventsPage() {
             transition={{ duration: 0.6 }}
             className="text-center relative z-10"
           >
-            <h1 className="text-5xl md:text-6xl font-bold text-green-800 dark:text-green-500 font-serif mb-4 relative inline-block group">
-              <span className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-              Events📅
-              <Sparkles className="absolute -right-8 -top-8 w-6 h-6 text-green-700/40 animate-spin-slow" />
+            <h1 className="text-5xl md:text-6xl font-bold text-blueberry dark:text-sky mb-4 relative inline-block group rainbow-text">
+              <span className="absolute -inset-1 bg-candy/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+              Events & Fun Times!
+              <Sparkles className="absolute -right-8 -top-8 w-8 h-8 text-sunshine animate-spin-slow" />
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
-              Join us for exciting book discussions, workshops, and literary adventures!
+            <p className="text-xl text-blueberry/80 dark:text-sky/80 max-w-2xl mx-auto">
+              Join us for exciting book discussions, workshops, and magical reading adventures!
             </p>
           </motion.div>
 
@@ -83,52 +107,52 @@ export default function EventsPage() {
               onClick={() => setActiveSection("upcoming")}
               className={`${
                 activeSection === "upcoming"
-                  ? "bg-green-700 text-white"
-                  : "text-green-700 border-green-700 hover:bg-green-200"
-              } font-serif relative overflow-hidden group px-4 py-2 rounded-md border cursor-pointer flex items-center`}
+                  ? "bg-candy text-white shadow-childish"
+                  : "text-blueberry dark:text-sky border-4 border-candy hover:bg-candy/20"
+              } relative overflow-hidden group px-4 py-3 rounded-full cursor-pointer flex items-center font-bold`}
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <CalendarCheck className="w-4 h-4 mr-2" />
+              <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <CalendarCheck className="w-5 h-5 mr-2" />
               Upcoming Events
             </div>
             <div
               onClick={() => setActiveSection("previous")}
               className={`${
                 activeSection === "previous"
-                  ? "bg-green-700 text-white"
-                  : "text-green-700 border-green-700 hover:bg-green-200"
-              } font-serif relative overflow-hidden group px-4 py-2 rounded-md border cursor-pointer flex items-center`}
+                  ? "bg-sky text-white shadow-childish"
+                  : "text-blueberry dark:text-sky border-4 border-sky hover:bg-sky/20"
+              } relative overflow-hidden group px-4 py-3 rounded-full cursor-pointer flex items-center font-bold`}
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <History className="w-4 h-4 mr-2" />
+              <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <History className="w-5 h-5 mr-2" />
               Previous Events
             </div>
             <div
               onClick={() => setActiveSection("calendar")}
               className={`${
                 activeSection === "calendar"
-                  ? "bg-green-700 text-white"
-                  : "text-green-700 border-green-700 hover:bg-green-200"
-              } font-serif relative overflow-hidden group px-4 py-2 rounded-md border cursor-pointer flex items-center`}
+                  ? "bg-sunshine text-blueberry shadow-childish"
+                  : "text-blueberry dark:text-sunshine border-4 border-sunshine hover:bg-sunshine/20"
+              } relative overflow-hidden group px-4 py-3 rounded-full cursor-pointer flex items-center font-bold`}
             >
-              <CalendarDays className="w-4 h-4 mr-2" />
-              <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <CalendarDays className="w-5 h-5 mr-2" />
+              <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               Calendar View
             </div>
 
             <Link
               href="/gallery"
-              className="text-green-700 dark:text-white border border-green-700 hover:bg-green-200 font-serif relative overflow-hidden group px-4 py-2 rounded-md flex items-center"
+              className="text-blueberry dark:text-sky border-4 border-grass hover:bg-grass/20 relative overflow-hidden group px-4 py-3 rounded-full flex items-center font-bold"
             >
-              <Camera className="w-4 h-4 mr-2" />
-              <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <Camera className="w-5 h-5 mr-2" />
+              <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <span className="mr-2">Gallery</span>
             </Link>
           </motion.div>
         </div>
 
         {/* Decorative Bottom Wave */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-[#fffaf0] dark:bg-gray-800 transform -skew-y-2" />
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-white dark:bg-blueberry/80 transform -skew-y-2" />
       </div>
 
       {/* Main Content */}
@@ -150,9 +174,12 @@ export default function EventsPage() {
                   className="group relative"
                 >
                   {/* Event Card */}
-                  <div className="relative bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+                  <div
+                    className="relative bg-white dark:bg-blueberry/80 rounded-3xl shadow-childish hover:shadow-childish-lg border-4 border-candy overflow-hidden transition-all duration-300 hover:-translate-y-2 animate-float"
+                    style={{ animationDelay: `${index * 0.2}s` }}
+                  >
                     {/* Gradient Border Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-candy/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                     <div className="p-6 md:p-8">
                       <div className="flex flex-col md:flex-row gap-6">
@@ -162,10 +189,10 @@ export default function EventsPage() {
                             src={event.imageUrl || "/placeholder.svg"}
                             alt={event.title}
                             fill
-                            className="rounded-lg object-cover border-2 border-green-700 transition-transform duration-300 group-hover:scale-105"
+                            className="rounded-2xl object-cover border-4 border-sky transition-transform duration-300 group-hover:scale-105 shadow-childish"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-lg" />
-                          <div className="absolute bottom-2 left-2 bg-green-700/90 text-white px-3 py-1 rounded-full text-sm font-serif backdrop-blur-sm">
+                          <div className="absolute inset-0 bg-gradient-to-t from-blueberry/40 to-transparent rounded-2xl" />
+                          <div className="absolute bottom-3 left-3 bg-cherry text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm shadow-childish transform rotate-2">
                             {event.type}
                           </div>
                         </div>
@@ -173,16 +200,17 @@ export default function EventsPage() {
                         {/* Content Section */}
                         <div className="flex-1 space-y-4">
                           <div className="flex items-start justify-between">
-                            <h3 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif group-hover:text-green-700 dark:group-hover:text-green-400 transition-colors">
+                            <h3 className="text-2xl font-bold text-blueberry dark:text-sky group-hover:text-candy dark:group-hover:text-candy transition-colors">
                               {event.title}
                             </h3>
                             {event.link && (
                               <Button
                                 variant="secondary"
-                                className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
+                                className="bg-candy hover:bg-candy/80 text-white transition-all duration-300 relative overflow-hidden group/btn rounded-full shadow-childish"
                               >
                                 <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
                                 <Link href={event.link} target="_blank" rel="noopener noreferrer">
+                                  <Star className="w-4 h-4 mr-1 animate-spin-slow" />
                                   Join Discussion
                                 </Link>
                               </Button>
@@ -190,37 +218,37 @@ export default function EventsPage() {
                           </div>
 
                           {/* Event Details */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600 dark:text-gray-300 font-serif">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-blueberry/80 dark:text-sky/80">
                             <div className="flex items-center gap-2 group/item">
-                              <Clock className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
+                              <Clock className="w-5 h-5 text-candy transition-transform duration-300 group-hover/item:scale-110" />
                               {event.time}
                             </div>
                             <div className="flex items-center gap-2 group/item">
-                              <MapPin className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
+                              <MapPin className="w-5 h-5 text-sky transition-transform duration-300 group-hover/item:scale-110" />
                               {event.location}
                             </div>
                             <div className="flex items-center gap-2 group/item">
-                              <CalendarCheck className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
+                              <CalendarCheck className="w-5 h-5 text-sunshine transition-transform duration-300 group-hover/item:scale-110" />
                               {event.eventDate}
                             </div>
                             <div className="flex items-center gap-2 group/item">
-                              <BookOpen className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
+                              <BookOpen className="w-5 h-5 text-grass transition-transform duration-300 group-hover/item:scale-110" />
                               {event.bookTitle}
                             </div>
                           </div>
 
-                          <p className="text-gray-600 dark:text-gray-300 font-serif">{event.description}</p>
+                          <p className="text-blueberry/80 dark:text-sky/80 bg-white/50 dark:bg-blueberry/50 p-4 rounded-2xl border-2 border-dashed border-sky">
+                            {event.description}
+                          </p>
 
                           {/* Moderators */}
                           <div className="flex items-center gap-4">
-                            <span className="text-green-800 dark:text-green-500 font-serif font-semibold">
-                              Moderators:
-                            </span>
+                            <span className="text-blueberry dark:text-sky font-bold">Moderators:</span>
                             <div className="flex flex-wrap gap-2">
                               {event.moderators.map((moderator, idx) => (
                                 <span
                                   key={idx}
-                                  className="bg-green-700/10 text-green-800 dark:text-green-500 px-3 py-1 rounded-full text-sm font-serif transition-all duration-300 hover:bg-green-700/20 hover:scale-105"
+                                  className="bg-sunshine/30 text-blueberry dark:text-sunshine px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-sunshine/50 hover:scale-105 shadow-childish"
                                 >
                                   {moderator}
                                 </span>
@@ -234,12 +262,10 @@ export default function EventsPage() {
                 </motion.div>
               ))
             ) : (
-              <div className="text-center py-12 bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700">
-                <Archive className="w-16 h-16 mx-auto text-green-700/50 mb-4" />
-                <h3 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-2">
-                  No Upcoming Events
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 font-serif">
+              <div className="text-center py-12 bg-white dark:bg-blueberry/80 rounded-3xl shadow-childish border-4 border-candy">
+                <Archive className="w-20 h-20 mx-auto text-candy/50 mb-4" />
+                <h3 className="text-2xl font-bold text-blueberry dark:text-sky mb-2">No Upcoming Events</h3>
+                <p className="text-blueberry/80 dark:text-sky/80">
                   Check back soon for new events or view our previous gatherings!
                 </p>
               </div>
@@ -253,21 +279,21 @@ export default function EventsPage() {
               className="text-center mt-12 space-y-6"
             >
               <div className="relative inline-block">
-                <h3 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
+                <h3 className="text-2xl font-bold text-blueberry dark:text-sky rainbow-text">
                   Want to know more? Maybe join us?
                 </h3>
-                <div className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 hover:scale-x-100 transition-transform origin-left" />
+                <div className="absolute -inset-1 bg-candy/10 rounded-lg scale-x-0 hover:scale-x-100 transition-transform origin-left" />
               </div>
-              <p className="text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
+              <p className="text-blueberry/80 dark:text-sky/80 max-w-2xl mx-auto">
                 Click the about us page below to learn more about the club and how to join.
               </p>
               <Link href="/about-us">
                 <Button
                   variant="outline"
-                  className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden"
+                  className="border-4 border-sky text-blueberry dark:text-sky hover:bg-sky/20 group relative overflow-hidden rounded-full shadow-childish"
                 >
-                  <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <Info className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:rotate-12" />
+                  <span className="absolute inset-0 bg-sky/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <Info className="w-5 h-5 mr-2 transition-transform duration-300 group-hover:rotate-12" />
                   About Us
                 </Button>
               </Link>
@@ -282,12 +308,12 @@ export default function EventsPage() {
             transition={{ duration: 0.4 }}
             className="space-y-8"
           >
-            <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-green-700 mb-8">
-              <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-4 flex items-center">
-                <Archive className="w-6 h-6 mr-2" />
+            <div className="bg-white dark:bg-blueberry/80 rounded-3xl p-6 shadow-childish border-4 border-sky mb-8">
+              <h2 className="text-2xl font-bold text-blueberry dark:text-sky mb-4 flex items-center">
+                <Archive className="w-7 h-7 mr-2 text-sky" />
                 Previous Events
               </h2>
-              <p className="text-gray-600 dark:text-gray-300 font-serif">
+              <p className="text-blueberry/80 dark:text-sky/80">
                 Explore our past gatherings and discussions. These events showcase our reading journey and community
                 growth.
               </p>
@@ -302,26 +328,29 @@ export default function EventsPage() {
                 className="group relative"
               >
                 {/* Event Card */}
-                <div className="relative bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700/70 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+                <div
+                  className="relative bg-white dark:bg-blueberry/80 rounded-3xl shadow-childish hover:shadow-childish-lg border-4 border-sky/70 overflow-hidden transition-all duration-300 hover:-translate-y-2 animate-float"
+                  style={{ animationDelay: `${index * 0.2}s` }}
+                >
                   {/* Gradient Border Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-sky/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                   <div className="p-6 md:p-8">
                     <div className="flex flex-col md:flex-row gap-6">
                       {/* Image Section */}
                       <div className="relative w-full md:w-64 h-48 md:h-64 group">
-                        <div className="absolute inset-0 bg-black/10 z-10 rounded-lg" />
+                        <div className="absolute inset-0 bg-white/10 z-10 rounded-2xl" />
                         <Image
                           src={event.imageUrl || "/placeholder.svg"}
                           alt={event.title}
                           fill
-                          className="rounded-lg object-cover border-2 border-green-700/70 transition-transform duration-300 group-hover:scale-105 filter grayscale-[30%] group-hover:grayscale-0"
+                          className="rounded-2xl object-cover border-4 border-sky/70 transition-transform duration-300 group-hover:scale-105 filter grayscale-[30%] group-hover:grayscale-0 shadow-childish"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-lg" />
-                        <div className="absolute bottom-2 left-2 bg-green-700/80 text-white px-3 py-1 rounded-full text-sm font-serif backdrop-blur-sm">
+                        <div className="absolute inset-0 bg-gradient-to-t from-blueberry/40 to-transparent rounded-2xl" />
+                        <div className="absolute bottom-3 left-3 bg-sky/80 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm shadow-childish transform rotate-2">
                           {event.type}
                         </div>
-                        <div className="absolute top-2 right-2 bg-gray-800/80 text-white px-3 py-1 rounded-full text-xs font-serif backdrop-blur-sm">
+                        <div className="absolute top-3 right-3 bg-blueberry/80 text-white px-3 py-1 rounded-full text-xs backdrop-blur-sm shadow-childish transform -rotate-2">
                           Past Event
                         </div>
                       </div>
@@ -329,43 +358,43 @@ export default function EventsPage() {
                       {/* Content Section */}
                       <div className="flex-1 space-y-4">
                         <div className="flex items-start justify-between">
-                          <h3 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif group-hover:text-green-700 dark:group-hover:text-green-400 transition-colors">
+                          <h3 className="text-2xl font-bold text-blueberry dark:text-sky group-hover:text-sky dark:group-hover:text-sky transition-colors">
                             {event.title}
                           </h3>
                         </div>
 
                         {/* Event Details */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600 dark:text-gray-300 font-serif">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-blueberry/80 dark:text-sky/80">
                           <div className="flex items-center gap-2 group/item">
-                            <Clock className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
+                            <Clock className="w-5 h-5 text-candy transition-transform duration-300 group-hover/item:scale-110" />
                             {event.time}
                           </div>
                           <div className="flex items-center gap-2 group/item">
-                            <MapPin className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
+                            <MapPin className="w-5 h-5 text-sky transition-transform duration-300 group-hover/item:scale-110" />
                             {event.location}
                           </div>
                           <div className="flex items-center gap-2 group/item">
-                            <CalendarCheck className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
+                            <CalendarCheck className="w-5 h-5 text-sunshine transition-transform duration-300 group-hover/item:scale-110" />
                             {event.eventDate}
                           </div>
                           <div className="flex items-center gap-2 group/item">
-                            <BookOpen className="w-5 h-5 text-green-700 transition-transform duration-300 group-hover/item:scale-110" />
+                            <BookOpen className="w-5 h-5 text-grass transition-transform duration-300 group-hover/item:scale-110" />
                             {event.bookTitle}
                           </div>
                         </div>
 
-                        <p className="text-gray-600 dark:text-gray-300 font-serif">{event.description}</p>
+                        <p className="text-blueberry/80 dark:text-sky/80 bg-white/50 dark:bg-blueberry/50 p-4 rounded-2xl border-2 border-dashed border-sky">
+                          {event.description}
+                        </p>
 
                         {/* Moderators */}
                         <div className="flex items-center gap-4">
-                          <span className="text-green-800 dark:text-green-500 font-serif font-semibold">
-                            Moderators:
-                          </span>
+                          <span className="text-blueberry dark:text-sky font-bold">Moderators:</span>
                           <div className="flex flex-wrap gap-2">
                             {event.moderators.map((moderator, idx) => (
                               <span
                                 key={idx}
-                                className="bg-green-700/10 text-green-800 dark:text-green-500 px-3 py-1 rounded-full text-sm font-serif transition-all duration-300 hover:bg-green-700/20 hover:scale-105"
+                                className="bg-sunshine/30 text-blueberry dark:text-sunshine px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-sunshine/50 hover:scale-105 shadow-childish"
                               >
                                 {moderator}
                               </span>

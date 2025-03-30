@@ -151,13 +151,13 @@ export function HeaderCountdown({
         <div className="relative">
           {/* Pulsing effect */}
           <div className="absolute inset-0 rounded-full bg-green-500/30 animate-pulse" />
-          <div className="relative bg-green-700 text-white rounded-full px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs font-mono font-bold flex items-center gap-1">
+          <div className="relative bg-candy text-white rounded-full px-1.5 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold flex items-center gap-1 shadow-childish animate-pulse">
             <Calendar className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
             <span>{timeLeft?.days || 0}d</span>
           </div>
         </div>
 
-        <div className="hidden lg:flex items-center gap-1 text-green-700 dark:text-green-400 text-[10px] sm:text-xs font-serif">
+        <div className="hidden lg:flex items-center gap-1 text-candy dark:text-candy text-[10px] sm:text-xs">
           <span>Next Event</span>
           {isExpanded ? (
             <ChevronUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
@@ -191,16 +191,16 @@ export function HeaderCountdown({
                   zIndex: 999,
                 }}
               >
-                <div className="bg-[#fffaf0] dark:bg-gray-800/95 rounded-xl shadow-xl border-2 border-green-700 overflow-hidden">
+                <div className="bg-[#fffaf0] dark:bg-blueberry/95 rounded-3xl shadow-childish-lg border-4 border-candy animate-rainbow-border overflow-hidden">
                   {/* Header */}
-                  <div className="bg-green-700 text-white p-3 flex justify-between items-center">
+                  <div className="bg-candy text-white p-3 flex justify-between items-center">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
                       <h3 className="font-serif font-bold">Upcoming Event</h3>
                     </div>
                     <button
                       onClick={() => setIsExpanded(false)}
-                      className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
+                      className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors shadow-childish"
                       aria-label="Close"
                     >
                       <ChevronUp className="w-4 h-4" />
@@ -211,39 +211,37 @@ export function HeaderCountdown({
                   <div className="p-4">
                     {/* Book info */}
                     <div className="flex gap-3 mb-3">
-                      <div className="relative w-14 h-20 flex-shrink-0">
+                      <div className="relative w-14 h-20 flex-shrink-0 animate-float">
                         <Image
                           src={currentEvent.bookCover || "/placeholder.svg"}
                           alt={currentEvent.bookTitle}
                           fill
-                          className="object-cover rounded-md border border-green-700"
+                          className="object-cover rounded-xl border-4 border-sky shadow-childish"
                         />
                       </div>
                       <div>
-                        <h4 className="font-serif font-bold text-green-800 dark:text-green-400">
-                          {currentEvent.eventTitle}
-                        </h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 font-serif">{currentEvent.bookTitle}</p>
+                        <h4 className="font-bold text-blueberry dark:text-sky">{currentEvent.eventTitle}</h4>
+                        <p className="text-sm text-blueberry/80 dark:text-sky/80">{currentEvent.bookTitle}</p>
                         <div className="flex items-center gap-1 mt-1 text-xs text-gray-600 dark:text-gray-300">
-                          <Clock className="w-3 h-3 text-green-700" />
-                          <span>{currentEvent.eventTime}</span>
+                          <Clock className="w-3 h-3 text-candy" />
+                          <span className="text-blueberry/80 dark:text-sky/80">{currentEvent.eventTime}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Countdown */}
                     {timeLeft && (
-                      <div className="bg-green-700/10 rounded-lg p-3 mb-3">
-                        <p className="text-xs text-center text-green-800 dark:text-green-400 mb-2 font-serif">
-                          Time remaining to event:
+                      <div className="bg-sunshine/20 rounded-2xl p-3 mb-3 border-2 border-dashed border-sky">
+                        <p className="text-xs text-center text-blueberry dark:text-sky mb-2">
+                          Time remaining until discussion:
                         </p>
                         <div className="grid grid-cols-4 gap-1 text-center">
                           {Object.entries(timeLeft).map(([key, value]) => (
                             <div key={key} className="flex flex-col">
-                              <div className="bg-green-700 text-white rounded-md py-0.5 sm:py-1 px-1 sm:px-2 font-mono text-sm sm:text-lg font-bold">
+                              <div className="bg-candy text-white rounded-md py-0.5 sm:py-1 px-1 sm:px-2 text-sm sm:text-lg font-bold shadow-childish">
                                 {value.toString().padStart(2, "0")}
                               </div>
-                              <span className="text-[10px] sm:text-xs mt-1 text-gray-600 dark:text-gray-300 capitalize">
+                              <span className="text-[10px] sm:text-xs mt-1 text-blueberry/80 dark:text-sky/80 capitalize">
                                 {key}
                               </span>
                             </div>
@@ -255,7 +253,7 @@ export function HeaderCountdown({
                     {/* Join button */}
                     <Button
                       asChild
-                      className="w-full bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
+                      className="w-full bg-candy hover:bg-candy/80 text-white transition-all duration-300 relative overflow-hidden group/btn rounded-full shadow-childish"
                       disabled={!currentEvent.eventLink}
                     >
                       <Link href={currentEvent.eventLink || "#"} target="_blank" rel="noopener noreferrer">
