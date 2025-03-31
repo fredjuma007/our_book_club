@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Calendar, Clock, ChevronDown, ChevronUp, BookOpen } from "lucide-react"
+import { Calendar, Clock, ChevronDown, ChevronUp, BookOpen, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
@@ -256,11 +256,23 @@ export function HeaderCountdown({
                       className="w-full bg-candy hover:bg-candy/80 text-white transition-all duration-300 relative overflow-hidden group/btn rounded-full shadow-childish"
                       disabled={!currentEvent.eventLink}
                     >
-                      <Link href={currentEvent.eventLink || "#"} target="_blank" rel="noopener noreferrer">
+
+                      {/*<Link href={currentEvent.eventLink || "#"} target="_blank" rel="noopener noreferrer">
                         <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
                         <BookOpen className="w-4 h-4 mr-2" />
                         {currentEvent.eventLink ? "Join Discussion" : "Event Details"}
-                      </Link>
+                      </Link>*/}
+
+                        <Link
+                          href="https://docs.google.com/forms/d/e/1FAIpQLSciPYpGllhVcLJcfVOGZzdzcOyaCxvm7utEe1uhChDjXCfAtA/viewform"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                          <Heart className="w-5 h-5 mr-2 animate-pulse" />
+                            Donate
+                        </Link>
+                        
                     </Button>
                   </div>
                 </div>

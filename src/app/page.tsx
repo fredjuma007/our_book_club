@@ -635,13 +635,13 @@ export default function Home() {
                         className="w-full bg-sky hover:bg-sky/80 text-white transition-all duration-300 relative overflow-hidden group/btn rounded-full shadow-childish py-6"
                       >
                         <Link
-                          href="https://wa.me/+254790964291?text=Hello%20Reading%20Circle%20Event%20Coordinator,%20I'm%20contacting%20from%20the%20website.%20I%20would%20like%20to%20know%20more%20about%20the%20upcoming%20bookclub%20events%20and%20discussions"
+                          href="https://docs.google.com/forms/d/e/1FAIpQLSciPYpGllhVcLJcfVOGZzdzcOyaCxvm7utEe1uhChDjXCfAtA/viewform"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
                           <Heart className="w-5 h-5 mr-2 animate-pulse" />
-                          Inquire To Donate
+                            Donate
                         </Link>
                       </Button>
                     )}
