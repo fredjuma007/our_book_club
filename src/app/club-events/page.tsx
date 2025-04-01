@@ -86,11 +86,13 @@ export default function EventsPage() {
             transition={{ duration: 0.6 }}
             className="text-center relative z-10"
           >
-            <h1 className="text-5xl md:text-6xl font-bold text-blueberry dark:text-sky mb-4 relative inline-block group rainbow-text">
+            <Link href="/tetris" className="group">
+              <h1 className="text-5xl md:text-6xl font-bold text-blueberry dark:text-sky mb-4 relative inline-block group rainbow-text cursor-pointer">
               <span className="absolute -inset-1 bg-candy/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-              Events & Fun Times!
+              Events, Fun Times & Games!
               <Sparkles className="absolute -right-8 -top-8 w-8 h-8 text-sunshine animate-spin-slow" />
-            </h1>
+              </h1>
+            </Link>
             <p className="text-xl text-blueberry/80 dark:text-sky/80 max-w-2xl mx-auto">
               Join us for exciting book discussions, workshops, and magical reading adventures!
             </p>

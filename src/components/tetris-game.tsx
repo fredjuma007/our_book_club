@@ -17,9 +17,15 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  RotateCw,
+  Sparkles,
+  Trophy,
+  Gamepad2,
+  Music,
+  Music2,
   RotateCcw,
+  RotateCw,
 } from "lucide-react"
+import { motion } from "framer-motion"
 
 // Define tetromino shapes
 const TETROMINOS = {
@@ -31,7 +37,7 @@ const TETROMINOS = {
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ],
-    color: "80, 227, 230",
+    color: "80, 227, 230", // sky
   },
   J: {
     shape: [
@@ -39,7 +45,7 @@ const TETROMINOS = {
       [0, 1, 0],
       [1, 1, 0],
     ],
-    color: "36, 95, 223",
+    color: "36, 95, 223", // blueberry
   },
   L: {
     shape: [
@@ -47,14 +53,14 @@ const TETROMINOS = {
       [0, 1, 0],
       [0, 1, 1],
     ],
-    color: "223, 173, 36",
+    color: "255, 173, 36", // sunshine
   },
   O: {
     shape: [
       [1, 1],
       [1, 1],
     ],
-    color: "223, 217, 36",
+    color: "255, 217, 36", // sunshine lighter
   },
   S: {
     shape: [
@@ -62,7 +68,7 @@ const TETROMINOS = {
       [1, 1, 0],
       [0, 0, 0],
     ],
-    color: "48, 211, 56",
+    color: "48, 211, 56", // grass
   },
   T: {
     shape: [
@@ -70,7 +76,7 @@ const TETROMINOS = {
       [1, 1, 1],
       [0, 0, 0],
     ],
-    color: "132, 61, 198",
+    color: "232, 61, 198", // candy
   },
   Z: {
     shape: [
@@ -78,7 +84,7 @@ const TETROMINOS = {
       [0, 1, 1],
       [0, 0, 0],
     ],
-    color: "227, 78, 78",
+    color: "227, 78, 78", // cherry
   },
 }
 
@@ -151,6 +157,8 @@ export default function TetrisGame() {
   const [score, setScore] = useState(0)
   const [rows, setRows] = useState(0)
   const [level, setLevel] = useState(1)
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement>(null)
   const { toast } = useToast()
   const isMobile = useMobile()
 
@@ -169,6 +177,10 @@ export default function TetrisGame() {
     setScore(0)
     setRows(0)
     setLevel(1)
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0
+    }
+    setIsMusicPlaying(false)
   }
 
   const pauseGame = () => {
@@ -179,11 +191,31 @@ export default function TetrisGame() {
     }
   }
 
+  const toggleMusic = () => {
+    if (audioRef.current) {
+      if (isMusicPlaying) {
+        audioRef.current.pause()
+      } else {
+        audioRef.current.play().catch((error) => {
+          console.error("Audio playback failed:", error)
+          toast({
+            title: "Audio playback failed",
+            description: "Browser may require user interaction first",
+            variant: "destructive",
+          })
+        })
+      }
+      setIsMusicPlaying(!isMusicPlaying)
+    }
+  }
+
   // Update stage
   const updateStage = useCallback(
     (prevStage: Stage): Stage => {
       // First flush the stage
-      const newStage: Stage = prevStage.map((row) => row.map((cell) => (cell[1] === "clear" ? [0, "clear"] as Cell : cell)))
+      const newStage: Stage = prevStage.map((row) =>
+        row.map((cell) => (cell[1] === "clear" ? ([0, "clear"] as Cell) : cell)),
+      )
 
       // Then draw the tetromino
       player.tetromino.shape.forEach((row, y) => {
@@ -474,219 +506,330 @@ export default function TetrisGame() {
   }, [player, updateStage])
 
   return (
-    <div className="flex flex-col items-center md:flex-row md:items-start gap-6">
-      <Card
-        className="p-4 bg-gray-800 border-gray-700 shadow-lg"
-        ref={gameAreaRef}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div className="relative">
-          {gameOver && (
-            <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-10">
-              <div className="text-center">
-                <h2 className="text-2xl font-bold text-red-500 mb-2">Game Over</h2>
-                <p className="text-white mb-4">Score: {score}</p>
-                <Button onClick={startGame} className="bg-primary hover:bg-primary/90">
-                  Play Again
-                </Button>
-              </div>
-            </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="flex flex-col items-center gap-3 relative"
+    >
+      {/* Audio Element for Tetris Music */}
+      <audio
+        ref={audioRef}
+        loop
+        src="https://assets.codepen.io/21542/TetrisTheme.mp3"
+        onEnded={() => setIsMusicPlaying(false)}
+      />
+
+      {/* Music Control */}
+      <div className="absolute top-2 right-2 z-10">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={toggleMusic}
+          className="w-8 h-8 rounded-full bg-white/80 dark:bg-blueberry/80 hover:bg-white dark:hover:bg-blueberry border-2 border-candy shadow-childish"
+        >
+          {isMusicPlaying ? (
+            <Music2 className="h-4 w-4 text-candy" />
+          ) : (
+            <Music className="h-4 w-4 text-blueberry dark:text-sky" />
           )}
-          <div
-            className="grid border-2 border-gray-700 bg-gray-900"
-            style={{
-              gridTemplateRows: `repeat(${20}, minmax(0, 1fr))`,
-              gridTemplateColumns: `repeat(${10}, minmax(0, 1fr))`,
-              gap: "1px",
-            }}
-          >
-            {stage.map((row, y) =>
-              row.map((cell, x) => (
-                <div
-                  key={`${y}-${x}`}
-                  className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8"
-                  style={{
-                    background:
-                      cell[0] !== 0
-                        ? `rgba(${TETROMINOS[Object.keys(TETROMINOS)[cell[0]] as keyof typeof TETROMINOS].color}, 1)`
-                        : "rgba(20, 20, 20, 1)",
-                    border: cell[0] !== 0 ? "1px solid rgba(255, 255, 255, 0.1)" : "none",
-                  }}
-                />
-              )),
-            )}
-          </div>
-          {isMobile && !gameOver && (
-            <div className="text-center mt-2 text-xs text-gray-400">
-              <p>Swipe to move • Tap to rotate</p>
-            </div>
-          )}
-        </div>
-      </Card>
+          <span className="sr-only">{isMusicPlaying ? "Pause Music" : "Play Music"}</span>
+        </Button>
 
-      <div className="flex flex-col gap-6">
-        <Card className="p-4 bg-gray-800 border-gray-700 shadow-lg">
-          <div className="text-center mb-4">
-            <h2 className="text-xl font-bold text-white">Stats</h2>
-          </div>
-          <div className="grid grid-cols-2 gap-2 text-white">
-            <div className="text-right">Score:</div>
-            <div className="font-bold">{score}</div>
-            <div className="text-right">Rows:</div>
-            <div className="font-bold">{rows}</div>
-            <div className="text-right">Level:</div>
-            <div className="font-bold">{level}</div>
-          </div>
-        </Card>
-
-        {isMobile ? (
-          <Card className="p-4 bg-gray-800 border-gray-700 shadow-lg">
-            <div className="text-center mb-4">
-              <h2 className="text-xl font-bold text-white">Controls</h2>
-            </div>
-
-            <div className="grid grid-cols-3 gap-4 max-w-[280px] mx-auto">
-              {/* Top row - rotate */}
-              <div className="col-start-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => playerRotate(1)}
-                  className="w-16 h-16 bg-gray-700 hover:bg-gray-600 text-white rounded-full"
-                >
-                  <Rotate className="h-8 w-8" />
-                  <span className="sr-only">Rotate</span>
-                </Button>
-              </div>
-
-              {/* Middle row - left, hard drop, right */}
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => movePlayer(-1)}
-                className="w-16 h-16 bg-gray-700 hover:bg-gray-600 text-white rounded-full"
-              >
-                <ChevronLeft className="h-8 w-8" />
-                <span className="sr-only">Move Left</span>
-              </Button>
-
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={hardDrop}
-                className="w-16 h-16 bg-gray-700 hover:bg-gray-600 text-white rounded-full"
-              >
-                <ChevronDown className="h-8 w-8" />
-                <span className="sr-only">Hard Drop</span>
-              </Button>
-
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => movePlayer(1)}
-                className="w-16 h-16 bg-gray-700 hover:bg-gray-600 text-white rounded-full"
-              >
-                <ChevronRight className="h-8 w-8" />
-                <span className="sr-only">Move Right</span>
-              </Button>
-            </div>
-
-            <div className="flex gap-2 justify-center mt-6">
-              <Button onClick={startGame} className="bg-primary hover:bg-primary/90 flex-1">
-                <Play className="h-4 w-4 mr-2" />
-                {gameOver ? "Play Again" : "New Game"}
-              </Button>
-              {!gameOver && (
-                <Button onClick={pauseGame} variant="outline" className="bg-gray-700 hover:bg-gray-600 text-white">
-                  {dropTime ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                </Button>
-              )}
-            </div>
-          </Card>
-        ) : (
-          <Card className="p-4 bg-gray-800 border-gray-700 shadow-lg">
-            <div className="text-center mb-4">
-              <h2 className="text-xl font-bold text-white">Controls</h2>
-            </div>
-            <div className="grid grid-cols-2 gap-2 text-white mb-4">
-              <div className="text-right">Move:</div>
-              <div className="font-bold">← →</div>
-              <div className="text-right">Rotate:</div>
-              <div className="font-bold">↑</div>
-              <div className="text-right">Soft Drop:</div>
-              <div className="font-bold">↓</div>
-              <div className="text-right">Hard Drop:</div>
-              <div className="font-bold">Space</div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => movePlayer(-1)}
-                className="bg-gray-700 hover:bg-gray-600 text-white"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={dropPlayer}
-                className="bg-gray-700 hover:bg-gray-600 text-white"
-              >
-                <ArrowDown className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => movePlayer(1)}
-                className="bg-gray-700 hover:bg-gray-600 text-white"
-              >
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => playerRotate(-1)}
-                className="bg-gray-700 hover:bg-gray-600 text-white"
-              >
-                <RotateCcw className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={hardDrop}
-                className="bg-gray-700 hover:bg-gray-600 text-white"
-              >
-                <ArrowDown className="h-4 w-4 font-bold" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => playerRotate(1)}
-                className="bg-gray-700 hover:bg-gray-600 text-white"
-              >
-                <RotateCw className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="flex gap-2 justify-center mt-4">
-              <Button onClick={startGame} className="bg-primary hover:bg-primary/90 flex-1">
-                <Play className="h-4 w-4 mr-2" />
-                {gameOver ? "Play Again" : "New Game"}
-              </Button>
-              {!gameOver && (
-                <Button onClick={pauseGame} variant="outline" className="bg-gray-700 hover:bg-gray-600 text-white">
-                  {dropTime ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                </Button>
-              )}
-            </div>
-          </Card>
-        )}
+        <audio 
+        ref={audioRef} 
+        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Tetris-kxnh5j7hpNEcFspAndlU2huV5n6dvk.mp3" 
+        />
       </div>
-    </div>
+      
+      {/* Start Game Button for Mobile - Visible at the top */}
+      {isMobile && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="w-full max-w-md mb-2"
+        >
+          <Button
+            onClick={startGame}
+            className="w-full bg-candy hover:bg-candy/90 text-white rounded-full py-6 shadow-childish relative overflow-hidden group"
+          >
+            <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            <Play className="h-5 w-5 mr-2 animate-pulse" />
+            {gameOver ? "Play Again" : dropTime ? "Restart Game" : "Start Game"}
+            <Sparkles className="h-4 w-4 ml-2 animate-spin-slow" />
+          </Button>
+        </motion.div>
+      )}
+
+      <div className="flex flex-col items-center md:flex-row md:items-start gap-3">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <Card
+            className="p-4 bg-white dark:bg-blueberry/80 border-4 border-candy shadow-childish hover:shadow-childish-lg transition-all duration-300"
+            ref={gameAreaRef}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            <div className="relative">
+              {gameOver && (
+                <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-10 rounded-xl">
+                  <div className="text-center p-6">
+                    <motion.div
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <Trophy className="w-16 h-16 mx-auto text-sunshine mb-4 animate-pulse" />
+                      <h2 className="text-2xl font-bold text-red-500 mb-2">Game Over</h2>
+                      <p className="text-white mb-4 text-xl">Score: {score}</p>
+                      <Button
+                        onClick={startGame}
+                        className="bg-candy hover:bg-candy/90 text-white rounded-full shadow-childish relative overflow-hidden group"
+                      >
+                        <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                        <Play className="h-4 w-4 mr-2" />
+                        Play Again
+                      </Button>
+                    </motion.div>
+                  </div>
+                </div>
+              )}
+              <div
+                className="grid border-4 border-sky bg-blueberry/90 rounded-xl overflow-hidden"
+                style={{
+                  gridTemplateRows: `repeat(${20}, minmax(0, 1fr))`,
+                  gridTemplateColumns: `repeat(${10}, minmax(0, 1fr))`,
+                  gap: "1px",
+                }}
+              >
+                {stage.map((row, y) =>
+                  row.map((cell, x) => (
+                    <div
+                      key={`${y}-${x}`}
+                      className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7"
+                      style={{
+                        background:
+                          cell[0] !== 0
+                            ? `rgba(${TETROMINOS[Object.keys(TETROMINOS)[cell[0]] as keyof typeof TETROMINOS].color}, 1)`
+                            : "rgba(20, 20, 30, 1)",
+                        border: cell[0] !== 0 ? "1px solid rgba(255, 255, 255, 0.2)" : "none",
+                        boxShadow: cell[0] !== 0 ? "inset 0 0 8px rgba(255, 255, 255, 0.3)" : "none",
+                        borderRadius: "2px",
+                      }}
+                    />
+                  )),
+                )}
+              </div>
+              {isMobile && !gameOver && dropTime && (
+                <div className="text-center mt-2 text-xs text-blueberry/70 dark:text-sky/70 bg-white/50 dark:bg-blueberry/50 p-2 rounded-full border-2 border-dashed border-sky">
+                  <p>Swipe to move • Tap to rotate</p>
+                </div>
+              )}
+            </div>
+          </Card>
+        </motion.div>
+
+        <div className="flex flex-col gap-6">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <Card className="p-3 bg-white dark:bg-blueberry/80 border-4 border-sky shadow-childish hover:shadow-childish-lg transition-all duration-300">
+              <div className="text-center mb-2">
+                <h2 className="text-lg font-bold text-blueberry dark:text-sky flex items-center justify-center">
+                  <Trophy className="w-4 h-4 mr-2 text-sunshine" />
+                  Stats
+                </h2>
+              </div>
+              <div className="grid grid-cols-2 gap-1 text-blueberry dark:text-sky text-sm">
+                <div className="text-right font-bold">Score:</div>
+                <div className="font-bold text-candy">{score}</div>
+                <div className="text-right font-bold">Rows:</div>
+                <div className="font-bold text-sky">{rows}</div>
+                <div className="text-right font-bold">Level:</div>
+                <div className="font-bold text-sunshine">{level}</div>
+              </div>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            {isMobile ? (
+              <Card className="p-4 bg-white dark:bg-blueberry/80 border-4 border-sunshine shadow-childish hover:shadow-childish-lg transition-all duration-300">
+                <div className="text-center mb-4">
+                  <h2 className="text-xl font-bold text-blueberry dark:text-sky flex items-center justify-center">
+                    <Gamepad2 className="w-5 h-5 mr-2 text-candy" />
+                    Controls
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 max-w-[240px] mx-auto">
+                  {/* Top row - rotate */}
+                  <div className="col-start-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => playerRotate(1)}
+                      className="w-14 h-14 bg-candy hover:bg-candy/80 text-white rounded-full shadow-childish relative overflow-hidden group"
+                    >
+                      <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <Rotate className="h-6 w-6" />
+                      <span className="sr-only">Rotate</span>
+                    </Button>
+                  </div>
+
+                  {/* Middle row - left, hard drop, right */}
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => movePlayer(-1)}
+                    className="w-14 h-14 bg-sky hover:bg-sky/80 text-white rounded-full shadow-childish relative overflow-hidden group"
+                  >
+                    <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <ChevronLeft className="h-6 w-6" />
+                    <span className="sr-only">Move Left</span>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={hardDrop}
+                    className="w-14 h-14 bg-sunshine hover:bg-sunshine/80 text-blueberry rounded-full shadow-childish relative overflow-hidden group"
+                  >
+                    <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <ChevronDown className="h-6 w-6" />
+                    <span className="sr-only">Hard Drop</span>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => movePlayer(1)}
+                    className="w-14 h-14 bg-sky hover:bg-sky/80 text-white rounded-full shadow-childish relative overflow-hidden group"
+                  >
+                    <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <ChevronRight className="h-6 w-6" />
+                    <span className="sr-only">Move Right</span>
+                  </Button>
+                </div>
+
+                {!gameOver && dropTime && (
+                  <div className="flex justify-center mt-6">
+                    <Button
+                      onClick={pauseGame}
+                      variant="outline"
+                      className="bg-blueberry/10 hover:bg-blueberry/20 text-blueberry dark:text-sky border-2 border-sky rounded-full shadow-childish"
+                    >
+                      {dropTime ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                )}
+              </Card>
+            ) : (
+              <Card className="p-4 bg-white dark:bg-blueberry/80 border-4 border-sunshine shadow-childish hover:shadow-childish-lg transition-all duration-300">
+                <div className="text-center mb-4">
+                  <h2 className="text-xl font-bold text-blueberry dark:text-sky flex items-center justify-center">
+                    <Gamepad2 className="w-5 h-5 mr-2 text-candy" />
+                    Controls
+                  </h2>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-blueberry dark:text-sky mb-4 bg-white/50 dark:bg-blueberry/50 p-3 rounded-xl border-2 border-dashed border-sky">
+                  <div className="text-right font-bold">Move:</div>
+                  <div className="font-bold">← →</div>
+                  <div className="text-right font-bold">Rotate:</div>
+                  <div className="font-bold">↑</div>
+                  <div className="text-right font-bold">Soft Drop:</div>
+                  <div className="font-bold">↓</div>
+                  <div className="text-right font-bold">Hard Drop:</div>
+                  <div className="font-bold">Space</div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => movePlayer(-1)}
+                    className="bg-sky hover:bg-sky/80 text-white shadow-childish"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={dropPlayer}
+                    className="bg-sunshine hover:bg-sunshine/80 text-blueberry shadow-childish"
+                  >
+                    <ArrowDown className="h-4 w-4 font-bold" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => movePlayer(1)}
+                    className="bg-sky hover:bg-sky/80 text-white shadow-childish"
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => playerRotate(-1)}
+                    className="bg-candy hover:bg-candy/80 text-white shadow-childish"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={hardDrop}
+                    className="bg-sunshine hover:bg-sunshine/80 text-blueberry shadow-childish"
+                  >
+                    <ArrowDown className="h-4 w-4 font-bold" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => playerRotate(1)}
+                    className="bg-candy hover:bg-candy/80 text-white shadow-childish"
+                  >
+                    <RotateCw className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                <div className="flex gap-2 justify-center mt-4">
+                  <Button
+                    onClick={startGame}
+                    className="bg-candy hover:bg-candy/90 text-white flex-1 rounded-full shadow-childish relative overflow-hidden group"
+                  >
+                    <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                    <Play className="h-4 w-4 mr-2" />
+                    {gameOver ? "Play Again" : "New Game"}
+                    <Sparkles className="h-4 w-4 ml-2 animate-spin-slow" />
+                  </Button>
+                  {!gameOver && (
+                    <Button
+                      onClick={pauseGame}
+                      variant="outline"
+                      className="bg-blueberry/10 hover:bg-blueberry/20 text-blueberry dark:text-sky border-2 border-sky rounded-full shadow-childish"
+                    >
+                      {dropTime ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                    </Button>
+                  )}
+                </div>
+              </Card>
+            )}
+          </motion.div>
+        </div>
+      </div>
+    </motion.div>
   )
 }
 
@@ -701,3 +844,4 @@ function useInterval(callback: () => void, delay: number | null) {
     }
   }, [delay, savedCallback])
 }
+
