@@ -264,9 +264,7 @@ export function HeaderCountdown({
                       </Link>*/}
 
                         <Link
-                          href="https://docs.google.com/forms/d/e/1FAIpQLSciPYpGllhVcLJcfVOGZzdzcOyaCxvm7utEe1uhChDjXCfAtA/viewform"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          href="/special-event"
                         >
                           <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
                           <Heart className="w-5 h-5 mr-2 animate-pulse" />

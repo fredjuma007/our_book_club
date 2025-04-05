@@ -36,6 +36,12 @@ export default function Home() {
   // Get featured gallery items for the homepage preview
   const [randomGalleryItems, setRandomGalleryItems] = useState<typeof galleryItems>([])
 
+  // Add donation tracking state at the top of the component, after the existing useState declarations
+  const [donationAmount, setDonationAmount] = useState(500)
+  const [donationGoal, setDonationGoal] = useState(10000)
+  const [donorCount, setDonorCount] = useState(1)
+  const [donationPercentage, setDonationPercentage] = useState(0)
+
   // Select random gallery items on component mount
   useEffect(() => {
     // Create a copy of the gallery items array
@@ -50,6 +56,12 @@ export default function Home() {
     // Take the first 3 items
     setRandomGalleryItems(shuffled.slice(0, 3))
   }, [])
+
+  // Add useEffect to calculate percentage whenever amount or goal changes
+  useEffect(() => {
+    const percentage = (donationAmount / donationGoal) * 100
+    setDonationPercentage(percentage)
+  }, [donationAmount, donationGoal])
 
   // Handle scroll and set active section
   useEffect(() => {
@@ -86,12 +98,12 @@ export default function Home() {
   }
 
   return (
-    <div className="relative bg-[url('/picnic.jpg')] bg-cover bg-fixed bg-center bg-no-repeat text-blueberry dark:text-sky overflow-x-hidden selection:bg-candy/30">
+    <div className="relative bg-[url('/picnic.jpg')] bg-cover bg-fixed bg-center bg-no-repeat text-green-600 dark:text-green-500 overflow-x-hidden selection:bg-green-700/30">
       {/* Animated particles */}
-      <div className="fixed inset-0 star-bg animate-fade" />
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20 animate-fade" />
 
       {/* Main overlay */}
-      <div className="fixed inset-0 bg-sky/10 dark:bg-blueberry/70 backdrop-blur-sm" />
+      <div className="fixed inset-0 bg-white/60 dark:bg-black/70 backdrop-blur-sm" />
 
       {/* Navigation dots */}
       <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col gap-4">
@@ -99,26 +111,24 @@ export default function Home() {
           <button
             key={section}
             onClick={() => scrollToSection(section)}
-            className={`w-6 h-6 rounded-full transition-all duration-300 flex items-center justify-center ${
-              activeSection === section ? "bg-candy shadow-childish scale-125" : "bg-sunshine hover:bg-orange"
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              activeSection === section ? "bg-green-600 scale-125" : "bg-green-300 hover:bg-green-400"
             }`}
             aria-label={`Scroll to ${section} section`}
-          >
-            {activeSection === section && <Heart className="w-3 h-3 text-white animate-pulse" />}
-          </button>
+          />
         ))}
       </div>
 
       {/* Mobile Book Details Modal */}
       {showMobileBookDetails && (
-        <div className="fixed inset-0 bg-blueberry/70 backdrop-blur-sm z-50 md:hidden flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-blueberry rounded-3xl shadow-childish-xl w-full max-w-md max-h-[80vh] overflow-auto border-4 border-candy animate-rainbow-border">
-            <div className="p-6 relative">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 md:hidden flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-gray-800/95 rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] overflow-auto">
+            <div className="p-4 relative">
               <button
                 onClick={() => setShowMobileBookDetails(false)}
-                className="absolute top-2 right-2 w-10 h-10 rounded-full bg-cherry text-white flex items-center justify-center hover:bg-cherry/80 transition-colors"
+                className="absolute top-2 right-2 w-8 h-8 rounded-full bg-green-700/10 flex items-center justify-center text-green-700 hover:bg-green-700/20 transition-colors"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               </button>
 
               <div className="flex items-start gap-4 mb-6">
@@ -146,7 +156,8 @@ export default function Home() {
               <div className="relative mb-6 bg-sunshine/20 p-4 rounded-2xl">
                 <Quote className="absolute -left-3 -top-3 w-8 h-8 text-sunshine" />
                 <p className="text-base text-blueberry dark:text-sky italic pl-4">
-                  "People don’t get depressed when they face threats collectively; they get depressed when they feel isolated, lonely, or useless."
+                  "People don’t get depressed when they face threats collectively; they get depressed when they feel
+                  isolated, lonely, or useless."
                 </p>
               </div>
 
@@ -156,12 +167,12 @@ export default function Home() {
                   About Book
                 </h4>
                 <p className="text-blueberry/80 dark:text-sky/80 bg-white/50 dark:bg-blueberry/50 p-4 rounded-2xl border-2 border-dashed border-sky">
-                The Anxious Generation: How the Great Rewiring of Childhood Caused an Epidemic of Mental Illness
-                 by Jonathan Haidt explores how the rise of smartphones, 
-                social media, and overprotective parenting have contributed to skyrocketing anxiety, depression,
-                 and loneliness among young people. Haidt argues that the "great rewiring" of childhood—marked by 
-                 decreased independence, less face-to-face interaction, and constant digital engagement—has led to 
-                 a mental health crisis. He proposes solutions to help restore childhood to a healthier, more resilient state.
+                  The Anxious Generation: How the Great Rewiring of Childhood Caused an Epidemic of Mental Illness by
+                  Jonathan Haidt explores how the rise of smartphones, social media, and overprotective parenting have
+                  contributed to skyrocketing anxiety, depression, and loneliness among young people. Haidt argues that
+                  the "great rewiring" of childhood—marked by decreased independence, less face-to-face interaction, and
+                  constant digital engagement—has led to a mental health crisis. He proposes solutions to help restore
+                  childhood to a healthier, more resilient state.
                 </p>
               </div>
 
@@ -203,9 +214,9 @@ export default function Home() {
                     />
                     <div className="absolute -inset-2 rounded-full bg-sunshine/30 scale-0 group-hover:scale-100 transition-transform duration-300" />
                   </div>
-                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-blueberry dark:text-sky relative inline-block group rainbow-text">
+                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-green-800 dark:text-green-400 font-serif relative inline-block group">
                     Little Hearts, Big Dreams
-                    <span className="absolute -inset-1 bg-candy/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                    <span className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                   </h1>
                 </div>
                 <div className="relative">
@@ -222,11 +233,11 @@ export default function Home() {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-sky hover:bg-sky/80 text-white gap-2 group relative overflow-hidden rounded-full shadow-childish py-7"
+                  className="bg-green-700 hover:bg-green-800 text-white gap-2 group relative overflow-hidden rounded-full shadow-md py-7"
                 >
                   <Link href="/books">
                     <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                    <BookOpen className="w-6 h-6 transition-transform duration-300 group-hover:rotate-12" />
+                    <BookOpen className="w-5 h-5 transition-transform duration-300 group-hover:rotate-12" />
                     Explore Books
                   </Link>
                 </Button>
@@ -298,7 +309,8 @@ export default function Home() {
                         <div className="relative mt-2">
                           <Quote className="absolute -left-4 top-0 w-4 h-4 text-sunshine" />
                           <p className="text-xs text-blueberry/80 dark:text-sky/80 italic pl-4 line-clamp-1">
-                            "People don’t get depressed when they face threats collectively; they get depressed when they feel isolated, lonely, or useless."
+                            "People don’t get depressed when they face threats collectively; they get depressed when
+                            they feel isolated, lonely, or useless."
                           </p>
                         </div>
                         <div className="flex items-center justify-end mt-2 text-candy text-xs">
@@ -367,9 +379,93 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
+              {/* Donation Progress Card */}
+              <div className="hidden md:block bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-[0_4px_0_0_#166534] overflow-hidden border-4 border-green-700/70 group hover:shadow-[0_6px_0_0_#166534] transition-all duration-300 hover:-translate-y-1 mb-4">
+                <div className="p-4 relative">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-bold text-green-800 dark:text-green-400 font-serif">
+                      Donation Progress (first target)
+                    </h3>
+                    <span className="text-sm text-green-700 dark:text-green-500 font-bold font-serif">
+                      {donationAmount.toLocaleString()}/{donationGoal.toLocaleString()} KSh
+                    </span>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="w-full h-4 bg-green-100 dark:bg-green-900/30 rounded-full overflow-hidden mb-3">
+                    <div
+                      className="h-full bg-gradient-to-r from-green-600 to-green-500 rounded-full relative"
+                      style={{ width: `${donationPercentage}%` }}
+                    >
+                      <div className="absolute inset-0 bg-white/20 opacity-50 animate-pulse"></div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <Heart className="w-4 h-4 text-green-700 animate-pulse" />
+                      <span className="text-xs text-gray-700 dark:text-gray-300 font-serif">{donorCount} donors</span>
+                    </div>
+                    <Button
+                      asChild
+                      size="sm"
+                      className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 relative overflow-hidden group/btn rounded-full shadow-[0_2px_0_0_#166534] text-xs py-1 h-7"
+                    >
+                      <Link href="/special-event">
+                        <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                        <Heart className="w-3 h-3 mr-1" />
+                        Donate Now
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mobile Donation Progress Card */}
+              <div className="md:hidden bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-[0_4px_0_0_#166534] overflow-hidden border-4 border-green-700/70 group hover:shadow-[0_6px_0_0_#166534] transition-all duration-300 hover:-translate-y-1 mb-4">
+                <div className="p-3 relative">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-bold text-green-800 dark:text-green-400 font-serif">
+                      Donation Progress
+                    </h3>
+                    <span className="text-xs text-green-700 dark:text-green-500 font-bold font-serif">
+                      {donationAmount.toLocaleString()}/{donationGoal.toLocaleString()} KSh
+                    </span>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="w-full h-3 bg-green-100 dark:bg-green-900/30 rounded-full overflow-hidden mb-2">
+                    <div
+                      className="h-full bg-gradient-to-r from-green-600 to-green-500 rounded-full relative"
+                      style={{ width: `${donationPercentage}%` }}
+                    >
+                      <div className="absolute inset-0 bg-white/20 opacity-50 animate-pulse"></div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <Heart className="w-3 h-3 text-green-700 animate-pulse" />
+                      <span className="text-xs text-gray-700 dark:text-gray-300 font-serif">{donorCount} donors</span>
+                    </div>
+                    <Button
+                      asChild
+                      size="sm"
+                      className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 relative overflow-hidden group/btn rounded-full shadow-[0_2px_0_0_#166534] text-xs py-0 h-6 px-2"
+                    >
+                      <Link href="/special-event">
+                        <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                        <Heart className="w-3 h-3 mr-1" />
+                        Donate
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
               {/* Book of the Month Card - Desktop Only */}
-              <div className="hidden md:block bg-white dark:bg-blueberry/80 backdrop-blur-md rounded-3xl shadow-childish-lg overflow-hidden border-4 border-candy group hover:shadow-childish-xl transition-all duration-300 hover:-translate-y-2 animate-float">
-                <div className="absolute inset-0 bg-gradient-to-r from-candy/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="hidden md:block bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700">
+                <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="p-6 relative">
                   <div className="flex items-start gap-6">
                     <Link
@@ -380,9 +476,9 @@ export default function Home() {
                         src="/the_anxious_generation.jpg"
                         alt="Book Cover"
                         fill
-                        className="rounded-2xl shadow-childish object-cover transition-transform duration-300 group-hover/cover:scale-105 group-hover/cover:rotate-2 border-4 border-sky"
+                        className="rounded-lg shadow-lg object-cover transition-transform duration-300 group-hover/cover:scale-105 group-hover/cover:rotate-2 border-2 border-green-700"
                       />
-                      <div className="absolute -top-3 -right-3 bg-cherry text-white text-sm px-3 py-1 rounded-full shadow-childish transform rotate-3">
+                      <div className="absolute -top-2 -right-2 bg-green-700 text-white text-xs px-2 py-1 rounded-full">
                         Book of the Month
                       </div>
                     </Link>
@@ -394,7 +490,8 @@ export default function Home() {
                       <div className="relative bg-sunshine/20 p-4 rounded-2xl">
                         <Quote className="absolute -left-3 -top-3 w-6 h-6 text-sunshine" />
                         <p className="text-lg text-blueberry dark:text-sky italic pl-4">
-                          "People don’t get depressed when they face threats collectively; they get depressed when they feel isolated, lonely, or useless."
+                          "People don’t get depressed when they face threats collectively; they get depressed when they
+                          feel isolated, lonely, or useless."
                         </p>
                       </div>
                       <Button
@@ -409,11 +506,13 @@ export default function Home() {
                       </Button>
                       {showAbout && (
                         <p className="text-blueberry/80 dark:text-sky/80 mt-4 bg-white/50 dark:bg-blueberry/50 p-4 rounded-2xl border-2 border-dashed border-sky">
-                          The Anxious Generation: How the Great Rewiring of Childhood Caused an Epidemic of Mental Illness by Jonathan Haidt 
-                          explores how the rise of smartphones, social media, and overprotective parenting have contributed to skyrocketing anxiety,
-                           depression, and loneliness among young people. Haidt argues that the "great rewiring" of childhood—marked by decreased 
-                           independence, less face-to-face interaction, and constant digital engagement—has led to a mental health crisis.
-                           He proposes solutions to help restore childhood to a healthier, more resilient state.
+                          The Anxious Generation: How the Great Rewiring of Childhood Caused an Epidemic of Mental
+                          Illness by Jonathan Haidt explores how the rise of smartphones, social media, and
+                          overprotective parenting have contributed to skyrocketing anxiety, depression, and loneliness
+                          among young people. Haidt argues that the "great rewiring" of childhood—marked by decreased
+                          independence, less face-to-face interaction, and constant digital engagement—has led to a
+                          mental health crisis. He proposes solutions to help restore childhood to a healthier, more
+                          resilient state.
                         </p>
                       )}
                     </div>
@@ -494,9 +593,9 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-blueberry dark:text-sky mb-4 relative inline-block group rainbow-text">
+              <h2 className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif mb-4 relative inline-block group">
                 Why Join Our Reading Circle?
-                <span className="absolute -inset-1 bg-candy/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                <span className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
               </h2>
               <p className="text-xl text-blueberry/80 dark:text-sky/80 max-w-2xl mx-auto">
                 Discover the benefits of being part of our literary community
@@ -529,20 +628,15 @@ export default function Home() {
               ].map((feature, index) => (
                 <motion.div
                   key={index}
-                  className={`bg-white dark:bg-blueberry/80 backdrop-blur-md rounded-3xl p-6 shadow-childish hover:shadow-childish-lg transition-all duration-300 hover:-translate-y-3 border-4 border-${feature.color} group relative animate-float`}
+                  className="bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-green-700/30 hover:border-green-700 group relative"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.2 }}
-                  style={{ animationDelay: `${index * 0.3}s` }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-sky/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl" />
-                  <div
-                    className={`w-16 h-16 bg-${feature.color}/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-${feature.color}/30 transition-colors duration-300`}
-                  >
-                    <feature.icon
-                      className={`w-8 h-8 text-${feature.color} transition-transform duration-300 group-hover:scale-110`}
-                    />
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4 group-hover:bg-green-700/10 transition-colors duration-300">
+                    <feature.icon className="w-6 h-6 text-green-700 dark:text-green-400 transition-transform duration-300 group-hover:scale-110" />
                   </div>
                   <h3 className="text-2xl font-bold text-blueberry dark:text-sky mb-3">{feature.title}</h3>
                   <p className="text-blueberry/80 dark:text-sky/80">{feature.description}</p>
@@ -635,13 +729,11 @@ export default function Home() {
                         className="w-full bg-sky hover:bg-sky/80 text-white transition-all duration-300 relative overflow-hidden group/btn rounded-full shadow-childish py-6"
                       >
                         <Link
-                          href="https://docs.google.com/forms/d/e/1FAIpQLSciPYpGllhVcLJcfVOGZzdzcOyaCxvm7utEe1uhChDjXCfAtA/viewform"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          href="/special-event"
                         >
                           <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
                           <Heart className="w-5 h-5 mr-2 animate-pulse" />
-                            Donate
+                          Donate
                         </Link>
                       </Button>
                     )}
@@ -720,17 +812,16 @@ export default function Home() {
               ].map((testimonial, index) => (
                 <motion.div
                   key={index}
-                  className={`bg-white dark:bg-blueberry/80 backdrop-blur-md rounded-3xl p-6 shadow-childish hover:shadow-childish-lg transition-all duration-300 hover:-translate-y-3 border-4 border-${testimonial.color} group relative animate-float`}
+                  className="bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-green-700/30 hover:border-green-700 group relative"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.2 }}
-                  style={{ animationDelay: `${index * 0.3}s` }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-sky/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl" />
-                  <div className={`relative mb-6 bg-${testimonial.color}/20 p-4 rounded-2xl`}>
-                    <Quote className={`absolute -left-3 -top-3 w-8 h-8 text-${testimonial.color}`} />
-                    <p className="text-blueberry/80 dark:text-sky/80 italic pl-4 relative z-10">
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative mb-6">
+                    <Quote className="absolute -left-2 -top-2 w-8 h-8 text-green-200 dark:text-green-800" />
+                    <p className="text-gray-700 dark:text-gray-300 italic pl-6 relative z-10 font-serif">
                       "{testimonial.quote}"
                     </p>
                   </div>
@@ -752,17 +843,17 @@ export default function Home() {
             </div>
 
             <motion.div
-              className="mt-16 text-center bg-white dark:bg-blueberry/80 backdrop-blur-md rounded-3xl p-8 shadow-childish-lg border-4 border-candy animate-rainbow-border max-w-3xl mx-auto group relative"
+              className="mt-16 text-center bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-8 shadow-lg border border-green-700/30 hover:border-green-700 max-w-3xl mx-auto group relative"
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-candy/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl" />
-              <h3 className="text-2xl font-bold text-blueberry dark:text-sky mb-4">
+              <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+              <h3 className="text-2xl font-bold text-green-800 dark:text-green-400 mb-4 font-serif">
                 Ready to Join Our Reading Circle?
               </h3>
-              <p className="text-blueberry/80 dark:text-sky/80 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 mb-6 font-serif">
                 Become part of our growing community of book lovers. Sign up today to participate in our next
                 discussion!
               </p>
@@ -770,7 +861,7 @@ export default function Home() {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-candy hover:bg-candy/80 text-white transition-all duration-300 relative overflow-hidden group/btn rounded-full shadow-childish py-7"
+                  className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn rounded-full"
                 >
                   <Link
                     href="https://wa.me/+254714747231?text=Hello%20Reading%20Circle%20Membership%20Admin,%20I%20would%20like%20to%20join%20your%20community"
