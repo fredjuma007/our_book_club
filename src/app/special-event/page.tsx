@@ -343,7 +343,7 @@ export default function DonatePage() {
                     <div>
                       <p className="text-gray-700 dark:text-gray-300 font-serif mb-1">Treasurer Number:</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-green-800 dark:text-green-400 font-bold font-serif">0708075088</span>
+                        <span className="text-green-800 dark:text-green-400 font-bold font-serif">+254111910451</span>
                         <button
                           onClick={() => copyToClipboard("247247")}
                           className="p-1 rounded-full hover:bg-green-100 dark:hover:bg-green-800/30 transition-colors"
@@ -359,7 +359,7 @@ export default function DonatePage() {
                     <div>
                       <p className="text-gray-700 dark:text-gray-300 font-serif mb-1">Account Number:</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-green-800 dark:text-green-400 font-bold font-serif">Brian</span>
+                        <span className="text-green-800 dark:text-green-400 font-bold font-serif">Brian Obiero</span>
                         <button
                           onClick={() => copyToClipboard("READING-CIRCLE")}
                           className="p-1 rounded-full hover:bg-green-100 dark:hover:bg-green-800/30 transition-colors"
@@ -469,18 +469,18 @@ export default function DonatePage() {
                   <Heart className="w-5 h-5 animate-pulse" />
                   Donate Now
                 </Button>
-                <Button
+                {/*<Button
                   asChild
                   size="lg"
                   variant="outline"
                   className="border-4 border-green-600 text-green-700 dark:text-green-400 hover:bg-green-700/20 gap-2 group rounded-full shadow-[0_4px_0_0_#166534] py-7 relative overflow-hidden"
                 >
                   <Link href="/club-events">
-                    <span className="absolute inset-0 bg-green-700/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-                    Join the Event
+                  <span className="absolute inset-0 bg-green-700/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  Join the Event
                   </Link>
-                </Button>
+                </Button> */}
               </div>
             </motion.div>
           </div>
@@ -520,7 +520,7 @@ export default function DonatePage() {
                     <div>
                       <p className="text-gray-700 dark:text-gray-300 font-serif mb-1">Treasurer Number:</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-green-800 dark:text-green-400 font-bold font-serif">0708075088</span>
+                        <span className="text-green-800 dark:text-green-400 font-bold font-serif">+254111910451</span>
                         <button
                           onClick={() => copyToClipboard("247247")}
                           className="p-1 rounded-full hover:bg-green-100 dark:hover:bg-green-800/30 transition-colors"
@@ -536,7 +536,7 @@ export default function DonatePage() {
                     <div>
                       <p className="text-gray-700 dark:text-gray-300 font-serif mb-1">Account Number:</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-green-800 dark:text-green-400 font-bold font-serif">Brian</span>
+                        <span className="text-green-800 dark:text-green-400 font-bold font-serif">Brian Obiero</span>
                         <button
                           onClick={() => copyToClipboard("READING-CIRCLE")}
                           className="p-1 rounded-full hover:bg-green-100 dark:hover:bg-green-800/30 transition-colors"
