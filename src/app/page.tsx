@@ -111,11 +111,13 @@ export default function Home() {
           <button
             key={section}
             onClick={() => scrollToSection(section)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              activeSection === section ? "bg-green-600 scale-125" : "bg-green-300 hover:bg-green-400"
+            className={`w-6 h-6 rounded-full transition-all duration-300 flex items-center justify-center ${
+              activeSection === section ? "bg-candy shadow-childish scale-125" : "bg-sunshine hover:bg-orange"
             }`}
             aria-label={`Scroll to ${section} section`}
-          />
+          >
+            {activeSection === section && <Heart className="w-3 h-3 text-white animate-pulse" />}
+          </button>
         ))}
       </div>
 
