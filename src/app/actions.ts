@@ -133,10 +133,13 @@ export async function deleteReviewAction(reviewId: string) {
 export async function createReviewAction(formData: FormData) {
   try {
     const client = await getServerClient()
-    const member = await getMember()
+    let member = null
 
-    if (!member) {
-      throw new Error("You must be logged in to post a review")
+    try {
+      member = await getMember()
+    } catch (error) {
+      console.log("No authenticated member, allowing anonymous review")
+      // Continue without a member - allow anonymous reviews
     }
 
     const bookId = formData.get("bookId") as string
@@ -144,27 +147,32 @@ export async function createReviewAction(formData: FormData) {
     const rating = Number.parseFloat(formData.get("rating") as string)
     const review = formData.get("review") as string
 
-    if (!bookId || !name || !rating ) {
+    if (!bookId || !name || !rating) {
       throw new Error("Missing required fields")
     }
 
-    console.log("Creating review with member ID:", member.id)
+    // Create a data object with the review information
+    const reviewData: any = {
+      bookId,
+      name,
+      rating,
+      review,
+    }
 
-    // Insert the review with multiple user ID fields to ensure compatibility
+    // Add user information if available
+    if (member) {
+      reviewData.userId = member.id
+      reviewData.memberId = member.id
+      reviewData.authorId = member.id
+      reviewData.createdBy = member.id
+      reviewData.userEmail = member.loginEmail || ""
+    }
+
+    // Insert the review
     const result = await client.items.insertDataItem({
       dataCollectionId: "Reviews",
       dataItem: {
-        data: {
-          bookId,
-          name,
-          rating,
-          review,
-          userId: member.id,
-          memberId: member.id,
-          authorId: member.id,
-          createdBy: member.id,
-          userEmail: member.loginEmail || "",
-        },
+        data: reviewData,
       },
     })
 

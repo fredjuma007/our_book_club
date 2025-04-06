@@ -66,6 +66,19 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
               </Link>
             </Button>
 
+            <Button
+              asChild
+              variant="ghost"
+              className="w-full justify-start text-green-600 dark:text-green-400 
+              hover:text-green-700 hover:bg-green-50/50 dark:hover:bg-green-900/20
+              dark:hover:text-green-300 transition-colors relative group overflow-hidden font-serif"
+            >
+              <Link href="/about-us">
+                <span className="absolute inset-0 bg-gradient-to-r from-green-200/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
+                About Us
+              </Link>
+            </Button>
+
             {isLoggedIn && (
               <Button
                 asChild
@@ -84,7 +97,7 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
 
           {/* Authentication */}
           <div className="pt-2 border-b border-green-100 dark:border-green-900 pb-4">
-            {isLoggedIn ? (
+            {/*{isLoggedIn ? (
               <div className="flex flex-col gap-3">
                 <div className="relative">
                   <p className="text-sm text-gray-800 dark:text-gray-300 font-medium font-serif">
@@ -121,8 +134,8 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
                   <span className="relative z-10">Login</span>
                   <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Button>
-              </form>
-            )}
+              </form> 
+            )} */}
           </div>
 
           {/* Book of the Month */}

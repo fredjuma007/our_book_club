@@ -266,7 +266,7 @@ export default function Home() {
                     Check Events
                   </Link>
                 </Button>
-                <Button
+                {/*<Button
                   asChild
                   size="lg"
                   variant="outline"
@@ -278,6 +278,7 @@ export default function Home() {
                     About
                   </Link>
                 </Button>
+                */}
               </div>
 
               {/* Mobile Book of the Month */}

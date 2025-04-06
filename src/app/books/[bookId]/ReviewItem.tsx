@@ -82,7 +82,7 @@ export function ReviewItem({
       </div>
 
       {showReplies && (
-        <ReplySection reviewId={id} bookId={bookId} isLoggedIn={isLoggedIn} currentUserId={currentUserId} />
+        <ReplySection reviewId={id} bookId={bookId} currentUserId={currentUserId} />
       )}
     </div>
   )
