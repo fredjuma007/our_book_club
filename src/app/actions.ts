@@ -13,7 +13,7 @@ export async function loginAction() {
       throw new Error("Authentication client is undefined.")
     }
 
-    const oauthData = await client.auth.generateOAuthData(
+    const oauthData = client.auth.generateOAuthData(
       `${process.env.NEXT_PUBLIC_URL}/login-callback`,
       process.env.NEXT_PUBLIC_URL!,
     )
@@ -133,13 +133,10 @@ export async function deleteReviewAction(reviewId: string) {
 export async function createReviewAction(formData: FormData) {
   try {
     const client = await getServerClient()
-    let member = null
+    const member = await getMember()
 
-    try {
-      member = await getMember()
-    } catch (error) {
-      console.log("No authenticated member, allowing anonymous review")
-      // Continue without a member - allow anonymous reviews
+    if (!member) {
+      throw new Error("You must be logged in to post a review")
     }
 
     const bookId = formData.get("bookId") as string
@@ -147,32 +144,27 @@ export async function createReviewAction(formData: FormData) {
     const rating = Number.parseFloat(formData.get("rating") as string)
     const review = formData.get("review") as string
 
-    if (!bookId || !name || !rating) {
+    if (!bookId || !name || !rating ) {
       throw new Error("Missing required fields")
     }
 
-    // Create a data object with the review information
-    const reviewData: any = {
-      bookId,
-      name,
-      rating,
-      review,
-    }
+    console.log("Creating review with member ID:", member.id)
 
-    // Add user information if available
-    if (member) {
-      reviewData.userId = member.id
-      reviewData.memberId = member.id
-      reviewData.authorId = member.id
-      reviewData.createdBy = member.id
-      reviewData.userEmail = member.loginEmail || ""
-    }
-
-    // Insert the review
+    // Insert the review with multiple user ID fields to ensure compatibility
     const result = await client.items.insertDataItem({
       dataCollectionId: "Reviews",
       dataItem: {
-        data: reviewData,
+        data: {
+          bookId,
+          name,
+          rating,
+          review,
+          userId: member.id,
+          memberId: member.id,
+          authorId: member.id,
+          createdBy: member.id,
+          userEmail: member.loginEmail || "",
+        },
       },
     })
 
@@ -194,7 +186,7 @@ export async function createReviewAction(formData: FormData) {
 export async function addReplyAction(reviewId: string[], bookId: string, content: string) {
   try {
     const client = await getServerClient()
-    const isLoggedIn = await client.auth.loggedIn()
+    const isLoggedIn = client.auth.loggedIn()
 
     if (!isLoggedIn) {
       throw new Error("You must be logged in to reply to a review")
@@ -336,4 +328,3 @@ export async function deleteReplyAction(replyId: string, bookId: string) {
     throw error
   }
 }
-

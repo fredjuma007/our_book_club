@@ -114,7 +114,7 @@ export async function Header() {
             </div>
 
             <div className="flex items-center gap-3">
-              {/* {isLoggedIn ? (
+              {isLoggedIn ? (
                 <div className="flex items-center gap-2">
                   <div className="relative">
                     <p className="text-sm text-gray-800 dark:text-gray-300 font-medium font-serif">
@@ -148,7 +148,7 @@ export async function Header() {
                     <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </Button>
                 </form>
-              )} */}
+              )} 
             </div>
           </div>
 
