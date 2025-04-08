@@ -27,7 +27,7 @@ export default function DonatePage() {
   const [showDonationModal, setShowDonationModal] = useState(false)
 
   // Donation tracking state
-  const [donationAmount, setDonationAmount] = useState(5000)
+  const [donationAmount, setDonationAmount] = useState(5800)
   const [donationGoal, setDonationGoal] = useState(10000)
   const [donorCount, setDonorCount] = useState(9)
   const [donationPercentage, setDonationPercentage] = useState(0)
