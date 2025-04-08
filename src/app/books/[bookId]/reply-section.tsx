@@ -19,10 +19,11 @@ interface Reply {
 interface ReplySectionProps {
   reviewId: string
   bookId: string
+  isLoggedIn: boolean
   currentUserId?: string
 }
 
-export function ReplySection({ reviewId, bookId, currentUserId }: ReplySectionProps) {
+export function ReplySection({ reviewId, bookId, isLoggedIn, currentUserId }: ReplySectionProps) {
   const [isReplying, setIsReplying] = useState(false)
   const [replyContent, setReplyContent] = useState("")
   const [replies, setReplies] = useState<Reply[]>([])
@@ -119,7 +120,17 @@ export function ReplySection({ reviewId, bookId, currentUserId }: ReplySectionPr
         variant="ghost"
         size="sm"
         className="text-gray-600 dark:text-gray-400 hover:text-green-700 hover:bg-green-50 dark:hover:text-green-400 dark:hover:bg-gray-700 p-1 h-auto"
-        onClick={() => setIsReplying(!isReplying)}
+        onClick={() => {
+          if (!isLoggedIn) {
+            toast({
+              title: "Login Required",
+              description: "Please log in to reply to reviews",
+              variant: "destructive",
+            })
+            return
+          }
+          setIsReplying(!isReplying)
+        }}
       >
         <MessageCircle className="w-4 h-4 mr-1" />
         Comment on this review

@@ -3,9 +3,10 @@ import { BookIcon, ChevronLeft, StarIcon, BookOpen, Calendar, User, MessageCircl
 import { PostReviewForm } from "./post-review-form"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { getServerClient } from "@/lib/wix"
+import { getServerClient, getMember } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import { notFound } from "next/navigation"
+import { loginAction } from "@/app/actions"
 import type { Metadata } from "next"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { ReviewItem } from "./ReviewItem"
@@ -56,7 +57,9 @@ export default async function Page({ params }: PageProps) {
   const paramsObj = await params
   const bookId = paramsObj.bookId
 
-  const [client] = await Promise.all([getServerClient()])
+  const [client, member] = await Promise.all([getServerClient(), getMember()])
+  const isLoggedIn = await client.auth.loggedIn()
+
   try {
     // Add a cache-busting timestamp to ensure fresh data
     const timestamp = Date.now()
@@ -224,6 +227,7 @@ export default async function Page({ params }: PageProps) {
                     </a>
                   </Button>
                   <ShareButton />
+                  
                 </div>
               </div>
             </div>
@@ -246,59 +250,73 @@ export default async function Page({ params }: PageProps) {
 
             <div className="prose prose-green dark:prose-invert max-w-none font-serif">
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                {book.description || "No description available for this book."}
+          {book.description || "No description available for this book."}
               </p>
             </div>
           </div>
 
           {/* Review Form */}
-          <Card
-            id="post-review"
-            className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl"
-          >
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
-                ⭐ Rate & Post a Review ⭐
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <PostReviewForm bookId={book._id} userName={""} />
-            </CardContent>
-          </Card>
-
-          {/* Reviews Section */}
-          <Card className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
-                Reviews
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                {reviews.length > 0 ? (
-                  reviews.map((review) => (
-                    <ReviewItem
-                      key={review._id}
-                      id={review._id}
-                      name={review.name}
-                      rating={review.rating}
-                      review={review.review}
-                      isLoggedIn={false}
-                      bookId={bookId}
-                    />
-                  ))
-                ) : (
-                  <p className="text-gray-500 dark:text-gray-400 font-serif">
-                    No reviews available. Be the first to review this book!
-                  </p>
-                )}
+        <Card
+          id="post-review" 
+          className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
+              ⭐ Rate & Post a Review ⭐
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {isLoggedIn && member ? (
+              <PostReviewForm bookId={book._id} userName={member.nickname || member.loginEmail || "Anonymous"} />
+            ) : (
+              <div className="text-center space-y-4">
+                <p className="text-gray-600 dark:text-gray-400 font-serif">Please log in to post a review</p>
+                <form action={loginAction}>
+                  <Button
+                    variant="outline"
+                    className="bg-green-700 text-white hover:bg-green-800 transition-all font-serif"
+                  >
+                    Login to Review
+                  </Button>
+                </form>
               </div>
-            </CardContent>
-          </Card>
-          {/* Scroll to Top Button */}
-          <ScrollToTop />
-          <Toaster />
-        </div>
+            )}
+          </CardContent>
+        </Card>
+
+           {/* Reviews Section */}
+        <Card className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
+              Reviews
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              {reviews.length > 0 ? (
+                reviews.map((review) => (
+                  <ReviewItem
+                    key={review._id}
+                    id={review._id}
+                    name={review.name}
+                    rating={review.rating}
+                    review={review.review}
+                    isLoggedIn={isLoggedIn}
+                    bookId={bookId}
+                    currentUserId={member?.id ?? undefined}
+                  />
+                ))
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400 font-serif">
+                  No reviews available. Be the first to review this book!
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+        {/* Scroll to Top Button */}
+        <ScrollToTop />
+        <Toaster />
+      </div>
       </div>
     )
   } catch (error) {
