@@ -97,7 +97,7 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
 
           {/* Authentication */}
           <div className="pt-2 border-b border-green-100 dark:border-green-900 pb-4">
-            {/*{isLoggedIn ? (
+            {isLoggedIn ? (
               <div className="flex flex-col gap-3">
                 <div className="relative">
                   <p className="text-sm text-gray-800 dark:text-gray-300 font-medium font-serif">
@@ -135,7 +135,7 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
                   <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Button>
               </form> 
-            )} */}
+            )}
           </div>
 
           {/* Book of the Month */}
