@@ -98,12 +98,12 @@ export default function DonatePage() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="border-4 border-white text-white hover:bg-white/20 gap-2 group rounded-full shadow-[0_4px_0_0_rgba(255,255,255,0.3)] py-7 relative overflow-hidden"
+                  className="border-4 border-green-700 text-green-700 dark:text-white hover:bg-green-700/10 dark:hover:bg-white/20 gap-2 group rounded-full shadow-[0_4px_0_0_#166534] dark:shadow-[0_4px_0_0_rgba(255,255,255,0.3)] py-7 relative overflow-hidden"
                 >
                   <Link href="/#events">
-                    <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <Calendar className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-                    View Events
+                  <span className="absolute inset-0 bg-green-700/10 dark:bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <Calendar className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+                  View Events
                   </Link>
                 </Button>
               </div>
