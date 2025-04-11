@@ -37,9 +37,9 @@ export default function Home() {
   const [randomGalleryItems, setRandomGalleryItems] = useState<typeof galleryItems>([])
 
   // Add donation tracking state at the top of the component, after the existing useState declarations
-  const [donationAmount, setDonationAmount] = useState(7300)
+  const [donationAmount, setDonationAmount] = useState(8100)
   const [donationGoal, setDonationGoal] = useState(10000)
-  const [donorCount, setDonorCount] = useState(13)
+  const [donorCount, setDonorCount] = useState(15)
   const [donationPercentage, setDonationPercentage] = useState(0)
 
   // Select random gallery items on component mount
