@@ -119,7 +119,7 @@ export default function DonatePage() {
               <div className="p-6 relative">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-2xl font-bold text-green-800 dark:text-green-400 font-serif">
-                  Donation Progress (first target)
+                  Donation Progress (second target)
                   </h3>
                   <span className="text-lg text-green-700 dark:text-green-500 font-bold font-serif">
                     {donationAmount.toLocaleString()}/{donationGoal.toLocaleString()} KSh
