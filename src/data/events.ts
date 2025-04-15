@@ -24,7 +24,7 @@ export type Event = {
       location: "Better Living Children's Home: Zimmerman, Nairobi",
       moderators: ["Esther Mboche", "Alice Wainaina", "Brenda Frenjo", "Fred Juma", "Grace Kamau"],
       description: "Join us with COMMUNITY COTERIE Club for a visit to the children's home. We will be donating books and other items to the children.",
-      imageUrl: "/community_service.jpg",
+      imageUrl: "/better_living_poster.jpg",
       link: "",
       eventDate: "April 19, 2025",
       bookTitle: "THEME: Little Hearts, Big Dreams",
