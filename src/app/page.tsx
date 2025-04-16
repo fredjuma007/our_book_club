@@ -1,6 +1,7 @@
 import { getServerClient } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import HomePageClient from "./home-client"
+import ErrorBoundary from "@/components/error-boundary"
 
 export default async function HomePage() {
   let randomGalleryItems: {
@@ -17,15 +18,33 @@ export default async function HomePage() {
     // Fetch gallery items from Wix for the preview
     const client = await getServerClient()
 
-    // Fetch gallery items from Wix CMS
-    const galleryData = await client.items
-      .queryDataItems({ dataCollectionId: "Gallery" })
-      .find()
-      .then((res) => res.items.map((item) => item.data || {}))
-      .catch((error) => {
-        console.error("Error fetching gallery items:", error)
-        return []
-      })
+    // Fetch gallery items from Wix CMS with a timeout
+    const galleryDataPromise = new Promise<any[]>(async (resolve, reject) => {
+      // Set a timeout for the entire operation
+      const timeout = setTimeout(() => {
+        reject(new Error("Gallery data fetch timed out after 10 seconds"))
+      }, 10000)
+
+      try {
+        const data = await client.items
+          .queryDataItems({ dataCollectionId: "Gallery" })
+          .find()
+          .then((res) => res.items.map((item) => item.data || {}))
+          .catch((error) => {
+            console.error("Error fetching gallery items:", error)
+            return []
+          })
+
+        clearTimeout(timeout)
+        resolve(data)
+      } catch (error) {
+        clearTimeout(timeout)
+        reject(error)
+      }
+    })
+
+    // Wait for the data with a timeout
+    const galleryData = await galleryDataPromise
 
     // Filter out any null or undefined values
     const galleryItems = galleryData.filter(
@@ -79,5 +98,9 @@ export default async function HomePage() {
     // Leave randomGalleryItems as an empty array
   }
 
-  return <HomePageClient initialGalleryItems={randomGalleryItems} />
+  return (
+    <ErrorBoundary>
+      <HomePageClient initialGalleryItems={randomGalleryItems} />
+    </ErrorBoundary>
+  )
 }
