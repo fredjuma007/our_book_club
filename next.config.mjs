@@ -3,9 +3,15 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
-                hostname: "static.wixstatic.com",
-                protocol: "https",
-            },
+                protocol: 'https',
+                hostname: 'static.wixstatic.com',
+                pathname: '/media/**',
+              },
+              {
+                protocol: 'https',
+                hostname: 'video.wixstatic.com',
+                pathname: '/video/**',
+              }
         ],
     },
     // Ignore build validation errors
