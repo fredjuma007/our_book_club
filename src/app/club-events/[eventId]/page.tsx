@@ -10,32 +10,27 @@ import { notFound } from "next/navigation"
 import { convertWixEventData, formatEventDate, isEventPast } from "@/lib/event-utils"
 import ShareButton from "@/components/sharebutton"
 
-export default async function EventPage({ params }: { params: { eventId: string } }) {
-  const eventId = params.eventId
+export default async function EventPage({ params }: { params: Promise<{ eventId: string }> }) {
+  // Await params before using them
+  const paramsObj = await params
+  const eventId = paramsObj.eventId
 
   console.log(`Fetching event with ID: ${eventId}`)
 
   try {
     const client = await getServerClient()
 
-    // Try using the original filter approach that was working in your code
-    const response = await client.items
-      .queryDataItems({
-        dataCollectionId: "Events",
-        // @ts-ignore - Using string filter which works but TypeScript doesn't recognize
-        filter: `_id == "${eventId}"`,
-      })
-      .find()
+    // Use getDataItem directly with the event ID instead of querying with a filter
+    const eventResponse = await client.items.getDataItem(eventId, {
+      dataCollectionId: "Events",
+    })
 
-    console.log(`Query response: ${response.items.length} items found`)
-    console.log(`Available IDs: ${response.items.map((item) => item.data?._id).join(", ")}`)
-
-    if (response.items.length === 0) {
+    if (!eventResponse || !eventResponse.data) {
       console.log(`Event with ID ${eventId} not found`)
       return notFound()
     }
 
-    const eventData = convertWixEventData(response.items[0].data || {})
+    const eventData = convertWixEventData(eventResponse.data || {})
 
     console.log(`Event found: ${eventData.title}`)
 
