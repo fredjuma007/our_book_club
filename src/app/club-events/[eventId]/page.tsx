@@ -244,7 +244,7 @@ export default async function EventPage({ params }: { params: Promise<{ eventId:
                           href="/gallery"
                           className="block text-green-700 hover:text-green-800 dark:text-green-500 dark:hover:text-green-400 font-serif"
                         >
-                          Event Gallery
+                          Gallery
                         </Link>
                       </div>
                     </div>
