@@ -47,9 +47,9 @@ export default function HomePageClient({ initialGalleryItems = [] }: { initialGa
   const [isLoading, setIsLoading] = useState(initialGalleryItems.length === 0)
 
   // Add donation tracking state at the top of the component, after the existing useState declarations
-  const [donationAmount, setDonationAmount] = useState(11500)
+  const [donationAmount, setDonationAmount] = useState(13600)
   const [donationGoal, setDonationGoal] = useState(15000)
-  const [donorCount, setDonorCount] = useState(21)
+  const [donorCount, setDonorCount] = useState(26)
   const [donationPercentage, setDonationPercentage] = useState(0)
 
   // Fetch gallery items from API only if we don't have initial items
