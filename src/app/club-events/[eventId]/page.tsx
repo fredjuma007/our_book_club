@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
-import { BookOpen, MapPin, CalendarCheck, ArrowLeft, Users, Tag } from "lucide-react"
+import { BookOpen, MapPin, CalendarCheck, ArrowLeft, Users, Tag, ChevronLeft } from "lucide-react"
 import Footer from "@/components/footer"
 import { getServerClient } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
@@ -48,13 +48,19 @@ export default async function EventPage({ params }: { params: Promise<{ eventId:
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20" />
 
           <div className="max-w-screen-xl mx-auto py-8 px-4 lg:px-8 relative">
-            <Link
-              href="/club-events"
-              className="inline-flex items-center text-green-700 hover:text-green-800 transition-colors mb-6"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              <span className="font-serif">Back to Events</span>
-            </Link>
+          <div className="mb-8">
+              <Button
+                variant="outline"
+                className="border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden"
+                asChild
+              >
+                <Link href="/club-events" className="flex items-center">
+                  <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <ChevronLeft className="mr-1 transition-transform duration-300 group-hover:-translate-x-1" />
+                  All Events
+                </Link>
+              </Button>
+            </div>
 
             <div className="bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700 overflow-hidden">
               {/* Event Header */}

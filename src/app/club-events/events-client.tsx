@@ -38,6 +38,9 @@ export default function EventsClient({ eventsData, upcomingEvents, pastEvents, f
   } else if (filter === "previous" || filter === "past") {
     eventsToDisplay = pastEvents
     showPastEvents = false
+  } else if (filter === "all") {
+    // For "all" filter, only show upcoming events in the main grid
+    eventsToDisplay = upcomingEvents
   }
 
   // Function to render event card in grid format
@@ -185,7 +188,14 @@ export default function EventsClient({ eventsData, upcomingEvents, pastEvents, f
       {/* Main Content */}
       <div className="max-w-screen-xl mx-auto px-4 lg:px-8 pb-16 relative">
         <div className="space-y-8">
-          {/* Upcoming Events Section */}
+          {/* Section Title */}
+          {filter === "all" && upcomingEvents.length > 0 && (
+            <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6 flex items-center">
+              <CalendarCheck className="w-6 h-6 mr-2" />
+              Upcoming Events
+            </h2>
+          )}
+
           {filter === "upcoming" && (
             <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6 flex items-center">
               <CalendarCheck className="w-6 h-6 mr-2" />
@@ -203,9 +213,7 @@ export default function EventsClient({ eventsData, upcomingEvents, pastEvents, f
           {/* Grid of Events */}
           {eventsToDisplay.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {eventsToDisplay.map((event) =>
-                renderEventCard(event, filter === "previous" || (filter === "all" && pastEvents.includes(event))),
-              )}
+              {eventsToDisplay.map((event) => renderEventCard(event, filter === "previous"))}
             </div>
           ) : (
             <div className="text-center py-12 bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700">

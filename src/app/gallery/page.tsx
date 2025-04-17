@@ -1,6 +1,6 @@
 import { getServerClient } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
-import GalleryClient, { type GalleryItem } from "@/components/gallery-client"
+import GalleryClient, { type GalleryItem } from "@/app/gallery/gallery-client"
 import ErrorBoundary from "@/components/error-boundary"
 
 export default async function GalleryPage() {
