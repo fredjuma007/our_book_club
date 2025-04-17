@@ -1,5 +1,5 @@
 import { convertWixEventData } from "@/lib/event-utils"
-import EventsClient from "@/components/events-client"
+import EventsClient from "@/app/club-events/events-client"
 import { getServerClient } from "@/lib/wix"
 
 type EventsPageProps = {
