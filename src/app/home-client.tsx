@@ -24,7 +24,6 @@ import {
 } from "lucide-react"
 import React, { useEffect, useState } from "react"
 import Footer from "@/components/footer"
-import { events } from "@/data/events"
 
 // Define the GalleryItem type
 interface GalleryItem {
@@ -37,7 +36,26 @@ interface GalleryItem {
   category?: string
 }
 
-export default function HomePageClient({ initialGalleryItems = [] }: { initialGalleryItems: GalleryItem[] }) {
+// Define the Event type
+interface Event {
+  id: string
+  title: string
+  eventDate: string
+  time: string
+  location: string
+  type: string
+  bookTitle: string
+  bookAuthor?: string
+  imageUrl?: string
+  link?: string
+}
+
+interface HomePageClientProps {
+  initialGalleryItems: GalleryItem[]
+  upcomingEvents: Event[]
+}
+
+export default function HomePageClient({ initialGalleryItems = [], upcomingEvents = [] }: HomePageClientProps) {
   const [showAbout, setShowAbout] = React.useState(false)
   const [activeSection, setActiveSection] = useState("hero")
   const [showMobileBookDetails, setShowMobileBookDetails] = useState(false)
@@ -693,7 +711,7 @@ export default function HomePageClient({ initialGalleryItems = [] }: { initialGa
             </motion.div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {events.slice(0, 3).map((event, index) => (
+              {upcomingEvents.slice(0, 3).map((event, index) => (
                 <motion.div
                   key={event.id}
                   className="bg-white dark:bg-blueberry/80 backdrop-blur-md rounded-3xl overflow-hidden shadow-childish hover:shadow-childish-lg transition-all duration-300 hover:-translate-y-3 border-4 border-sky group relative animate-float"

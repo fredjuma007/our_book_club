@@ -5,20 +5,31 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { BookOpen, Calendar, Menu, X, MapPin, Clock } from "lucide-react"
 import Image from "next/image"
-import { events } from "@/data/events"
+
+interface Event {
+  id: string
+  title: string
+  eventDate: string
+  time: string
+  location: string
+  type: string
+  bookTitle: string
+  bookAuthor?: string
+  imageUrl?: string
+  link?: string
+  date?: Date // Add this property
+}
 
 interface MobileMenuProps {
   isLoggedIn: boolean
   memberNickname?: string | null
   loginAction: () => Promise<void>
   logoutAction: () => Promise<void>
+  upcomingEvent?: Event | null
 }
 
-export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutAction }: MobileMenuProps) {
+export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutAction, upcomingEvent }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
-
-  // Get the first upcoming event
-  const upcomingEvent = events.length > 0 ? events[0] : null
 
   return (
     <div className="relative">
@@ -134,7 +145,7 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
                   <span className="relative z-10">Login</span>
                   <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Button>
-              </form> 
+              </form>
             )}
           </div>
 
@@ -173,7 +184,7 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
                       The Anxious Generation
                     </h4>
                     <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 mt-0.5 sm:mt-1">
-                    Jonathan Haidt
+                      Jonathan Haidt
                     </p>
                     <div className="flex items-center mt-1 sm:mt-2 text-[10px] sm:text-xs text-gray-500 dark:text-gray-500">
                       <Calendar className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />

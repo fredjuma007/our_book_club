@@ -2,6 +2,7 @@ import { getServerClient } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import HomePageClient from "./home-client"
 import ErrorBoundary from "@/components/error-boundary"
+import { convertWixEventData } from "@/lib/event-utils"
 
 export default async function HomePage() {
   let randomGalleryItems: {
@@ -14,9 +15,24 @@ export default async function HomePage() {
     category: string
   }[] = []
 
+  // Initialize upcomingEvents array
+  let upcomingEvents: {
+    id: string
+    title: string
+    eventDate: string
+    time: string
+    location: string
+    type: string
+    bookTitle: string
+    bookAuthor?: string
+    imageUrl?: string
+    link?: string
+  }[] = []
+
   try {
-    // Fetch gallery items from Wix for the preview
+    // Fetch gallery items and events from Wix
     const client = await getServerClient()
+    const currentDate = new Date()
 
     // Fetch gallery items from Wix CMS with a timeout
     const galleryDataPromise = new Promise<any[]>(async (resolve, reject) => {
@@ -43,10 +59,35 @@ export default async function HomePage() {
       }
     })
 
-    // Wait for the data with a timeout
-    const galleryData = await galleryDataPromise
+    // Fetch events data with a timeout
+    const eventsDataPromise = new Promise<any[]>(async (resolve, reject) => {
+      // Set a timeout for the entire operation
+      const timeout = setTimeout(() => {
+        reject(new Error("Events data fetch timed out after 10 seconds"))
+      }, 10000)
 
-    // Filter out any null or undefined values
+      try {
+        const data = await client.items
+          .queryDataItems({ dataCollectionId: "Events" })
+          .find()
+          .then((res) => res.items.map((item) => item.data || {}))
+          .catch((error) => {
+            console.error("Error fetching events:", error)
+            return []
+          })
+
+        clearTimeout(timeout)
+        resolve(data)
+      } catch (error) {
+        clearTimeout(timeout)
+        reject(error)
+      }
+    })
+
+    // Wait for both data fetches with timeouts
+    const [galleryData, eventsData] = await Promise.all([galleryDataPromise, eventsDataPromise])
+
+    // Process gallery items
     const galleryItems = galleryData.filter(
       (
         item,
@@ -93,14 +134,88 @@ export default async function HomePage() {
 
     // Take the first 3 items for the preview
     randomGalleryItems = shuffled.slice(0, 3)
+
+    // Process events data
+    const processedEvents = eventsData
+      .map((item) => convertWixEventData(item))
+      .filter(
+        (
+          event,
+        ): event is {
+          _id: string
+          title: string
+          date: string
+          time: string
+          location: string
+          type?: string
+          bookTitle?: string
+          bookAuthor?: string
+          image?: any
+          link?: string
+          isPast?: boolean
+          moderators: string[]
+          description: string
+        } =>
+          !!event &&
+          typeof event._id === "string" &&
+          Array.isArray(event.moderators) &&
+          typeof event.description === "string",
+      )
+
+    // Filter for upcoming events
+    const upcoming = processedEvents.filter((event) => {
+      const eventDate = new Date(event.date)
+      return eventDate >= currentDate && !event.isPast
+    })
+
+    // Sort by date (nearest first)
+    upcoming.sort((a, b) => {
+      const dateA = new Date(a.date)
+      const dateB = new Date(b.date)
+      return dateA.getTime() - dateB.getTime()
+    })
+
+    // Take the first 3 upcoming events
+    upcomingEvents = upcoming.slice(0, 3).map((event) => {
+      // Format the date for display
+      const eventDate = new Date(event.date)
+      const formattedDate = eventDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+
+      // Get the image URL with error handling
+      let imageUrl = "/placeholder.svg?height=300&width=400"
+      try {
+        if (event.image) {
+          imageUrl = convertWixImageToUrl(event.image)
+        }
+      } catch (error) {
+        console.error("Error converting event image URL:", error)
+      }
+
+      return {
+        id: event._id,
+        title: event.title,
+        eventDate: formattedDate,
+        time: event.time,
+        location: event.location,
+        type: event.type || "Event",
+        bookTitle: event.bookTitle || "TBA",
+        bookAuthor: event.bookAuthor,
+        imageUrl: imageUrl,
+        link: event.link,
+      }
+    })
   } catch (error) {
-    console.error("Error fetching gallery data:", error)
-    // Leave randomGalleryItems as an empty array
+    console.error("Error fetching data:", error)
+    // Leave arrays as empty if there's an error
   }
 
   return (
     <ErrorBoundary>
-      <HomePageClient initialGalleryItems={randomGalleryItems} />
+      <HomePageClient initialGalleryItems={randomGalleryItems} upcomingEvents={upcomingEvents} />
     </ErrorBoundary>
   )
 }

@@ -6,10 +6,83 @@ import { getMember, getServerClient } from "@/lib/wix"
 import { ThemeToggle } from "@/components/ModeToggle"
 import { MobileMenu } from "@/components/mobile-menu"
 import { HeaderCountdown } from "@/components/header-countdown"
+import { convertWixEventData } from "@/lib/event-utils"
+import { convertWixImageToUrl } from "@/lib/wix-client"
 
 export async function Header() {
   const [member, client] = await Promise.all([getMember(), getServerClient()])
   const isLoggedIn = client.auth.loggedIn()
+
+  // Fetch upcoming event for mobile menu and countdown
+  let upcomingEvent = null
+  try {
+    const currentDate = new Date()
+
+    const eventsResponse = await client.items.queryDataItems({ dataCollectionId: "Events" }).find()
+
+    // Process events data
+    const processedEvents = eventsResponse.items
+      .map((item) => convertWixEventData(item.data || {}))
+      .filter(
+        (event) =>
+          !!event &&
+          typeof event._id === "string" &&
+          Array.isArray(event.moderators) &&
+          typeof event.description === "string",
+      )
+
+    // Filter for upcoming events
+    const upcoming = processedEvents.filter((event) => {
+      const eventDate = new Date(event.date)
+      return eventDate >= currentDate && !event.isPast
+    })
+
+    // Sort by date (nearest first)
+    upcoming.sort((a, b) => {
+      const dateA = new Date(a.date)
+      const dateB = new Date(b.date)
+      return dateA.getTime() - dateB.getTime()
+    })
+
+    // Get the first upcoming event
+    if (upcoming.length > 0) {
+      const event = upcoming[0]
+
+      // Format the date for display
+      const eventDate = new Date(event.date)
+      const formattedDate = eventDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+
+      // Get the image URL with error handling
+      let imageUrl = "/placeholder.svg?height=300&width=400"
+      try {
+        if (event.image) {
+          imageUrl = convertWixImageToUrl(event.image)
+        }
+      } catch (error) {
+        console.error("Error converting event image URL:", error)
+      }
+
+      upcomingEvent = {
+        id: event._id,
+        title: event.title,
+        eventDate: formattedDate,
+        time: event.time,
+        location: event.location,
+        type: event.type || "Event",
+        bookTitle: event.bookTitle || "TBA",
+        bookAuthor: event.bookAuthor,
+        imageUrl: imageUrl,
+        link: event.link,
+        date: eventDate, // Add the actual Date object for countdown calculation
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching upcoming event:", error)
+  }
 
   return (
     <>
@@ -66,14 +139,7 @@ export async function Header() {
           </Button>
 
           <div className="hidden lg:flex items-center gap-2 lg:gap-4 xl:gap-6 relative z-10">
-            <HeaderCountdown
-              initialEventDate={new Date(2025, 2, 29, 19, 0, 0)}
-              initialEventTitle="Book Club Meeting"
-              initialEventTime="7:00 PM - 9:00 PM"
-              initialEventLink="https://meet.google.com/vhv-hfwz-avi"
-              initialBookTitle="Sometimes I Lie"
-              initialBookCover="/sometimes i lie.jpg"
-            />
+            <HeaderCountdown upcomingEvent={upcomingEvent} />
             <ThemeToggle />
 
             <div className="flex items-center gap-3 lg:gap-6">
@@ -148,25 +214,19 @@ export async function Header() {
                     <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </Button>
                 </form>
-              )} 
+              )}
             </div>
           </div>
 
           <div className="flex lg:hidden items-center gap-2 z-10">
-            <HeaderCountdown
-              initialEventDate={new Date(2025, 2, 29, 19, 0, 0)}
-              initialEventTitle="Book Club Meeting"
-              initialEventTime="7:00 PM - 9:00 PM"
-              initialEventLink="https://meet.google.com/vhv-hfwz-avi"
-              initialBookTitle="Sometimes I Lie"
-              initialBookCover="/sometimes i lie.jpg"
-            />
+            <HeaderCountdown upcomingEvent={upcomingEvent} />
             <ThemeToggle />
             <MobileMenu
               isLoggedIn={isLoggedIn}
               memberNickname={member?.nickname}
               loginAction={loginAction}
               logoutAction={logoutAction}
+              upcomingEvent={upcomingEvent}
             />
           </div>
         </div>
