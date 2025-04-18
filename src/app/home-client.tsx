@@ -776,37 +776,42 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
                 <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="p-6 relative">
                   <div className="flex items-start gap-6">
-                    <motion.div
-                      className="relative w-32 h-48 flex-shrink-0 group/cover perspective-1000"
-                      ref={bookCoverRef}
-                      whileHover={{ scale: 1.02 }} // Reduced from 1.05
-                      style={{ transformStyle: "preserve-3d" }}
+                    <Link
+                      href="https://readingcircle.vercel.app/books/0ff3b310-acd6-4a8d-b468-6542a9f818e0"
+                      className="block"
                     >
-                      <Image
-                        src="/the_anxious_generation.jpg"
-                        alt="The Anxious Generation Book Cover"
-                        fill
-                        className="rounded-lg shadow-lg object-cover transition-transform duration-300 group-hover/cover:scale-105 group-hover/cover:rotate-1 border-2 border-green-700"
-                      />
                       <motion.div
-                        className="absolute -top-2 -right-2 bg-green-700 text-white text-xs px-2 py-1 rounded-full"
-                        // Remove the rotating animation
-                        // animate={{ rotate: [0, 3, 0, -3, 0] }}
-                        // transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY }}
+                        className="relative w-32 h-48 flex-shrink-0 group/cover perspective-1000"
+                        ref={bookCoverRef}
+                        whileHover={{ scale: 1.02 }} // Reduced from 1.05
+                        style={{ transformStyle: "preserve-3d" }}
                       >
-                        Book of the Month
+                        <Image
+                          src="/the_anxious_generation.jpg"
+                          alt="The Anxious Generation Book Cover"
+                          fill
+                          className="rounded-lg shadow-lg object-cover transition-transform duration-300 group-hover/cover:scale-105 group-hover/cover:rotate-1 border-2 border-green-700"
+                        />
+                        <motion.div className="absolute -top-2 -right-2 bg-green-700 text-white text-xs px-2 py-1 rounded-full">
+                          Book of the Month
+                        </motion.div>
                       </motion.div>
-                    </motion.div>
+                    </Link>
                     <div className="flex-1 space-y-4">
                       <div>
-                        <motion.h3
-                          className="text-2xl font-bold text-green-800 dark:text-green-400 font-serif gradient-text"
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.7 }}
+                        <Link
+                          href="https://readingcircle.vercel.app/books/0ff3b310-acd6-4a8d-b468-6542a9f818e0"
+                          className="block hover:underline"
                         >
-                          The Anxious Generation
-                        </motion.h3>
+                          <motion.h3
+                            className="text-2xl font-bold text-green-800 dark:text-green-400 font-serif gradient-text"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.7 }}
+                          >
+                            The Anxious Generation
+                          </motion.h3>
+                        </Link>
                         <motion.p
                           className="text-gray-600 dark:text-gray-300 font-serif"
                           initial={{ opacity: 0, y: -5 }}
