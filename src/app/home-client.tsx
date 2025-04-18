@@ -678,7 +678,7 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="w-full h-4 bg-green-100 dark:bg-yellow-500 rounded-full overflow-hidden mb-3">
+                  <div className="w-full h-4 bg-yellow-500 dark:bg-yellow-500 rounded-full overflow-hidden mb-3">
                     <motion.div
                       className="h-full bg-gradient-to-r from-green-600 to-green-500 rounded-full relative animate-shimmer"
                       style={{ width: `${donationPercentage}%` }}
