@@ -66,9 +66,9 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
   const [isLoading, setIsLoading] = useState(initialGalleryItems.length === 0)
 
   // Add donation tracking state at the top of the component, after the existing useState declarations
-  const [donationAmount, setDonationAmount] = useState(14100)
+  const [donationAmount, setDonationAmount] = useState(16600)
   const [donationGoal, setDonationGoal] = useState(15000)
-  const [donorCount, setDonorCount] = useState(27)
+  const [donorCount, setDonorCount] = useState(29)
   const [donationPercentage, setDonationPercentage] = useState(0)
 
   // Refs for parallax effect
@@ -678,7 +678,7 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="w-full h-4 bg-green-100 dark:bg-green-900/30 rounded-full overflow-hidden mb-3">
+                  <div className="w-full h-4 bg-green-100 dark:bg-yellow-500 rounded-full overflow-hidden mb-3">
                     <motion.div
                       className="h-full bg-gradient-to-r from-green-600 to-green-500 rounded-full relative animate-shimmer"
                       style={{ width: `${donationPercentage}%` }}

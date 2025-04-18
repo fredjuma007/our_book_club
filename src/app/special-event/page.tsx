@@ -27,9 +27,9 @@ export default function DonatePage() {
   const [showDonationModal, setShowDonationModal] = useState(false)
 
   // Donation tracking state
-  const [donationAmount, setDonationAmount] = useState(14100)
+  const [donationAmount, setDonationAmount] = useState(16600)
   const [donationGoal, setDonationGoal] = useState(15000)
-  const [donorCount, setDonorCount] = useState(27)
+  const [donorCount, setDonorCount] = useState(29)
   const [donationPercentage, setDonationPercentage] = useState(0)
 
   // Calculate percentage whenever amount or goal changes
@@ -129,7 +129,7 @@ export default function DonatePage() {
                 {/* Progress Bar */}
                 <div className="w-full h-6 bg-green-100 dark:bg-green-900/30 rounded-full overflow-hidden mb-4">
                   <div
-                    className="h-full bg-gradient-to-r from-green-600 to-green-500 rounded-full relative"
+                    className="h-full bg-gradient-to-r from-yellow-600 to-yellow-500 rounded-full relative"
                     style={{ width: `${donationPercentage}%` }}
                   >
                     <div className="absolute inset-0 bg-white/20 opacity-50 animate-pulse"></div>
