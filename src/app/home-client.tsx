@@ -65,12 +65,6 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
   const [randomGalleryItems, setRandomGalleryItems] = useState<GalleryItem[]>(initialGalleryItems)
   const [isLoading, setIsLoading] = useState(initialGalleryItems.length === 0)
 
-  // Add donation tracking state at the top of the component, after the existing useState declarations
-  const [donationAmount, setDonationAmount] = useState(16600)
-  const [donationGoal, setDonationGoal] = useState(15000)
-  const [donorCount, setDonorCount] = useState(29)
-  const [donationPercentage, setDonationPercentage] = useState(0)
-
   // Refs for parallax effect
   const parallaxRef = useRef<HTMLDivElement>(null)
   const bookCoverRef = useRef<HTMLDivElement>(null)
@@ -106,12 +100,6 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
 
     fetchGalleryItems()
   }, [initialGalleryItems])
-
-  // Add useEffect to calculate percentage whenever amount or goal changes
-  useEffect(() => {
-    const percentage = (donationAmount / donationGoal) * 100
-    setDonationPercentage(percentage)
-  }, [donationAmount, donationGoal])
 
   // Handle scroll and set active section
   useEffect(() => {
@@ -588,8 +576,8 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
               <div className="hidden md:grid grid-cols-3 gap-6 mt-8">
                 {[
                   { label: "Members", value: "100+", icon: Users, color: "green-700", delay: 0.9 },
-                  { label: "Books Read", value: "13", icon: BookOpen, color: "green-700", delay: 1.0 },
-                  { label: "Events", value: "3+", icon: Calendar, color: "green-700", delay: 1.1 },
+                  { label: "Books Read", value: "14", icon: BookOpen, color: "green-700", delay: 1.0 },
+                  { label: "Events", value: "4+", icon: Calendar, color: "green-700", delay: 1.1 },
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}
@@ -659,112 +647,6 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              {/* Donation Progress Card */}
-              <motion.div
-                className="hidden md:block bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-[0_4px_0_0_#166534] overflow-hidden border-4 border-green-700/70 group hover:shadow-[0_6px_0_0_#166534] transition-all duration-300 hover:-translate-y-1 mb-4 animate-float-slow"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="p-4 relative">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-bold text-green-800 dark:text-green-400 font-serif gradient-text">
-                      Donation Progress (second target)
-                    </h3>
-                    <span className="text-sm text-green-700 dark:text-green-500 font-bold font-serif">
-                      {donationAmount.toLocaleString()}/{donationGoal.toLocaleString()} KSh
-                    </span>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="w-full h-4 bg-yellow-500 dark:bg-yellow-500 rounded-full overflow-hidden mb-3">
-                    <motion.div
-                      className="h-full bg-gradient-to-r from-green-600 to-green-500 rounded-full relative animate-shimmer"
-                      style={{ width: `${donationPercentage}%` }}
-                      initial={{ width: "0%" }}
-                      animate={{ width: `${donationPercentage}%` }}
-                      transition={{ duration: 1.5, delay: 0.7 }}
-                    >
-                      <div className="absolute inset-0 bg-white/20 opacity-50 animate-pulse"></div>
-                    </motion.div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <Heart className="w-4 h-4 text-green-700 animate-pulse" />
-                      <span className="text-xs text-gray-700 dark:text-gray-300 font-serif">{donorCount} donors</span>
-                    </div>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button
-                        asChild
-                        size="sm"
-                        className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 relative overflow-hidden group/btn rounded-full shadow-[0_2px_0_0_#166534] text-xs py-1 h-7"
-                      >
-                        <Link href="/special-event">
-                          <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
-                          <Heart className="w-3 h-3 mr-1 animate-pulse" />
-                          Donate Now
-                        </Link>
-                      </Button>
-                    </motion.div>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Mobile Donation Progress Card */}
-              <motion.div
-                className="md:hidden bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-[0_4px_0_0_#166534] overflow-hidden border-4 border-green-700/70 group hover:shadow-[0_6px_0_0_#166534] transition-all duration-300 hover:-translate-y-1 mb-4 animate-float-slow"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="p-3 relative">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-bold text-green-800 dark:text-green-400 font-serif gradient-text">
-                      Donation Progress
-                    </h3>
-                    <span className="text-xs text-green-700 dark:text-green-500 font-bold font-serif">
-                      {donationAmount.toLocaleString()}/{donationGoal.toLocaleString()} KSh
-                    </span>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="w-full h-3 bg-green-100 dark:bg-green-900/30 rounded-full overflow-hidden mb-2">
-                    <motion.div
-                      className="h-full bg-gradient-to-r from-green-600 to-green-500 rounded-full relative animate-shimmer"
-                      style={{ width: `${donationPercentage}%` }}
-                      initial={{ width: "0%" }}
-                      animate={{ width: `${donationPercentage}%` }}
-                      transition={{ duration: 1.5, delay: 0.7 }}
-                    >
-                      <div className="absolute inset-0 bg-white/20 opacity-50 animate-pulse"></div>
-                    </motion.div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <Heart className="w-3 h-3 text-green-700 animate-pulse" />
-                      <span className="text-xs text-gray-700 dark:text-gray-300 font-serif">{donorCount} donors</span>
-                    </div>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button
-                        asChild
-                        size="sm"
-                        className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 relative overflow-hidden group/btn rounded-full shadow-[0_2px_0_0_#166534] text-xs py-0 h-6 px-2"
-                      >
-                        <Link href="/special-event">
-                          <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
-                          <Heart className="w-3 h-3 mr-1 animate-pulse" />
-                          Donate
-                        </Link>
-                      </Button>
-                    </motion.div>
-                  </div>
-                </div>
-              </motion.div>
-
               {/* Book of the Month Card - Desktop Only */}
               <motion.div
                 className="hidden md:block bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border-2 border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700 animate-float"
