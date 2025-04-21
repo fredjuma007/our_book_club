@@ -6,6 +6,7 @@ import Footer from "@/components/footer"
 import { getServerClient } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import { notFound } from "next/navigation"
+import AddToCalendar from "@/components/add-to-calendar"
 
 import { convertWixEventData, formatEventDate, isEventPast } from "@/lib/event-utils"
 import ShareButton from "@/components/sharebutton"
@@ -48,7 +49,7 @@ export default async function EventPage({ params }: { params: Promise<{ eventId:
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20" />
 
           <div className="max-w-screen-xl mx-auto py-8 px-4 lg:px-8 relative">
-          <div className="mb-8">
+            <div className="mb-8">
               <Button
                 variant="outline"
                 className="border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden"
@@ -203,8 +204,16 @@ export default async function EventPage({ params }: { params: Promise<{ eventId:
                           </div>
                         </div>
 
-                        {eventData.link && (
-                          <div className="w-full">
+                        <div className="flex flex-col gap-2 w-full">
+                          {/* Add to Calendar Button */}
+                          <AddToCalendar
+                            event={eventData}
+                            variant="outline"
+                            className="w-full border-green-700 text-green-700 hover:bg-green-100 dark:border-green-600 dark:text-green-500 dark:hover:bg-green-900/20"
+                          />
+
+                          {/* Join Discussion Button (if link exists) */}
+                          {eventData.link && (
                             <Link
                               href={eventData.link}
                               target="_blank"
@@ -215,10 +224,10 @@ export default async function EventPage({ params }: { params: Promise<{ eventId:
                                 Join Discussion
                               </Button>
                             </Link>
-                          </div>
-                        )}
+                          )}
 
-                        <ShareButton />
+                          <ShareButton />
+                        </div>
                       </div>
                     </div>
 

@@ -19,6 +19,7 @@ import {
 import Footer from "@/components/footer"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import type { Event } from "@/lib/event-utils"
+import AddToCalendar from "@/components/add-to-calendar"
 
 interface EventsClientProps {
   eventsData: Event[]
@@ -98,8 +99,21 @@ export default function EventsClient({ eventsData, upcomingEvents, pastEvents, f
             <span>{event.time}</span>
           </div>
 
-          {/* View Details Button */}
-          <div className="pt-2 flex justify-end">
+          {/* Add to Calendar Button */}
+          <div className="pt-2 flex justify-between items-center">
+            <div
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation() // This is crucial to stop the event from bubbling up
+              }}
+            >
+              <AddToCalendar
+                event={event}
+                variant="ghost"
+                size="sm"
+                className="text-xs text-green-700 dark:text-green-500 hover:bg-green-100 dark:hover:bg-green-900/20"
+              />
+            </div>
             <span className="text-green-700 dark:text-green-500 text-sm font-serif flex items-center group-hover:underline">
               View Details
               <ArrowRight className="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
