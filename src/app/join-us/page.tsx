@@ -56,7 +56,7 @@ export default function JoinUs() {
 
       // Reset form after successful submission
       setTimeout(() => {
-        router.push("/")
+        router.push("/books")
       }, 3000)
     } catch (error) {
       console.error("Error submitting form:", error)
