@@ -5,7 +5,7 @@ import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { MessageSquare, X, Send, BookOpen, ChevronDown, ChevronUp } from "lucide-react"
+import { MessageSquare, X, Send, BookOpen, ChevronDown, ChevronUp, Maximize2, Minimize2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 // Define types for the data
@@ -45,6 +45,7 @@ type ChatBotProps = {
 
 export default function ChatBot({ initialEvents = [], initialBook = null, allBooks = [] }: ChatBotProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
@@ -188,6 +189,12 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
     handleSend()
   }
 
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded)
+    // Ensure messages scroll to bottom after resize
+    setTimeout(scrollToBottom, 300)
+  }
+
   // Fallback response generator (used when AI is unavailable)
   const generateResponse = (query: string): string => {
     const lowerQuery = query.toLowerCase().trim()
@@ -218,7 +225,7 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       lowerQuery.includes("your name") ||
       lowerQuery.includes("gladwell")
     ) {
-      return `I'm Gladwell, the Reading Circle's digital assistant! My name is a little nod to great authors like Malcolm Gladwell. I'm here to help you with information about our events, current book selections, and how to join our community of book lovers!`
+      return `I'm Gladwell, the Reading Circle's digital assistant! My name is a little nod to the three main moderators of the club The Gladwells. I'm here to help you with information about our events, current book selections, and how to join our community of book lovers!`
     }
 
     // Book club statistics
@@ -333,12 +340,36 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
 
     // Meeting schedule
     if (lowerQuery.includes("schedule") || lowerQuery.includes("when") || lowerQuery.includes("meeting time")) {
-      return `🕒 Gladwell's schedule update: We typically meet twice a month - once for a book discussion and once for a social gathering or special event. We've hosted ${totalEventsCount} events so far! Check our <a href="/club-events" class="text-green-700 underline">events calendar</a> for specific dates and times.`
+      return `🕒 Gladwell's schedule update: We typically meet a maximum of twice a month - once for a book discussion and once for a social gathering or special event. We've hosted ${totalEventsCount} events so far! Check our <a href="/club-events" class="text-green-700 underline">events calendar</a> for specific dates and times.`
     }
 
     // Guidelines
     if (lowerQuery.includes("guideline") || lowerQuery.includes("rule") || lowerQuery.includes("expectation")) {
       return `📝 Gladwell here with the guidelines! Our club guidelines include reading the selected book before meetings, engaging in respectful discussions, and participating in regular check-ins. You can read the full guidelines on our <a href="/join-us?tab=guidelines" class="text-green-700 underline">join us page</a>.`
+    }
+
+    // Handsome member
+    if (lowerQuery.includes("handsome") || lowerQuery.includes("who is handsome") || lowerQuery.includes("most handsome")) {
+      return `The most handsome member of the club is Fred Juma. He is the one who always brings the best snacks to our meetings!`
+    }
+
+    // fact about Brenda's height
+    if (lowerQuery.includes("brenda") || lowerQuery.includes("height") || lowerQuery.includes("how tall is brenda")) {
+      return `Brenda Frenjo is 5'8" tall. She is can clearly see tommorrow's book club meeting from her house!`
+    }
+
+    // fact about Esther's prefect vibes
+    if (lowerQuery.includes("esther") || lowerQuery.includes("vibes") || lowerQuery.includes("how are esther's vibes")) {
+      return `Esther Mboche give off prefect vibes. She is the one who always keeps us on track during our meetings! Don't be surprised if she gives you a warning for talking too much!`
+    }
+
+    // book voting and selection
+    if (
+      lowerQuery.includes("book voting") ||
+      lowerQuery.includes("how do we select books") ||
+      lowerQuery.includes("book selection process")
+    ) {
+      return `📖 Gladwell's book selection process: We select our monthly book through member voting! Each month, members can suggest books, and then we vote on the top choices. The book with the most votes becomes our book of the month! It's a fun way to ensure everyone has a say in our reading list.`
     }
 
     // Gallery
@@ -370,6 +401,10 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
     // Fallback response
     return `This is Gladwell! I'm not sure about that, but I can tell you that The Reading Circle has read ${bookCount} books and hosted ${totalEventsCount} events so far! Would you like to know about our <a href="/club-events" class="text-green-700 underline">upcoming events</a>, <a href="/books" class="text-green-700 underline">current book</a>, or <a href="/join-us" class="text-green-700 underline">how to join</a>?`
   }
+
+  // Calculate dynamic sizes based on expanded state
+  const chatWindowWidth = isExpanded ? "w-[90vw] sm:w-[500px] md:w-[600px] lg:w-[700px]" : "w-80 sm:w-96"
+  const chatWindowHeight = isExpanded ? "h-[80vh]" : "h-[500px] max-h-[80vh]"
 
   return (
     <>
@@ -403,7 +438,14 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 50, scale: 0.9 }}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden flex flex-col w-80 sm:w-96 h-[500px] max-h-[80vh] border border-green-700"
+              transition={{ duration: 0.2 }}
+              className={`bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden flex flex-col ${chatWindowWidth} ${chatWindowHeight} border border-green-700 z-50`}
+              style={{
+                position: "fixed",
+                bottom: "1.5rem",
+                right: "1.5rem",
+                transition: "width 0.2s ease, height 0.2s ease",
+              }}
             >
               {/* Header */}
               <div className="bg-green-700 text-white p-4 flex justify-between items-center">
@@ -411,14 +453,29 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
                   <BookOpen className="w-5 h-5 mr-2" />
                   <h3 className="font-serif font-bold">Gladwell</h3>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsOpen(false)}
-                  className="text-white hover:bg-green-800 h-8 w-8"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleExpand}
+                    className="text-white hover:bg-green-800 h-8 w-8"
+                    title={isExpanded ? "Minimize" : "Maximize"}
+                  >
+                    {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      setIsOpen(false)
+                      // Reset expanded state when closing
+                      if (isExpanded) setIsExpanded(false)
+                    }}
+                    className="text-white hover:bg-green-800 h-8 w-8"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
 
               {/* Messages */}
