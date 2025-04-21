@@ -58,14 +58,15 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
   const [suggestionsOpen, setSuggestionsOpen] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const [useAI, setUseAI] = useState(true)
 
   // Extract book club statistics
-  const bookCount = allBooks.length
-  const authors = [...new Set(allBooks.map((book) => book.author).filter(Boolean))]
-  const genres = [...new Set(allBooks.map((book) => book.genre).filter(Boolean))]
-  const upcomingEventsCount = initialEvents.filter((event) => new Date(event.date) > new Date()).length
-  const pastEventsCount = initialEvents.length - upcomingEventsCount
-  const totalEventsCount = initialEvents.length
+  const bookCount = allBooks?.length || 0
+  const authors = [...new Set((allBooks || []).map((book) => book.author).filter(Boolean))]
+  const genres = [...new Set((allBooks || []).map((book) => book.genre).filter(Boolean))]
+  const upcomingEventsCount = (initialEvents || []).filter((event) => new Date(event.date) > new Date()).length
+  const pastEventsCount = (initialEvents || []).length - upcomingEventsCount
+  const totalEventsCount = (initialEvents || []).length
 
   // Sample suggestions
   const suggestions = [
@@ -106,20 +107,74 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
     setInputValue("")
     setIsTyping(true)
 
-    // Simulate bot thinking
-    setTimeout(() => {
-      const botResponse = generateResponse(inputValue)
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: (Date.now() + 1).toString(),
-          content: botResponse,
-          sender: "bot",
-          timestamp: new Date(),
-        },
-      ])
-      setIsTyping(false)
-    }, 1000)
+    try {
+      if (useAI) {
+        // Try to use AI API first
+        const response = await fetch("/api/chat-ai", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: inputValue,
+            bookData: {
+              currentBook: initialBook,
+              allBooks: allBooks,
+            },
+            eventData: initialEvents,
+          }),
+        })
+
+        const data = await response.json()
+
+        if (response.ok && !data.fallback) {
+          // AI response successful
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: (Date.now() + 1).toString(),
+              content: data.response,
+              sender: "bot",
+              timestamp: new Date(),
+            },
+          ])
+          setIsTyping(false)
+          return
+        }
+      }
+
+      // Fallback to rule-based responses if AI fails or is disabled
+      setTimeout(() => {
+        const botResponse = generateResponse(inputValue)
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: (Date.now() + 1).toString(),
+            content: botResponse,
+            sender: "bot",
+            timestamp: new Date(),
+          },
+        ])
+        setIsTyping(false)
+      }, 1000)
+    } catch (error) {
+      console.error("Error getting AI response:", error)
+
+      // Fallback to rule-based responses
+      setTimeout(() => {
+        const botResponse = generateResponse(inputValue)
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: (Date.now() + 1).toString(),
+            content: botResponse,
+            sender: "bot",
+            timestamp: new Date(),
+          },
+        ])
+        setIsTyping(false)
+      }, 1000)
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -133,6 +188,7 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
     handleSend()
   }
 
+  // Fallback response generator (used when AI is unavailable)
   const generateResponse = (query: string): string => {
     const lowerQuery = query.toLowerCase().trim()
 
@@ -162,7 +218,7 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       lowerQuery.includes("your name") ||
       lowerQuery.includes("gladwell")
     ) {
-      return `I'm Gladwell, the Reading Circle's digital assistant! My name is a little nod to the three moderstors of the club Gladwells. I'm here to help you with information about our events, current book selections, and how to join our community of book lovers!`
+      return `I'm Gladwell, the Reading Circle's digital assistant! My name is a little nod to great authors like Malcolm Gladwell. I'm here to help you with information about our events, current book selections, and how to join our community of book lovers!`
     }
 
     // Book club statistics
@@ -283,11 +339,6 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
     // Guidelines
     if (lowerQuery.includes("guideline") || lowerQuery.includes("rule") || lowerQuery.includes("expectation")) {
       return `📝 Gladwell here with the guidelines! Our club guidelines include reading the selected book before meetings, engaging in respectful discussions, and participating in regular check-ins. You can read the full guidelines on our <a href="/join-us?tab=guidelines" class="text-green-700 underline">join us page</a>.`
-    }
-
-    // Handsome member
-    if (lowerQuery.includes("handsome") || lowerQuery.includes("who is handsome") || lowerQuery.includes("most handsome")) {
-        return `The most handsome member of the club is Fred Juma. He is the one who always brings the best snacks to our meetings!`
     }
 
     // Gallery
