@@ -1098,15 +1098,19 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
                         whileTap={{ scale: 0.95 }}
                       >
                         <Button
-                          asChild
-                          className="w-full bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn shadow-lg"
+                        asChild
+                        className="w-full bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
+                      >
+                        <Link
+                          href="https://wa.me/+254790964291?text=Hello%20Reading%20Circle%20Event%20Coordinator,%20I'm%20contacting%20from%20the%20website.%20I%20would%20like%20to%20know%20more%20about%20the%20upcoming%20bookclub%20events%20and%20discussions"
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
-                          <Link href="/special-event">
-                            <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
-                            <Heart className="w-5 h-5 mr-2 animate-pulse" />
-                            Donate
-                          </Link>
-                        </Button>
+                          <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                          Inquire about Event
+                          <ArrowRight className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform" />
+                        </Link>
+                      </Button>
                       </motion.div>
                     )}
                   </div>
