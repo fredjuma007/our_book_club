@@ -114,12 +114,13 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
 
   // Sample suggestions
   const suggestions = [
-    "Hello Gladwell!",
     "Book of the month?",
-    "How many books?",
-    "Popular genres?",
+    "Who are the moderators?",
     "Next event?",
     "Club statistics",
+    "about the club",
+    "How to join",
+    "club guidelines",
   ]
 
   useEffect(() => {

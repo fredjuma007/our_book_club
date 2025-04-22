@@ -402,7 +402,8 @@ IMPORTANT FORMATTING INSTRUCTIONS:
       model: groq("llama3-8b-8192"),
       prompt: contextPrompt,
       system: SYSTEM_PROMPT,
-      maxTokens: 500,
+      maxTokens: 200,
+      temperature: 0.5,
     })
 
     return NextResponse.json({ response: text })
