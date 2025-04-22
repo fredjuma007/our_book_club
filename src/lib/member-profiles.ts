@@ -60,7 +60,7 @@ export interface MemberProfile {
     },
     {
       name: "Vaal",
-      alternateNames: ["Valeria", "Val", "@254714290212"],
+      alternateNames: ["Valeria", "Val"],
       bookPreferences: ["thriller", "fiction"],
       participationStyle: "Poetic analyzer who appreciates literary techniques big fan of Freida McFadden",
       personalInterests: ["creative writing", "arts"],
@@ -101,21 +101,18 @@ export interface MemberProfile {
     {
       name: "Dennis",
       alternateNames: ["Ha unijui"],
-      phoneNumber: "@254703698684",
       bookPreferences: ["humor", "satire"],
       participationStyle: "Witty contributor who finds humor in readings",
       notableQuotes: ["Books are just trees with opinions"],
     },
     {
       name: "Shannia",
-      phoneNumber: "@255676627978",
       notableContributions: ["Provides Tanzanian perspective on readings"],
       participationStyle: "International member who shares cross-cultural insights",
       personalInterests: ["cultural studies", "East African literature"],
     },
     {
       name: "Victor Mburu",
-      phoneNumber: "@254796574983",
       bookPreferences: ["political thrillers", "current affairs"],
       participationStyle: "Current events connector who relates books to news",
       personalInterests: ["politics", "current events"],
