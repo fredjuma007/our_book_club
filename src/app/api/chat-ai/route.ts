@@ -357,6 +357,7 @@ ${
 - Club guidelines include reading the selected book before meetings, engaging in respectful discussions, and participating in regular check-ins
 - New members can join by filling out an application form on the join-us page
 - The club has 100+ members, has read 14 books across multiple genres, and hosted 4+ events
+- A member called Brian Obiero is know for his flower plantation and willing to gift roses for female members of the club
 
 ${
   isFollowUpQuestion
