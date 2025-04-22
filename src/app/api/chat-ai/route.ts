@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server"
 import { groq } from "@ai-sdk/groq"
-// Import the member profiles at the top of the file
-import { memberProfiles } from "@/lib/member-profiles"
 import { generateText } from "ai"
 
-// Update the SYSTEM_PROMPT to include member information
 const SYSTEM_PROMPT = `You are Gladwell, the friendly and knowledgeable assistant for The Reading Circle book club.
 
 # PERSONALITY TRAITS
@@ -27,21 +24,6 @@ const SYSTEM_PROMPT = `You are Gladwell, the friendly and knowledgeable assistan
 - New members can join by filling out an application form on the join-us page
 - The club selects monthly books through member voting - members suggest books, then vote on the top choices
 - Club guidelines include reading the selected book before meetings, engaging in respectful discussions, and participating in regular check-ins
-
-# MEMBER INFORMATION
-- The club has a diverse membership with different reading preferences and participation styles
-- Key members include:
-  * Fred Juma - Enjoys historical non-fiction and biographies, analytical reader who focuses on historical context
-  * Esther Mboche - Moderator who prefers non-fiction and self-help books, active facilitator who keeps discussions on track
-  * Brenda Frenjo - Moderator who enjoys fiction and African literature, thoughtful contributor who asks insightful questions
-  * Vaal (Valeria) - Enjoys poetry and literary fiction, appreciates literary techniques
-  * Brian Obiero - Enjoys science fiction and technology books, analytical thinker who examines futuristic concepts
-  * Fibonacci - Enjoys mathematics, science, and logic puzzles, logical thinker who appreciates structure
-  * Sumaiya Juma - Enjoys cultural studies and international literature, global thinker who appreciates diverse perspectives
-  * Emmanuel Njeru - Enjoys philosophy and classics, deep thinker who examines underlying themes
-  * Shannia from Tanzania - Provides cross-cultural insights and perspectives on readings
-- Members have diverse interests including history, technology, creative writing, philosophy, cultural studies, and more
-- Some members are known for specific contributions, like Brian Obiero's flower plantation and his willingness to gift roses to female members
 
 # CURRENT BOOK OF THE MONTH
 - Title: "The Anxious Generation"
@@ -99,14 +81,6 @@ const SYSTEM_PROMPT = `You are Gladwell, the friendly and knowledgeable assistan
 - Count how many times each author appears in the book list to identify authors we've read multiple times
 - If asked about an author we've read multiple times (like Neil Gaiman), mention all their books we've read
 
-# MEMBER INFORMATION HANDLING
-- When asked about specific members, provide information about their reading preferences, participation style, and notable contributions
-- If a member is mentioned by name, check if they have specific interests or preferences to personalize your response
-- When recommending books, consider suggesting titles that align with the mentioned member's preferences
-- If asked about member roles, mention moderators and any other roles specified in the member data
-- For questions about who might enjoy a specific book or genre, suggest members with matching preferences
-- If asked about member dynamics or group interests, reference the member data to identify patterns and shared interests
-
 # CONTEXTUAL RESPONSE GUIDELINES
 - For general knowledge questions (like author information, book facts, literary history), focus on answering the question directly without mentioning the club's current book or upcoming events unless directly relevant
 - Only mention the current book of the month or upcoming events when:
@@ -131,7 +105,6 @@ const SYSTEM_PROMPT = `You are Gladwell, the friendly and knowledgeable assistan
 IMPORTANT: Your responses must be consistent with the information provided above and in the context prompt. Do not make up facts about the club, its events, or its members that contradict this information or aren't explicitly provided.
 `
 
-// In the POST function, modify the contextPrompt to include member information
 export async function POST(req: Request) {
   try {
     const { message, bookData, eventData, conversationHistory } = await req.json()
@@ -285,18 +258,6 @@ export async function POST(req: Request) {
       lowerMessage.includes("recommender") ||
       lowerMessage.includes("recommended by")
 
-    // Check if the message is asking about members
-    const isAskingAboutMembers =
-      lowerMessage.includes("member") ||
-      lowerMessage.includes("who is in") ||
-      lowerMessage.includes("who's in") ||
-      lowerMessage.includes("who are the members") ||
-      lowerMessage.includes("tell me about the members") ||
-      lowerMessage.includes("who likes") ||
-      lowerMessage.includes("who enjoys") ||
-      lowerMessage.includes("who reads") ||
-      lowerMessage.includes("who prefers")
-
     // Determine if this is a follow-up question in a conversation
     const isFollowUpQuestion = Array.isArray(conversationHistory) && conversationHistory.length > 0
 
@@ -315,18 +276,6 @@ export async function POST(req: Request) {
         .filter(Boolean)
         .join("\n\n")
     }
-
-    // Format member profiles for the context
-    const formattedMemberProfiles = memberProfiles
-      .map((member) => {
-        return `- ${member.name}${member.alternateNames ? ` (also known as: ${member.alternateNames.join(", ")})` : ""}${member.role ? `, Role: ${member.role}` : ""}
-  * Book preferences: ${member.bookPreferences ? member.bookPreferences.join(", ") : "Not specified"}
-  * Participation style: ${member.participationStyle || "Not specified"}
-  * Personal interests: ${member.personalInterests ? member.personalInterests.join(", ") : "Not specified"}
-  * Notable contributions: ${member.notableContributions ? member.notableContributions.join(", ") : "None specified"}
-  ${member.notableQuotes && member.notableQuotes.length > 0 ? `* Notable quotes: "${member.notableQuotes.join('", "')}"` : ""}`
-      })
-      .join("\n\n")
 
     // Create a context-rich prompt with the book club data
     const contextPrompt = `
@@ -402,35 +351,13 @@ ${
 - Brenda Frenjo: Membership & Reviews Moderator who is 5'8" tall and can "clearly see tomorrow's book club meeting from her house"
 - Fred Juma: Books & Reviews Moderator who is considered the most handsome member and always brings the best snacks to meetings
 
-# MEMBER PROFILES
-${formattedMemberProfiles}
-
-# MEMBER READING PREFERENCES
-- Fiction lovers: Brenda Frenjo, WANJAH (Emily Wanja), Stacey Nduta
-- Non-fiction enthusiasts: Esther Mboche, Fred Juma, Emma Mwangi
-- Poetry and literary fiction: Vaal (Valeria)
-- Science fiction and technology: Brian Obiero, Alex Mutisya
-- Philosophy and classics: Emmanuel Njeru
-- Cultural studies and international literature: Sumaiya Juma, Shannia
-- Mathematics and science: Fibonacci
-- Historical works: Fred Juma, George Gichogu
-- Business and psychology: Emma Mwangi, Joyce Kariuki
-
-# MEMBER NOTABLE TRAITS
-- Brian Obiero: Known for his flower plantation and willingness to gift roses to female members
-- Fred Juma: Considered the most handsome member, brings the best snacks to meetings
-- Esther Mboche: Gives off "prefect vibes" and keeps everyone on track
-- Brenda Frenjo: 5'8" tall, can "clearly see tomorrow's book club meeting from her house"
-- Fibonacci: Brings mathematical perspective to discussions
-- Dennis (Ha unijui): Known for witty contributions and humor
-- Shannia: Provides Tanzanian perspective on readings
-
 # CLUB DETAILS
 - The Reading Circle meets a maximum of twice a month - once for book discussion and once for social gathering
 - Books are selected through member voting - members suggest books, then vote on the top choices
 - Club guidelines include reading the selected book before meetings, engaging in respectful discussions, and participating in regular check-ins
 - New members can join by filling out an application form on the join-us page
 - The club has 100+ members, has read 14 books across multiple genres, and hosted 4+ events
+- A member called Brian Obiero is know for his flower plantation and willing to gift roses for female members of the club
 
 ${
   isFollowUpQuestion
@@ -443,14 +370,13 @@ ${formattedConversationHistory}
 # QUERY ANALYSIS
 - This appears to be a ${isGeneralKnowledgeQuestion ? "general knowledge question about literature or authors" : "question related to the book club"}
 - ${isAskingAboutRecommender ? "The user is asking about who recommended a specific book" : ""}
-- ${isAskingAboutMembers ? "The user is asking about club members" : ""}
 - ${isGeneralKnowledgeQuestion ? "Focus on answering the question directly without unnecessarily mentioning the club's current book or upcoming events" : "Include relevant information about the club, current book, or upcoming events as appropriate"}
 - This is ${isFollowUpQuestion ? "a follow-up question in an ongoing conversation" : "the first message in a new conversation"}
 - ${isFollowUpQuestion ? "Respond conversationally without reintroducing yourself or using formal greetings/closings" : "You may introduce yourself since this is the first message"}
 
 User message: ${message}
 
-Remember to respond as Gladwell, the Reading Circle's digital assistant. Only use the specific event, book, and member information provided above - do NOT make up or fabricate any events, members, or details that aren't explicitly listed. ${
+Remember to respond as Gladwell, the Reading Circle's digital assistant. Only use the specific event and book information provided above - do NOT make up or fabricate any events or details that aren't explicitly listed. ${
       isGeneralKnowledgeQuestion
         ? "Since this is a general knowledge question, focus on answering it directly without unnecessarily promoting the club's current book or events."
         : ""

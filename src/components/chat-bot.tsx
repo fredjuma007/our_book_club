@@ -8,9 +8,6 @@ import { Input } from "@/components/ui/input"
 import { MessageSquare, X, Send, BookOpen, ChevronDown, ChevronUp, Maximize2, Minimize2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
-// Import the member profiles and insights
-import { memberProfiles } from "@/lib/member-profiles"
-
 // Define types for the data
 interface EventData {
   [x: string]: any
@@ -117,13 +114,12 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
 
   // Sample suggestions
   const suggestions = [
-    "Tell me about the club",
+    "Hello Gladwell!",
     "Book of the month?",
+    "How many books?",
+    "Popular genres?",
     "Next event?",
     "Club statistics",
-    "Tell me about members",
-    "How to join?",
-    "What are the guidelines?",
   ]
 
   useEffect(() => {
@@ -303,7 +299,8 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       lowerQuery.includes("how many")
     ) {
       if (lowerQuery.includes("book") || lowerQuery.includes("read")) {
-        return `<h4 class="text-lg font-medium mb-2">📚 Gladwell's Book Statistics</h4>
+        return `<h4 class="text-lg font-medium mb-2">📚  || lowerQuery.includes("read")) {
+        return \`<h4 class="text-lg font-medium mb-2">📚 Gladwell's Book Statistics</h4>
 <ul class="list-disc pl-5 space-y-2">
   <li><strong>Total books read:</strong> ${bookCount}</li>
   <li><strong>Authors explored:</strong> ${authors.length}</li>
@@ -702,148 +699,6 @@ ${authorContent}`
 <p class="mb-3">We've read ${bookCount} books across ${genres.length} genres so far! What genres do you typically enjoy?</p>`
     }
 
-    // Member information
-    if (
-      lowerQuery.includes("member") ||
-      lowerQuery.includes("who is in") ||
-      lowerQuery.includes("who's in") ||
-      lowerQuery.includes("who are the members") ||
-      lowerQuery.includes("tell me about the members")
-    ) {
-      // Get a subset of members to display
-      const highlightedMembers = memberProfiles.slice(0, 5)
-      const formattedMembers = highlightedMembers
-        .map(
-          (member) =>
-            `<li><strong>${member.name}</strong>${member.role ? ` (${member.role})` : ""}: ${
-              member.participationStyle || "Active member"
-            }${
-              member.bookPreferences && member.bookPreferences.length > 0
-                ? `, enjoys ${member.bookPreferences.join(", ")}`
-                : ""
-            }</li>`,
-        )
-        .join("")
-
-      return `<h4 class="text-lg font-medium mb-2">👥 Gladwell's Member Insights</h4>
-<p class="mb-3">The Reading Circle has a diverse community of book lovers! Here are some of our members:</p>
-<ul class="list-disc pl-5 space-y-2">
-  ${formattedMembers}
-  ${memberProfiles.length > 5 ? "<li>...and many more wonderful readers!</li>" : ""}
-</ul>
-<p class="mb-3">Our members have diverse reading preferences including fiction, non-fiction, poetry, philosophy, science fiction, and more.</p>`
-    }
-
-    // Reading preferences by genre
-    if (
-      (lowerQuery.includes("who likes") ||
-        lowerQuery.includes("who enjoys") ||
-        lowerQuery.includes("who reads") ||
-        lowerQuery.includes("who prefers")) &&
-      (lowerQuery.includes("fiction") ||
-        lowerQuery.includes("non-fiction") ||
-        lowerQuery.includes("poetry") ||
-        lowerQuery.includes("science") ||
-        lowerQuery.includes("history") ||
-        lowerQuery.includes("philosophy") ||
-        lowerQuery.includes("business") ||
-        lowerQuery.includes("romance"))
-    ) {
-      // Extract the genre from the query
-      let genre = ""
-      if (lowerQuery.includes("fiction") && !lowerQuery.includes("non-fiction")) genre = "fiction"
-      else if (lowerQuery.includes("non-fiction")) genre = "non-fiction"
-      else if (lowerQuery.includes("poetry")) genre = "poetry"
-      else if (lowerQuery.includes("science")) genre = "science"
-      else if (lowerQuery.includes("history")) genre = "history"
-      else if (lowerQuery.includes("philosophy")) genre = "philosophy"
-      else if (lowerQuery.includes("business")) genre = "business"
-      else if (lowerQuery.includes("romance")) genre = "romance"
-
-      // Find members who like this genre
-      const matchingMembers = memberProfiles.filter(
-        (member) =>
-          member.bookPreferences &&
-          member.bookPreferences.some((pref) => pref.toLowerCase().includes(genre.toLowerCase())),
-      )
-
-      if (matchingMembers.length > 0) {
-        const formattedMembers = matchingMembers
-          .map((member) => `<li><strong>${member.name}</strong>: ${member.participationStyle || "Active member"}</li>`)
-          .join("")
-
-        return `<div class="p-3 rounded-md border mb-3">
-  <h4 class="text-lg font-medium mb-2">📚 Members Who Enjoy ${genre.charAt(0).toUpperCase() + genre.slice(1)}</h4>
-  <ul class="list-disc pl-5 space-y-2">
-    ${formattedMembers}
-  </ul>
-</div>`
-      } else {
-        return `<div class="p-3 rounded-md border mb-3">
-  <p class="mb-3">I don't have specific information about members who enjoy ${genre} in our records. Would you like to know about other reading preferences in our club?</p>
-</div>`
-      }
-    }
-
-    // Specific member information
-    const memberNames = memberProfiles.flatMap((member) => [
-      member.name.toLowerCase(),
-      ...(member.alternateNames || []).map((name) => name.toLowerCase()),
-    ])
-
-    if (memberNames.some((name) => lowerQuery.includes(name.toLowerCase()))) {
-      // Find which member is being asked about
-      let targetMember = null
-      for (const member of memberProfiles) {
-        if (lowerQuery.includes(member.name.toLowerCase())) {
-          targetMember = member
-          break
-        }
-
-        if (member.alternateNames) {
-          const foundAlias = member.alternateNames.find((alias) => lowerQuery.includes(alias.toLowerCase()))
-          if (foundAlias) {
-            targetMember = member
-            break
-          }
-        }
-      }
-
-      if (targetMember) {
-        return `<div class="p-3 rounded-md border mb-3">
-  <h4 class="text-lg font-medium mb-2">Member Profile: ${targetMember.name}</h4>
-  <ul class="list-disc pl-5 space-y-2">
-    ${targetMember.role ? `<li><strong>Role:</strong> ${targetMember.role}</li>` : ""}
-    ${
-      targetMember.bookPreferences && targetMember.bookPreferences.length > 0
-        ? `<li><strong>Reading preferences:</strong> ${targetMember.bookPreferences.join(", ")}</li>`
-        : ""
-    }
-    ${
-      targetMember.participationStyle
-        ? `<li><strong>Participation style:</strong> ${targetMember.participationStyle}</li>`
-        : ""
-    }
-    ${
-      targetMember.personalInterests && targetMember.personalInterests.length > 0
-        ? `<li><strong>Personal interests:</strong> ${targetMember.personalInterests.join(", ")}</li>`
-        : ""
-    }
-    ${
-      targetMember.notableContributions && targetMember.notableContributions.length > 0
-        ? `<li><strong>Notable contributions:</strong> ${targetMember.notableContributions.join(", ")}</li>`
-        : ""
-    }
-    ${
-      targetMember.notableQuotes && targetMember.notableQuotes.length > 0
-        ? `<li><strong>Notable quotes:</strong> "${targetMember.notableQuotes.join('", "')}"</li>`
-        : ""
-    }
-  </ul>
-</div>`
-      }
-    }
-
     // Fallback response
     return `<div class="p-3 rounded-md border mb-3">
   <p class="mb-3">This is Gladwell! I'm not sure about that, but I can tell you that The Reading Circle has read ${bookCount} books and hosted ${totalEventsCount} events so far!</p>
@@ -852,7 +707,6 @@ ${authorContent}`
     <li><a href="/club-events" class="underline">Upcoming events</a></li>
     <li><a href="/books" class="underline">Current book</a></li>
     <li><a href="/join-us" class="underline">How to join</a></li>
-    <li>Our members and their reading preferences</li>
   </ul>
 </div>`
   }
