@@ -399,11 +399,11 @@ IMPORTANT FORMATTING INSTRUCTIONS:
 
     // Generate a response using Groq
     const { text } = await generateText({
-      model: groq("llama3-8b-8192"),
+      model: groq("gemma2-9b-it"),
       prompt: contextPrompt,
       system: SYSTEM_PROMPT,
-      maxTokens: 150,
-      temperature: 0.5,
+      maxTokens: 300,
+      temperature: 0.7,
     })
 
     return NextResponse.json({ response: text })
