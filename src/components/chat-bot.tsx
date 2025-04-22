@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion"
 
 // Define types for the data
 interface EventData {
+  [x: string]: any
   _id: string
   title: string
   date: string
@@ -28,6 +29,7 @@ interface BookData {
   description?: string
   genre?: string
   _createdDate?: string
+  publisher?: string // Used for storing who recommended the book
 }
 
 type Message = {
@@ -35,6 +37,12 @@ type Message = {
   content: string
   sender: "user" | "bot"
   timestamp: Date
+}
+
+// Define conversation history type for AI context
+type ConversationExchange = {
+  role: "user" | "assistant"
+  content: string
 }
 
 type ChatBotProps = {
@@ -61,6 +69,9 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
   const inputRef = useRef<HTMLInputElement>(null)
   const [useAI, setUseAI] = useState(true)
 
+  // Track conversation history for context
+  const [conversationHistory, setConversationHistory] = useState<ConversationExchange[]>([])
+
   // Extract book club statistics
   const bookCount = allBooks?.length || 0
   const authors = [...new Set((allBooks || []).map((book) => book.author).filter(Boolean))]
@@ -68,6 +79,38 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
   const upcomingEventsCount = (initialEvents || []).filter((event) => new Date(event.date) > new Date()).length
   const pastEventsCount = (initialEvents || []).length - upcomingEventsCount
   const totalEventsCount = (initialEvents || []).length
+
+  // Count books by author to identify authors we've read multiple times
+  const authorCounts: Record<string, number> = {}
+  const booksByAuthor: Record<string, { title: string; genre?: string; publisher?: string }[]> = {}
+
+  if (allBooks && allBooks.length > 0) {
+    allBooks.forEach((book) => {
+      if (book.author) {
+        // Count books by author
+        authorCounts[book.author] = (authorCounts[book.author] || 0) + 1
+
+        // Group books by author
+        if (!booksByAuthor[book.author]) {
+          booksByAuthor[book.author] = []
+        }
+        booksByAuthor[book.author].push({
+          title: book.title,
+          genre: book.genre,
+          publisher: book.publisher,
+        })
+      }
+    })
+  }
+
+  // Get authors we've read multiple times
+  const multipleReadAuthors = Object.keys(authorCounts)
+    .filter((author) => authorCounts[author] > 1)
+    .map((author) => ({
+      name: author,
+      count: authorCounts[author],
+      books: booksByAuthor[author],
+    }))
 
   // Sample suggestions
   const suggestions = [
@@ -92,6 +135,25 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
+
+  // Update conversation history when messages change
+  useEffect(() => {
+    if (messages.length > 1) {
+      // Skip the welcome message
+      const newHistory: ConversationExchange[] = []
+
+      // Start from index 1 to skip welcome message
+      for (let i = 1; i < messages.length; i++) {
+        const message = messages[i]
+        newHistory.push({
+          role: message.sender === "user" ? "user" : "assistant",
+          content: message.content,
+        })
+      }
+
+      setConversationHistory(newHistory)
+    }
+  }, [messages])
 
   const handleSend = async () => {
     if (!inputValue.trim()) return
@@ -123,6 +185,7 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
               allBooks: allBooks,
             },
             eventData: initialEvents,
+            conversationHistory: conversationHistory, // Pass conversation history for context
           }),
         })
 
@@ -236,15 +299,34 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       lowerQuery.includes("how many")
     ) {
       if (lowerQuery.includes("book") || lowerQuery.includes("read")) {
-        return `📚 Gladwell's book stats: The Reading Circle has read ${bookCount} books so far! We've explored works from ${authors.length} different authors across ${genres.length} genres. Our members are always excited to discover new literary worlds together!`
+        return `<h4 class="text-lg font-medium mb-2">📚  || lowerQuery.includes("read")) {
+        return \`<h4 class="text-lg font-medium mb-2">📚 Gladwell's Book Statistics</h4>
+<ul class="list-disc pl-5 space-y-2">
+  <li><strong>Total books read:</strong> ${bookCount}</li>
+  <li><strong>Authors explored:</strong> ${authors.length}</li>
+  <li><strong>Genres covered:</strong> ${genres.length}</li>
+</ul>
+<p class="mb-3">Our members are always excited to discover new literary worlds together!</p>`
       }
 
       if (lowerQuery.includes("event") || lowerQuery.includes("meeting")) {
-        return `📅 Gladwell's event stats: The Reading Circle has hosted ${totalEventsCount} events in total! We have ${upcomingEventsCount} upcoming events and have completed ${pastEventsCount} past gatherings. Our events include book discussions, author talks, and social gatherings.`
+        return `<h4 class="text-lg font-medium mb-2">📅 Gladwell's Event Statistics</h4>
+<ul class="list-disc pl-5 space-y-2">
+  <li><strong>Total events:</strong> ${totalEventsCount}</li>
+  <li><strong>Upcoming events:</strong> ${upcomingEventsCount}</li>
+  <li><strong>Past gatherings:</strong> ${pastEventsCount}</li>
+</ul>
+<p class="mb-3">Our events include book discussions, author talks, and social gatherings.</p>`
       }
 
       // General statistics
-      return `📊 Gladwell's club statistics: The Reading Circle has read ${bookCount} books from ${authors.length} authors across ${genres.length} genres. We've hosted ${totalEventsCount} events (${pastEventsCount} past, ${upcomingEventsCount} upcoming). Our community is growing with passionate readers who love to share their literary journeys!`
+      return `<h4 class="text-lg font-medium mb-2">📊 Gladwell's Club Statistics</h4>
+<ul class="list-disc pl-5 space-y-2">
+  <li><strong>Books read:</strong> ${bookCount} books from ${authors.length} authors across ${genres.length} genres</li>
+  <li><strong>Events hosted:</strong> ${totalEventsCount} events (${pastEventsCount} past, ${upcomingEventsCount} upcoming)</li>
+  <li><strong>Community size:</strong> 100+ passionate readers</li>
+</ul>
+<p class="mb-3">Our community is growing with passionate readers who love to share their literary journeys!</p>`
     }
 
     // Authors information
@@ -254,14 +336,69 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       lowerQuery.includes("who wrote") ||
       lowerQuery.includes("who has written")
     ) {
-      const authorsList = authors.slice(0, 5).join(", ") + (authors.length > 5 ? ", and more" : "")
-      return `✍️ Gladwell's author insights: The Reading Circle has explored works from ${authors.length} different authors, including ${authorsList}. We love discovering diverse voices and perspectives through our reading selections!`
+      const authorsList = authors.slice(0, 5)
+      const formattedAuthors = authorsList.map((author) => `<li>${author}</li>`).join("")
+
+      return `<h4 class="text-lg font-medium mb-2">✍️ Gladwell's Author Insights</h4>
+<p class="mb-3">The Reading Circle has explored works from ${authors.length} different authors, including:</p>
+<ul class="list-disc pl-5 space-y-2">
+  ${formattedAuthors}
+  ${authors.length > 5 ? "<li>...and more!</li>" : ""}
+</ul>
+<p class="mb-3">We love discovering diverse voices and perspectives through our reading selections!</p>`
+    }
+
+    // Authors we've read multiple times
+    if (
+      lowerQuery.includes("multiple") ||
+      lowerQuery.includes("twice") ||
+      lowerQuery.includes("more than once") ||
+      (lowerQuery.includes("neil") && lowerQuery.includes("gaiman"))
+    ) {
+      let authorContent = ""
+
+      if (multipleReadAuthors.length > 0) {
+        const authorItems = multipleReadAuthors
+          .map((author) => {
+            const bookList = author.books
+              .map(
+                (book) =>
+                  `<li><strong>${book.title}</strong>${book.publisher ? ` (Recommended by: ${book.publisher})` : ""}</li>`,
+              )
+              .join("")
+
+            return `<div class="mb-3">
+  <p class="font-medium">${author.name} (${author.count} books):</p>
+  <ul class="list-disc pl-5 space-y-2">
+    ${bookList}
+  </ul>
+</div>`
+          })
+          .join("")
+
+        authorContent = `<div class="p-3 rounded-md border mb-3">
+  ${authorItems}
+</div>`
+      } else {
+        authorContent = `<p class="mb-3">We haven't read any authors multiple times yet.</p>`
+      }
+
+      return `<h4 class="text-lg font-medium mb-2">📚 Authors We've Read Multiple Times</h4>
+${authorContent}`
     }
 
     // Genres information
     if (lowerQuery.includes("genre") || lowerQuery.includes("type of book") || lowerQuery.includes("category")) {
-      const genresList = genres.slice(0, 5).join(", ") + (genres.length > 5 ? ", and more" : "")
-      return `📚 Gladwell's genre guide: The Reading Circle has explored ${genres.length} different genres, including ${genresList}. We enjoy diversifying our reading experiences across different literary categories!`
+      const genresList = genres.slice(0, 5)
+      const formattedGenres = genresList.map((genre) => `<li>${genre}</li>`).join("")
+
+      return `<h4 class="text-lg font-medium mb-2">📚 Gladwell's Genre Guide</h4>
+<p class="mb-3">The Reading Circle has explored ${genres.length} different genres, including:</p>
+<ul class="list-disc pl-5 space-y-2">
+  ${formattedGenres}
+  ${genres.length > 5 ? "<li>...and more!</li>" : ""}
+</ul>
+<p class="mb-3">We enjoy diversifying our reading experiences across different literary categories!</p>`
     }
 
     // Book count
@@ -270,7 +407,8 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       lowerQuery.includes("book count") ||
       lowerQuery.includes("number of books")
     ) {
-      return `📚 Gladwell's book count: The Reading Circle has read ${bookCount} books so far! Our members are always excited to add more great titles to this growing list.`
+      return `<h4 class="text-lg font-medium mb-2">📚 Gladwell's Book Count</h4>
+<p class="mb-3">The Reading Circle has read <strong>${bookCount} books</strong> so far! Our members are always excited to add more great titles to this growing list.</p>`
     }
 
     // Events information
@@ -281,7 +419,17 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       lowerQuery.includes("about the club") ||
       lowerQuery.includes("tell me about the club")
     ) {
-      return `The Reading Circle is a vibrant community of book lovers who gather to discuss, share, and celebrate our love for literature. We've read ${bookCount} books across ${genres.length} genres and hosted ${totalEventsCount} events. Our club is moderated by Esther Mboche (Events Coordinator), Brenda Frenjo (Membership & Reviews), and Fred Juma (Books & Reviews). We aim to create a welcoming and inclusive environment where everyone feels valued and inspired to explore new genres and authors.`
+      return `<div class="p-3 rounded-md border mb-3">
+  <h4 class="text-lg font-medium mb-2">About The Reading Circle</h4>
+  <p class="mb-3">The Reading Circle is a vibrant community of book lovers who gather to discuss, share, and celebrate our love for literature. We've read ${bookCount} books across ${genres.length} genres and hosted ${totalEventsCount} events.</p>
+  <p class="mb-3">Our club is moderated by:</p>
+  <ul class="list-disc pl-5 space-y-2">
+    <li><strong>Esther Mboche</strong> - Events Coordinator</li>
+    <li><strong>Brenda Frenjo</strong> - Membership & Reviews</li>
+    <li><strong>Fred Juma</strong> - Books & Reviews</li>
+  </ul>
+  <p class="mb-3">We aim to create a welcoming and inclusive environment where everyone feels valued and inspired to explore new genres and authors.</p>
+</div>`
     }
 
     if (lowerQuery.includes("thank you") || lowerQuery.includes("thanks") || lowerQuery === "ty") {
@@ -296,9 +444,24 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
     if (lowerQuery.includes("next event") || lowerQuery.includes("upcoming event")) {
       if (initialEvents && initialEvents.length > 0) {
         const nextEvent = initialEvents[0]
-        return `📅 Gladwell here with the details! Our next event is "${nextEvent.title}" on ${new Date(nextEvent.date).toLocaleDateString()} at ${nextEvent.time}, ${nextEvent.location}. You can find more details on our <a href="/club-events" class="text-green-700 underline">events page</a>.`
+        return `<h4 class="text-lg font-medium mb-2">📅 Gladwell's Event Details</h4>
+<p class="mb-3">Our next event is:</p>
+<ul class="list-disc pl-5 space-y-2">
+  <li>
+    <strong>${nextEvent.title}</strong>
+    <ul class="list-disc pl-5 space-y-1 mt-1">
+      <li>Date: ${new Date(nextEvent.date).toLocaleDateString()}</li>
+      <li>Time: ${nextEvent.time}</li>
+      <li>Location: ${nextEvent.location}</li>
+      ${nextEvent.type ? `<li>Type: ${nextEvent.type}</li>` : ""}
+      ${nextEvent.bookTitle ? `<li>Book: "${nextEvent.bookTitle}" by ${nextEvent.bookAuthor || "Unknown"}</li>` : ""}
+    </ul>
+  </li>
+</ul>
+<p class="mb-3">You can find more details on our <a href="/club-events" class="underline">events page</a>.</p>`
       }
-      return `📅 Gladwell here! You can find our upcoming events on the <a href="/club-events" class="text-green-700 underline">events page</a>. We regularly host book discussions, author talks, and social gatherings.`
+      return `<h4 class="text-lg font-medium mb-2">📅 Gladwell's Event Update</h4>
+<p class="mb-3">You can find our upcoming events on the <a href="/club-events" class="underline">events page</a>. We regularly host book discussions, author talks, and social gatherings.</p>`
     }
 
     // Current book
@@ -309,9 +472,85 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       lowerQuery.includes("what are we reading")
     ) {
       if (initialBook) {
-        return `📚 Gladwell's book update: We're currently reading "${initialBook.title}" by ${initialBook.author}${initialBook.genre ? ` in the ${initialBook.genre} genre` : ""}. Join us for the discussion on our next meeting!`
+        return `<h4 class="text-lg font-medium mb-2">📚 Gladwell's Book Update</h4>
+<p class="mb-3">We're currently reading:</p>
+<ul class="list-disc pl-5 space-y-2">
+  <li><strong>${initialBook.title}</strong> by ${initialBook.author}${initialBook.genre ? ` (${initialBook.genre})` : ""}</li>
+</ul>
+<p class="mb-3">Join us for the discussion on our next meeting!</p>`
       }
-      return `📚 Gladwell here! You can find our current book selection on the <a href="/books" class="text-green-700 underline">books page</a>. We select a new book each month through member voting.`
+      return `<h4 class="text-lg font-medium mb-2">📚 Gladwell's Book Update</h4>
+<p class="mb-3">You can find our current book selection on the <a href="/books" class="underline">books page</a>. We select a new book each month through member voting.</p>`
+    }
+
+    // Book recommender
+    if (
+      lowerQuery.includes("who recommend") ||
+      lowerQuery.includes("who suggested") ||
+      lowerQuery.includes("recommender") ||
+      lowerQuery.includes("recommended by")
+    ) {
+      // Extract book title from query
+      let bookTitle = ""
+      const words = lowerQuery.split(" ")
+
+      for (let i = 0; i < words.length; i++) {
+        if (
+          words[i] === "recommend" ||
+          words[i] === "recommended" ||
+          words[i] === "suggests" ||
+          words[i] === "suggested"
+        ) {
+          // Look for book title after these words
+          if (i + 1 < words.length) {
+            bookTitle = words.slice(i + 1).join(" ")
+            break
+          }
+        }
+      }
+
+      // If no title found after recommend words, look for it before
+      if (!bookTitle) {
+        for (let i = 0; i < words.length; i++) {
+          if (
+            words[i] === "recommend" ||
+            words[i] === "recommended" ||
+            words[i] === "suggests" ||
+            words[i] === "suggested"
+          ) {
+            // Look for book title before these words
+            if (i > 0) {
+              bookTitle = words.slice(0, i).join(" ")
+              break
+            }
+          }
+        }
+      }
+
+      // Clean up the title
+      bookTitle = bookTitle.replace(/^who|^did|^who did|^the book/, "").trim()
+
+      // Search for the book in allBooks
+      const matchingBook = allBooks.find(
+        (book) => book.title.toLowerCase().includes(bookTitle) || bookTitle.includes(book.title.toLowerCase()),
+      )
+
+      if (matchingBook && matchingBook.publisher) {
+        return `<div class="p-3 rounded-md border mb-3">
+  <h4 class="text-lg font-medium mb-2">📚 Book Recommendation Info</h4>
+  <p class="mb-3"><strong>${matchingBook.title}</strong> by ${matchingBook.author} was recommended by <strong>${matchingBook.publisher}</strong>.</p>
+</div>`
+      } else if (matchingBook) {
+        return `<div class="p-3 rounded-md border mb-3">
+  <h4 class="text-lg font-medium mb-2">📚 Book Recommendation Info</h4>
+  <p class="mb-3">I don't have information about who recommended <strong>${matchingBook.title}</strong> by ${matchingBook.author}.</p>
+</div>`
+      } else {
+        return `<div class="p-3 rounded-md border mb-3">
+  <h4 class="text-lg font-medium mb-2">📚 Book Recommendation Info</h4>
+  <p class="mb-3">I don't have information about that book in our records. Would you like to know about other books we've read?</p>
+</div>`
+      }
     }
 
     // All books
@@ -321,46 +560,93 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       lowerQuery.includes("reading list") ||
       lowerQuery.includes("what have we read")
     ) {
-      const recentBooks = allBooks
-        .slice(0, 3)
-        .map((book) => `"${book.title}" by ${book.author}`)
-        .join(", ")
-      return `📚 Gladwell's reading list: The Reading Circle has read ${bookCount} books so far! Some of our recent selections include ${recentBooks}. You can view our complete reading history on the <a href="/books" class="text-green-700 underline">books page</a>.`
+      const recentBooksArray = allBooks.slice(0, 5)
+      const formattedBooks = recentBooksArray
+        .map(
+          (book) =>
+            `<li><strong>${book.title}</strong> by ${book.author}${book.genre ? ` (${book.genre})` : ""}${book.publisher ? ` - Recommended by: ${book.publisher}` : ""}</li>`,
+        )
+        .join("")
+
+      return `<h4 class="text-lg font-medium mb-2">📚 Gladwell's Reading List</h4>
+<p class="mb-3">The Reading Circle has read ${bookCount} books so far! Some of our recent selections include:</p>
+<ul class="list-disc pl-5 space-y-2">
+  ${formattedBooks}
+</ul>
+<p class="mb-3">You can view our complete reading history on the <a href="/books" class="underline">books page</a>.</p>`
     }
 
     // Moderators
     if (lowerQuery.includes("moderator") || lowerQuery.includes("leader") || lowerQuery.includes("who runs")) {
-      return `👥 Gladwell reporting! Our club is moderated by Esther Mboche (Events Coordinator), Brenda Frenjo (Membership & Reviews), and Fred Juma (Books & Reviews). You can learn more about them on our <a href="/about-us" class="text-green-700 underline">about us page</a>.`
+      return `<h4 class="text-lg font-medium mb-2">👥 Gladwell's Moderator Info</h4>
+<p class="mb-3">Our club is moderated by:</p>
+<ul class="list-disc pl-5 space-y-2">
+  <li><strong>Esther Mboche</strong> - Events Coordinator</li>
+  <li><strong>Brenda Frenjo</strong> - Membership & Reviews</li>
+  <li><strong>Fred Juma</strong> - Books & Reviews</li>
+</ul>
+<p class="mb-3">You can learn more about them on our <a href="/about-us" class="underline">about us page</a>.</p>`
     }
 
     // How to join
     if (lowerQuery.includes("join") || lowerQuery.includes("become member") || lowerQuery.includes("sign up")) {
-      return `🎉 Gladwell here with good news! We'd love to have you join! Please fill out our application form on the <a href="/join-us" class="text-green-700 underline">join us page</a>. We'll ask about your reading habits and interests to help integrate you into our community.`
+      return `<div class="p-3 rounded-md border mb-3">
+  <h4 class="text-lg font-medium mb-2">🎉 Join The Reading Circle</h4>
+  <p class="mb-3">We'd love to have you join! Please fill out our application form on the <a href="/join-us" class="underline">join us page</a>.</p>
+  <p class="mb-3">We'll ask about your reading habits and interests to help integrate you into our community.</p>
+</div>`
     }
 
     // Meeting schedule
     if (lowerQuery.includes("schedule") || lowerQuery.includes("when") || lowerQuery.includes("meeting time")) {
-      return `🕒 Gladwell's schedule update: We typically meet a maximum of twice a month - once for a book discussion and once for a social gathering or special event. We've hosted ${totalEventsCount} events so far! Check our <a href="/club-events" class="text-green-700 underline">events calendar</a> for specific dates and times.`
+      return `<h4 class="text-lg font-medium mb-2">🕒 Gladwell's Schedule Update</h4>
+<p class="mb-3">We typically meet a maximum of twice a month:</p>
+<ul class="list-disc pl-5 space-y-2">
+  <li>Once for a book discussion</li>
+  <li>Once for a social gathering or special event</li>
+</ul>
+<p class="mb-3">We've hosted ${totalEventsCount} events so far! Check our <a href="/club-events" class="underline">events calendar</a> for specific dates and times.</p>`
     }
 
     // Guidelines
     if (lowerQuery.includes("guideline") || lowerQuery.includes("rule") || lowerQuery.includes("expectation")) {
-      return `📝 Gladwell here with the guidelines! Our club guidelines include reading the selected book before meetings, engaging in respectful discussions, and participating in regular check-ins. You can read the full guidelines on our <a href="/join-us?tab=guidelines" class="text-green-700 underline">join us page</a>.`
+      return `<h4 class="text-lg font-medium mb-2">📝 Gladwell's Club Guidelines</h4>
+<p class="mb-3">Our club guidelines include:</p>
+<ul class="list-disc pl-5 space-y-2">
+  <li>Reading the selected book before meetings</li>
+  <li>Engaging in respectful discussions</li>
+  <li>Participating in regular check-ins</li>
+</ul>
+<p class="mb-3">You can read the full guidelines on our <a href="/join-us?tab=guidelines" class="underline">join us page</a>.</p>`
     }
 
     // Handsome member
-    if (lowerQuery.includes("handsome") || lowerQuery.includes("who is handsome") || lowerQuery.includes("most handsome")) {
-      return `The most handsome member of the club is Fred Juma. He is the one who always brings the best snacks to our meetings!`
+    if (
+      lowerQuery.includes("handsome") ||
+      lowerQuery.includes("who is handsome") ||
+      lowerQuery.includes("most handsome")
+    ) {
+      return `<div class="p-3 rounded-md border mb-3">
+  <p class="mb-3">The most handsome member of the club is <strong>Fred Juma</strong>. He is the one who always brings the best snacks to our meetings!</p>
+</div>`
     }
 
     // fact about Brenda's height
     if (lowerQuery.includes("brenda") || lowerQuery.includes("height") || lowerQuery.includes("how tall is brenda")) {
-      return `Brenda Frenjo is 5'8" tall. She is can clearly see tommorrow's book club meeting from her house!`
+      return `<div class="p-3 rounded-md border mb-3">
+  <p class="mb-3"><strong>Brenda Frenjo</strong> is 5'8" tall. She can clearly see tomorrow's book club meeting from her house!</p>
+</div>`
     }
 
     // fact about Esther's prefect vibes
-    if (lowerQuery.includes("esther") || lowerQuery.includes("vibes") || lowerQuery.includes("how are esther's vibes")) {
-      return `Esther Mboche give off prefect vibes. She is the one who always keeps us on track during our meetings! Don't be surprised if she gives you a warning for talking too much!`
+    if (
+      lowerQuery.includes("esther") ||
+      lowerQuery.includes("vibes") ||
+      lowerQuery.includes("how are esther's vibes")
+    ) {
+      return `<div class="p-3 rounded-md border mb-3">
+  <p class="mb-3"><strong>Esther Mboche</strong> gives off prefect vibes. She is the one who always keeps us on track during our meetings! Don't be surprised if she gives you a warning for talking too much!</p>
+</div>`
     }
 
     // book voting and selection
@@ -369,7 +655,14 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       lowerQuery.includes("how do we select books") ||
       lowerQuery.includes("book selection process")
     ) {
-      return `📖 Gladwell's book selection process: We select our monthly book through member voting! Each month, members can suggest books, and then we vote on the top choices. The book with the most votes becomes our book of the month! It's a fun way to ensure everyone has a say in our reading list.`
+      return `<h4 class="text-lg font-medium mb-2">📖 Gladwell's Book Selection Process</h4>
+<p class="mb-3">We select our monthly book through member voting!</p>
+<ol class="list-decimal pl-5 space-y-2">
+  <li>Each month, members can suggest books</li>
+  <li>We vote on the top choices</li>
+  <li>The book with the most votes becomes our book of the month</li>
+</ol>
+<p class="mb-3">It's a fun way to ensure everyone has a say in our reading list.</p>`
     }
 
     // Gallery
@@ -379,7 +672,8 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       lowerQuery.includes("image") ||
       lowerQuery.includes("gallery")
     ) {
-      return `📸 Gladwell's gallery guide: You can view photos from our past events and gatherings in our <a href="/gallery" class="text-green-700 underline">gallery page</a>. We love capturing memories from our book discussions and social events!`
+      return `<h4 class="text-lg font-medium mb-2">📸 Gladwell's Gallery Guide</h4>
+<p class="mb-3">You can view photos from our past events and gatherings in our <a href="/gallery" class="underline">gallery page</a>. We love capturing memories from our book discussions and social events!</p>`
     }
 
     // Book recommendations
@@ -392,14 +686,29 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       const randomBooks = allBooks
         .sort(() => 0.5 - Math.random())
         .slice(0, 3)
-        .map((book) => `"${book.title}" by ${book.author}${book.genre ? ` (${book.genre})` : ""}`)
-        .join(", ")
+        .map(
+          (book) => `<li><strong>${book.title}</strong> by ${book.author}${book.genre ? ` (${book.genre})` : ""}</li>`,
+        )
+        .join("")
 
-      return `📚 Gladwell's recommendations: Based on our club's favorites, you might enjoy ${randomBooks}. We've read ${bookCount} books across ${genres.length} genres so far! What genres do you typically enjoy?`
+      return `<h4 class="text-lg font-medium mb-2">📚 Gladwell's Recommendations</h4>
+<p class="mb-3">Based on our club's favorites, you might enjoy:</p>
+<ul class="list-disc pl-5 space-y-2">
+  ${randomBooks}
+</ul>
+<p class="mb-3">We've read ${bookCount} books across ${genres.length} genres so far! What genres do you typically enjoy?</p>`
     }
 
     // Fallback response
-    return `This is Gladwell! I'm not sure about that, but I can tell you that The Reading Circle has read ${bookCount} books and hosted ${totalEventsCount} events so far! Would you like to know about our <a href="/club-events" class="text-green-700 underline">upcoming events</a>, <a href="/books" class="text-green-700 underline">current book</a>, or <a href="/join-us" class="text-green-700 underline">how to join</a>?`
+    return `<div class="p-3 rounded-md border mb-3">
+  <p class="mb-3">This is Gladwell! I'm not sure about that, but I can tell you that The Reading Circle has read ${bookCount} books and hosted ${totalEventsCount} events so far!</p>
+  <p class="mb-3">Would you like to know about our:</p>
+  <ul class="list-disc pl-5 space-y-2">
+    <li><a href="/club-events" class="underline">Upcoming events</a></li>
+    <li><a href="/books" class="underline">Current book</a></li>
+    <li><a href="/join-us" class="underline">How to join</a></li>
+  </ul>
+</div>`
   }
 
   // Calculate dynamic sizes based on expanded state
