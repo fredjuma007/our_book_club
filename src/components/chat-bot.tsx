@@ -734,9 +734,9 @@ ${authorContent}`
               >
                 <MessageSquare className="w-6 h-6" />
               </Button>
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                1
-              </span>
+                <span className="absolute -top-4 right-0 bg-red-700 text-white text-xs rounded-full px-2 py-1 flex items-center justify-center transform translate-x-1/2">
+                  Ask AI
+                </span>
             </motion.div>
           )}
         </AnimatePresence>
