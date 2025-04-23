@@ -51,6 +51,59 @@ type ChatBotProps = {
   allBooks?: BookData[]
 }
 
+// Star animation component
+const StarAnimation = () => {
+  // Generate random stars with different properties
+  const stars = Array.from({ length: 20 }).map((_, i) => ({
+    id: i,
+    size: Math.random() * 10 + 5, // Size between 5-15px
+    left: Math.random() * 60 - 30, // Position between -30px and 30px from center
+    delay: Math.random() * 0.5, // Random delay for staggered animation
+    duration: Math.random() * 1 + 1.5, // Duration between 1.5-2.5s
+  }))
+
+  return (
+    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none">
+      {stars.map((star) => (
+        <motion.div
+          key={star.id}
+          initial={{ y: 0, opacity: 0, scale: 0 }}
+          animate={{
+            y: -200,
+            opacity: [0, 1, 0],
+            scale: [0, 1, 0.5],
+            x: star.left,
+          }}
+          transition={{
+            duration: star.duration * 1.5, // Make animation last longer
+            delay: star.delay,
+            repeat: Number.POSITIVE_INFINITY,
+            repeatDelay: 3 + Math.random() * 2,
+          }}
+          className="absolute bottom-0"
+        >
+          <div
+            className="text-green-500 flex items-center justify-center"
+            style={{
+              width: `${star.size}px`,
+              height: `${star.size}px`,
+            }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 2L14.2451 8.90983H21.5106L15.6327 13.1803L17.8779 20.0902L12 15.8197L6.12215 20.0902L8.36729 13.1803L2.48944 8.90983H9.75486L12 2Z"
+                fill="currentColor"
+                className="drop-shadow-[0_0_3px_rgba(34,197,94,0.7)]"
+              />
+            </svg>
+            <div className="absolute inset-0 rounded-full bg-green-400 blur-sm opacity-40"></div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  )
+}
+
 export default function ChatBot({ initialEvents = [], initialBook = null, allBooks = [] }: ChatBotProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -68,6 +121,7 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const [useAI, setUseAI] = useState(true)
+  const [showGreeting, setShowGreeting] = useState(true)
 
   // Track conversation history for context
   const [conversationHistory, setConversationHistory] = useState<ConversationExchange[]>([])
@@ -132,6 +186,15 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  useEffect(() => {
+    if (showGreeting) {
+      const timer = setTimeout(() => {
+        setShowGreeting(false)
+      }, 8000)
+      return () => clearTimeout(timer)
+    }
+  }, [showGreeting])
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -300,8 +363,7 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       lowerQuery.includes("how many")
     ) {
       if (lowerQuery.includes("book") || lowerQuery.includes("read")) {
-        return `<h4 class="text-lg font-medium mb-2">📚  || lowerQuery.includes("read")) {
-        return \`<h4 class="text-lg font-medium mb-2">📚 Gladwell's Book Statistics</h4>
+        return `<h4 class="text-lg font-medium mb-2">📚 Gladwell's Book Statistics</h4>
 <ul class="list-disc pl-5 space-y-2">
   <li><strong>Total books read:</strong> ${bookCount}</li>
   <li><strong>Authors explored:</strong> ${authors.length}</li>
@@ -728,15 +790,62 @@ ${authorContent}`
               exit={{ scale: 0, opacity: 0 }}
               className="relative"
             >
-              <Button
-                onClick={() => setIsOpen(true)}
-                className="w-14 h-14 rounded-full bg-green-700 hover:bg-green-800 text-white shadow-lg"
+              <motion.div
+                animate={{
+                  scale: [1, 1.1, 1],
+                  boxShadow: [
+                    "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    "0 10px 15px rgba(0, 0, 0, 0.2)",
+                    "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  ],
+                }}
+                transition={{
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatType: "reverse",
+                  duration: 2,
+                }}
+                className="relative"
               >
-                <MessageSquare className="w-6 h-6" />
-              </Button>
-                <span className="absolute -top-4 right-0 bg-red-700 text-white text-xs rounded-full px-2 py-1 flex items-center justify-center transform translate-x-1/2">
-                  Ask AI
-                </span>
+                <StarAnimation />
+                <Button
+                  onClick={() => setIsOpen(true)}
+                  className="w-14 h-14 rounded-full bg-green-700 hover:bg-green-800 text-white shadow-lg relative z-10"
+                >
+                  <MessageSquare className="w-6 h-6" />
+                </Button>
+              </motion.div>
+              {showGreeting && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ delay: 1, duration: 0.5 }}
+                  className="absolute -top-12 right-0 bg-white dark:bg-gray-800 text-green-700 dark:text-green-400 text-sm rounded-lg px-3 py-2 shadow-md border border-green-200 dark:border-green-800 whitespace-nowrap"
+                >
+                  <div className="relative">
+                    Hi, I'm Gladwell! 👋
+                    <div className="absolute -bottom-2 right-4 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-white dark:border-t-gray-800"></div>
+                  </div>
+                </motion.div>
+              )}
+              <motion.div
+                className="absolute -top-3 -right-3 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full px-2 py-0.5 flex items-center justify-center shadow-lg"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  boxShadow: [
+                    "0 0 0 rgba(139, 92, 246, 0.4)",
+                    "0 0 20px rgba(139, 92, 246, 0.6)",
+                    "0 0 0 rgba(139, 92, 246, 0.4)",
+                  ],
+                }}
+                transition={{
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatDelay: 1,
+                  duration: 1.5,
+                }}
+              >
+                <span className="text-white text-xs font-bold tracking-wider">AI</span>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
