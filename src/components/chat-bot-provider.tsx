@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import ChatBot from "./chat-bot"
+import ChatBot from "../app/chat-bot"
 
 // Define types for the data
 interface EventData {
