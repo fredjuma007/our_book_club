@@ -25,6 +25,8 @@ import {
 } from "lucide-react"
 import React, { useEffect, useState, useRef } from "react"
 import Footer from "@/components/footer"
+import GladwellAIWidget from "@/components/gladwell-ai-widget"
+import GladwellButton from "@/components/gladwell-button"
 
 // Define the GalleryItem type
 interface GalleryItem {
@@ -57,6 +59,8 @@ interface HomePageClientProps {
 }
 
 export default function HomePageClient({ initialGalleryItems = [], upcomingEvents = [] }: HomePageClientProps) {
+  // Add state for controlling the AI widget
+  const [isOpen, setIsOpen] = useState(false)
   const [showAbout, setShowAbout] = React.useState(false)
   const [activeSection, setActiveSection] = useState("hero")
   const [showMobileBookDetails, setShowMobileBookDetails] = useState(false)
@@ -111,13 +115,6 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
       if (parallaxRef.current) {
         parallaxRef.current.style.transform = `translateY(${scrollPosition * 0.1}px)`
       }
-
-      // Remove the aggressive 3D effect for book cover
-      // if (bookCoverRef.current) {
-      //   const rotateX = (window.innerHeight / 2 - scrollPosition) / 20
-      //   const rotateY = (window.innerWidth / 2 - window.innerWidth / 2) / 20
-      //   bookCoverRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
-      // }
 
       for (const section of sections) {
         const element = document.getElementById(section)
@@ -207,6 +204,7 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
 
   return (
     <div className="relative bg-[url('/picnic.jpg')] bg-cover bg-fixed bg-center bg-no-repeat text-green-600 dark:text-green-500 overflow-x-hidden selection:bg-green-700/30">
+      {isOpen && <GladwellAIWidget isOpen={isOpen} onClose={() => setIsOpen(false)} />}
       {/* Animated particles */}
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20 animate-fade" />
 
@@ -374,31 +372,45 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
               transition={{ duration: 0.8 }}
             >
               <div className="space-y-5 md:space-y-8">
+                {/* Update the logo section to make it clickable and add AI effects */}
                 <div className="flex items-center gap-4 mb-2">
-                  <motion.div
-                    className="relative group"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <Image
-                      src="/logo.jpeg"
-                      alt="Reading Circle Logo"
-                      width={80}
-                      height={80}
-                      className="w-[70px] h-[70px] md:w-[90px] md:h-[90px] rounded-full border-4 border-green-700 shadow-lg transition-transform duration-300 group-hover:scale-110 animate-morph"
-                    />
+                  <div className="relative">
                     <motion.div
-                      className="absolute -inset-2 rounded-full bg-green-50 scale-0 group-hover:scale-100 transition-transform duration-300"
-                      animate={{
-                        boxShadow: [
-                          "0 0 0 rgba(21, 128, 61, 0)",
-                          "0 0 20px rgba(21, 128, 61, 0.5)",
-                          "0 0 0 rgba(21, 128, 61, 0)",
-                        ],
-                      }}
-                      transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-                    />
-                  </motion.div>
+                      className="relative group cursor-pointer"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setIsOpen(true)}
+                    >
+                      <Image
+                        src="/logo.jpeg"
+                        alt="Reading Circle Logo"
+                        width={80}
+                        height={80}
+                        className="w-[70px] h-[70px] md:w-[90px] md:h-[90px] rounded-full border-4 border-green-700 shadow-lg transition-transform duration-300 group-hover:scale-110 animate-morph"
+                      />
+                      <motion.div
+                        className="absolute -inset-2 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 scale-0 group-hover:scale-100 transition-transform duration-300"
+                        animate={{
+                          boxShadow: [
+                            "0 0 0 rgba(139, 92, 246, 0)",
+                            "0 0 30px rgba(139, 92, 246, 0.6)",
+                            "0 0 0 rgba(139, 92, 246, 0)",
+                          ],
+                        }}
+                        transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+                      />
+                      {/* AI glow effect on hover */}
+                      <motion.div
+                        className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{
+                          background: "radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, rgba(59, 130, 246, 0) 70%)",
+                        }}
+                      />
+                      <div className="absolute -top-3 -right-3">
+                        <GladwellButton size="large" onClick={() => setIsOpen(true)} />
+                      </div>
+                    </motion.div>
+                  </div>
                   <motion.h1
                     className="text-2xl md:text-3xl lg:text-4xl font-bold text-green-800 dark:text-green-400 font-serif relative inline-block group gradient-text"
                     initial={{ opacity: 0, y: -20 }}
@@ -1098,19 +1110,19 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
                         whileTap={{ scale: 0.95 }}
                       >
                         <Button
-                        asChild
-                        className="w-full bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
-                      >
-                        <Link
-                          href="https://wa.me/+254790964291?text=Hello%20Reading%20Circle%20Event%20Coordinator,%20I'm%20contacting%20from%20the%20website.%20I%20would%20like%20to%20know%20more%20about%20the%20upcoming%20bookclub%20events%20and%20discussions"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          asChild
+                          className="w-full bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
                         >
-                          <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
-                          Inquire about Event
-                          <ArrowRight className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform" />
-                        </Link>
-                      </Button>
+                          <Link
+                            href="https://wa.me/+254790964291?text=Hello%20Reading%20Circle%20Event%20Coordinator,%20I'm%20contacting%20from%20the%20website.%20I%20would%20like%20to%20know%20more%20about%20the%20upcoming%20bookclub%20events%20and%20discussions"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                            Inquire about Event
+                            <ArrowRight className="w-5 h-5 mr-2 group-hover/btn:translate-x-1 transition-transform" />
+                          </Link>
+                        </Button>
                       </motion.div>
                     )}
                   </div>
@@ -1323,9 +1335,7 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
                     size="lg"
                     className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn shadow-lg"
                   >
-                    <Link
-                      href="/join-us"
-                    >
+                    <Link href="/join-us">
                       <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
                       <Heart className="w-5 h-5 mr-2 animate-pulse" />
                       Join Now
