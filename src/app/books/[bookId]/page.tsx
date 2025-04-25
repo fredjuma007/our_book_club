@@ -205,6 +205,13 @@ export default async function Page({ params }: PageProps) {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-3 mt-6">
+                  {/* Add the AI Book Insights Button */}
+                  <BookAIButton
+                    bookId={book._id}
+                    bookTitle={book.title}
+                    bookAuthor={book.author}
+                    bookDescription={book.description}
+                  />
                   {book.goodreadsUrl && (
                     <Button
                       asChild
@@ -228,13 +235,7 @@ export default async function Page({ params }: PageProps) {
                     </a>
                   </Button>
                   
-                  {/* Add the AI Book Insights Button */}
-                  <BookAIButton
-                    bookId={book._id}
-                    bookTitle={book.title}
-                    bookAuthor={book.author}
-                    bookDescription={book.description}
-                  />
+                  
                   <ShareButton />
                 </div>
               </div>
