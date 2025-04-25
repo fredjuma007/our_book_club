@@ -68,7 +68,7 @@ export function HeaderCountdown({
         </div>
 
         <div className="hidden lg:flex items-center gap-1 text-green-700 dark:text-green-400 text-[10px] sm:text-xs font-serif">
-          <span>Next Event</span>
+          
           {isExpanded ? (
             <ChevronUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
           ) : (
