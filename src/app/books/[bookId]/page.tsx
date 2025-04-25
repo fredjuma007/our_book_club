@@ -13,6 +13,7 @@ import { ReviewItem } from "./ReviewItem"
 import { Toaster } from "@/components/ui/toaster"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import ShareButton from "@/components/sharebutton"
+import { BookAIButton } from "@/components/book-ai-button"
 
 // This forces the page to be dynamically rendered and not cached
 export const dynamic = "force-dynamic"
@@ -226,8 +227,15 @@ export default async function Page({ params }: PageProps) {
                       Write a Review
                     </a>
                   </Button>
-                  <ShareButton />
                   
+                  {/* Add the AI Book Insights Button */}
+                  <BookAIButton
+                    bookId={book._id}
+                    bookTitle={book.title}
+                    bookAuthor={book.author}
+                    bookDescription={book.description}
+                  />
+                  <ShareButton />
                 </div>
               </div>
             </div>
@@ -250,73 +258,74 @@ export default async function Page({ params }: PageProps) {
 
             <div className="prose prose-green dark:prose-invert max-w-none font-serif">
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-          {book.description || "No description available for this book."}
+                {book.description || "No description available for this book."}
               </p>
             </div>
           </div>
 
           {/* Review Form */}
-        <Card
-          id="post-review" 
-          className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
-              ⭐ Rate & Post a Review ⭐
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoggedIn && member ? (
-              <PostReviewForm bookId={book._id} userName={member.nickname || member.loginEmail || "Anonymous"} />
-            ) : (
-              <div className="text-center space-y-4">
-                <p className="text-gray-600 dark:text-gray-400 font-serif">Please log in to post a review</p>
-                <form action={loginAction}>
-                  <Button
-                    variant="outline"
-                    className="bg-green-700 text-white hover:bg-green-800 transition-all font-serif"
-                  >
-                    Login to Review
-                  </Button>
-                </form>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-           {/* Reviews Section */}
-        <Card className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
-              Reviews
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {reviews.length > 0 ? (
-                reviews.map((review) => (
-                  <ReviewItem
-                    key={review._id}
-                    id={review._id}
-                    name={review.name}
-                    rating={review.rating}
-                    review={review.review}
-                    isLoggedIn={isLoggedIn}
-                    bookId={bookId}
-                    currentUserId={member?.id ?? undefined}
-                  />
-                ))
+          <Card
+            id="post-review"
+            className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl"
+          >
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
+                ⭐ Rate & Post a Review ⭐
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isLoggedIn && member ? (
+                <PostReviewForm bookId={book._id} userName={member.nickname || member.loginEmail || "Anonymous"} />
               ) : (
-                <p className="text-gray-500 dark:text-gray-400 font-serif">
-                  No reviews available. Be the first to review this book!
-                </p>
+                <div className="text-center space-y-4">
+                  <p className="text-gray-600 dark:text-gray-400 font-serif">Please log in to post a review</p>
+                  <form action={loginAction}>
+                    <Button
+                      variant="outline"
+                      className="bg-green-700 text-white hover:bg-green-800 transition-all font-serif"
+                    >
+                      Login to Review
+                    </Button>
+                  </form>
+                </div>
               )}
-            </div>
-          </CardContent>
-        </Card>
-        {/* Scroll to Top Button */}
-        <ScrollToTop />
-        <Toaster />
-      </div>
+            </CardContent>
+          </Card>
+
+          {/* Reviews Section */}
+          <Card className="relative rounded-lg shadow-md bg-white/70 dark:bg-gray-800/70 border border-green-700 backdrop-blur-md transition-all hover:shadow-xl">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif">
+                Reviews
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {reviews.length > 0 ? (
+                  reviews.map((review) => (
+                    <ReviewItem
+                      key={review._id}
+                      id={review._id}
+                      name={review.name}
+                      rating={review.rating}
+                      review={review.review}
+                      isLoggedIn={isLoggedIn}
+                      bookId={bookId}
+                      currentUserId={member?.id ?? undefined}
+                    />
+                  ))
+                ) : (
+                  <p className="text-gray-500 dark:text-gray-400 font-serif">
+                    No reviews available. Be the first to review this book!
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+          {/* Scroll to Top Button */}
+          <ScrollToTop />
+          <Toaster />
+        </div>
       </div>
     )
   } catch (error) {
