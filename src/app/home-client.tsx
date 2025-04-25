@@ -274,9 +274,6 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
                   />
                   <div
                     className="absolute -top-2 -right-2 bg-green-700 text-white text-xs px-2 py-1 rounded-full"
-                    // Remove the rotating animation
-                    // animate={{ rotate: [0, 3, 0, -3, 0] }}
-                    // transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY }}
                   >
                     Book of the Month
                   </div>
@@ -372,7 +369,7 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
               transition={{ duration: 0.8 }}
             >
               <div className="space-y-5 md:space-y-8">
-                {/* Update the logo section to make it clickable and add AI effects */}
+                {/* AI logo section */}
                 <div className="flex items-center gap-4 mb-2">
                   <div className="relative">
                     <motion.div
@@ -543,9 +540,6 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
                         />
                         <div
                           className="absolute -top-1 -right-1 bg-green-700 text-white text-[10px] px-1.5 py-0.5 rounded-full"
-                          // Remove the rotating animation
-                          // animate={{ rotate: [0, 3, 0, -3, 0] }}
-                          // transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY }}
                         >
                           Book of the Month
                         </div>

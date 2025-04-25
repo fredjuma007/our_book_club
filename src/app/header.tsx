@@ -114,9 +114,8 @@ export async function Header() {
                 <div className="absolute -inset-1 rounded-full bg-green-100 dark:bg-green-800/30 opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
               </div>
               <div className="relative overflow-hidden">
-                <span className="hidden sm:block text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-500 to-green-400 tracking-wide relative group-hover:text-shadow-neon transition-all duration-300">
+                <span className="hidden sm:block text-lg sm:text-xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-500 to-green-400 tracking-wide group-hover:text-shadow-neon transition-all">
                   READING CIRCLE
-                  <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-green-500 dark:via-green-400 to-transparent opacity-60" />
                 </span>
                 <span className="absolute inset-0 hidden md:block bg-gradient-to-r from-green-400/0 via-green-500/20 to-green-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 <div className="absolute inset-0 hidden md:block rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-green-400/0 via-green-500/30 to-green-400/0 blur-lg"></div>
