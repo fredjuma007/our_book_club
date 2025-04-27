@@ -38,6 +38,18 @@ export default async function HomePage() {
     avatar: string
   }[] = []
 
+  // Initialize featured book
+  let featuredBook: {
+    id: string
+    title: string
+    author: string
+    quote: string
+    description: string
+    meetingDate: string
+    meetingLink: string
+    coverImage: string
+  } | null = null
+
   try {
     // Fetch gallery items and events from Wix
     const client = await getServerClient()
@@ -118,11 +130,37 @@ export default async function HomePage() {
       }
     })
 
+    // Fetch featured book data with a timeout
+    const featuredBookDataPromise = new Promise<any[]>(async (resolve, reject) => {
+      // Set a timeout for the entire operation
+      const timeout = setTimeout(() => {
+        reject(new Error("Featured book data fetch timed out after 10 seconds"))
+      }, 10000)
+
+      try {
+        const data = await client.items
+          .queryDataItems({ dataCollectionId: "FeaturedBooks" })
+          .find()
+          .then((res) => res.items.map((item) => item.data || {}))
+          .catch((error) => {
+            console.error("Error fetching featured book:", error)
+            return []
+          })
+
+        clearTimeout(timeout)
+        resolve(data)
+      } catch (error) {
+        clearTimeout(timeout)
+        reject(error)
+      }
+    })
+
     // Wait for all data fetches with timeouts
-    const [galleryData, eventsData, testimonialsData] = await Promise.all([
+    const [galleryData, eventsData, testimonialsData, featuredBookData] = await Promise.all([
       galleryDataPromise,
       eventsDataPromise,
       testimonialsDataPromise,
+      featuredBookDataPromise,
     ])
 
     // Process gallery items
@@ -260,9 +298,6 @@ export default async function HomePage() {
       } => !!item && typeof item === "object",
     )
 
-    // Add debug logging
-    console.log("Raw testimonial items:", JSON.stringify(testimonialItems, null, 2))
-
     // Process the testimonial items to add proper image URLs
     const processedTestimonials = testimonialItems.map((item) => {
       // Get the avatar URL with error handling
@@ -276,7 +311,7 @@ export default async function HomePage() {
       }
 
       // Ensure name is being accessed correctly
-      const memberName = item.title || "Anonymous Member" // Name is actually title
+      const memberName = item.title || ""
 
       return {
         id: item._id,
@@ -296,6 +331,77 @@ export default async function HomePage() {
 
     // Take the first 3 testimonials for the preview
     randomTestimonials = shuffledTestimonials.slice(0, 3)
+
+    // Process featured book data
+    if (featuredBookData && featuredBookData.length > 0) {
+      const featuredBookItems = featuredBookData.filter(
+        (
+          item,
+        ): item is {
+          _id: string
+          title: string
+          author: string
+          quote: string
+          description: string
+          meetingDate: string
+          meetingLink: string
+          coverImage?: any
+          isBookOfMonth?: boolean
+        } => !!item && typeof item === "object",
+      )
+
+      // Sort by isBookOfMonth first (if available), then by most recent
+      const sortedBooks = featuredBookItems.sort((a, b) => {
+        // First prioritize books marked as "Book of the Month"
+        if (a.isBookOfMonth && !b.isBookOfMonth) return -1
+        if (!a.isBookOfMonth && b.isBookOfMonth) return 1
+
+        // If both have same isBookOfMonth status, sort by date (assuming meetingDate is a date string)
+        const dateA = new Date(a.meetingDate || "")
+        const dateB = new Date(b.meetingDate || "")
+        return dateB.getTime() - dateA.getTime() // Most recent first
+      })
+
+      // Take the first book as the featured one
+      const currentFeaturedBook = sortedBooks[0]
+
+      if (currentFeaturedBook) {
+        // Process the featured book to add proper image URL
+        let coverImageUrl = ""
+        try {
+          if (currentFeaturedBook.coverImage) {
+            coverImageUrl = convertWixImageToUrl(currentFeaturedBook.coverImage)
+          }
+        } catch (error) {
+          console.error("Error converting cover image URL:", error)
+        }
+
+        // Format the date for display
+        let formattedDate = ""
+        try {
+          if (currentFeaturedBook.meetingDate) {
+            const meetingDate = new Date(currentFeaturedBook.meetingDate)
+            formattedDate = meetingDate.toLocaleDateString("en-US", {
+              day: "numeric",
+              month: "long",
+            })
+          }
+        } catch (error) {
+          console.error("Error formatting date:", error)
+        }
+
+        featuredBook = {
+          id: currentFeaturedBook._id,
+          title: currentFeaturedBook.title || "",
+          author: currentFeaturedBook.author || "",
+          quote: currentFeaturedBook.quote || "",
+          description: currentFeaturedBook.description || "",
+          meetingDate: formattedDate,
+          meetingLink: currentFeaturedBook.meetingLink || "",
+          coverImage: coverImageUrl,
+        }
+      }
+    }
   } catch (error) {
     console.error("Error fetching data:", error)
     // Leave arrays as empty if there's an error
@@ -307,6 +413,7 @@ export default async function HomePage() {
         initialGalleryItems={randomGalleryItems}
         upcomingEvents={upcomingEvents}
         testimonials={randomTestimonials}
+        featuredBook={featuredBook}
       />
     </ErrorBoundary>
   )
