@@ -14,7 +14,7 @@ export async function GET() {
 
     // Process testimonials
     const testimonialItems = testimonialsData.filter(
-      (item): item is { _id: string; name: string; role: string; quote: string; avatar?: any } =>
+      (item): item is { _id: string; title: string; role: string; quote: string; avatar?: any } =>
         !!item && typeof item === "object",
     )
 
@@ -32,7 +32,7 @@ export async function GET() {
 
       return {
         id: item._id,
-        name: item.name || "",
+        title: item.title || "Anonymous Member", // Name is is actually title
         role: item.role || "",
         quote: item.quote || "",
         avatar: avatarUrl,

@@ -32,7 +32,7 @@ export default async function HomePage() {
   // Initialize testimonials array
   let randomTestimonials: {
     id: string
-    name: string
+    title: string
     role: string
     quote: string
     avatar: string
@@ -253,12 +253,15 @@ export default async function HomePage() {
         item,
       ): item is {
         _id: string
-        name: string
+        title: string
         role: string
         quote: string
         avatar?: any
       } => !!item && typeof item === "object",
     )
+
+    // Add debug logging
+    console.log("Raw testimonial items:", JSON.stringify(testimonialItems, null, 2))
 
     // Process the testimonial items to add proper image URLs
     const processedTestimonials = testimonialItems.map((item) => {
@@ -272,9 +275,12 @@ export default async function HomePage() {
         console.error("Error converting avatar URL:", error)
       }
 
+      // Ensure name is being accessed correctly
+      const memberName = item.title || "Anonymous Member" // Name is actually title
+
       return {
         id: item._id,
-        name: item.name || "",
+        title: memberName,
         role: item.role || "",
         quote: item.quote || "",
         avatar: avatarUrl,

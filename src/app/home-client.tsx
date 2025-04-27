@@ -56,7 +56,7 @@ interface Event {
 // Define the Testimonial type
 interface Testimonial {
   id: string
-  name: string
+  title: string
   role: string
   quote: string
   avatar: string
@@ -1227,7 +1227,7 @@ export default function HomePageClient({
                     >
                       <Image
                         src={testimonial.avatar || "/placeholder.svg?height=60&width=60"}
-                        alt={testimonial.name}
+                        alt={testimonial.title || "Member"}
                         width={60}
                         height={60}
                         className="rounded-full object-cover border-2 border-green-700 shadow-lg animate-morph"
@@ -1252,7 +1252,9 @@ export default function HomePageClient({
                         viewport={{ once: true }}
                         transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                       >
-                        {testimonial.name}
+                        {/* Add debugging output to see what's in the name field */}
+                        {testimonial.title || "Anonymous Member"} {/* Add fallback */}
+                        {!testimonial.title && <span className="text-xs text-red-500">(name missing)</span>}
                       </motion.h4>
                       <motion.p
                         className="text-sm text-gray-600 dark:text-gray-300"
