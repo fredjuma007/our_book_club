@@ -48,6 +48,7 @@ export default async function HomePage() {
     meetingDate: string
     meetingLink: string
     coverImage: string
+    bookLink: string
   } | null = null
 
   try {
@@ -338,6 +339,7 @@ export default async function HomePage() {
         (
           item,
         ): item is {
+          bookLink: string
           _id: string
           title: string
           author: string
@@ -399,6 +401,19 @@ export default async function HomePage() {
           meetingDate: formattedDate,
           meetingLink: currentFeaturedBook.meetingLink || "",
           coverImage: coverImageUrl,
+          bookLink: currentFeaturedBook.bookLink || "",
+        }
+
+        // Add validation to ensure bookLink is properly formatted
+        if (featuredBook.bookLink) {
+          // Check if the bookLink contains placeholder text or is not a valid URL
+          if (featuredBook.bookLink.includes("SINGLE_ITEM_ID") || !featuredBook.bookLink.startsWith("http")) {
+            // If it's not valid, set it to a direct link to the book page using the book's ID
+            featuredBook.bookLink = `/books/${currentFeaturedBook._id}`
+          }
+        } else {
+          // If no bookLink is provided, default to the book's page
+          featuredBook.bookLink = `/books/${currentFeaturedBook._id}`
         }
       }
     }

@@ -71,6 +71,7 @@ interface FeaturedBook {
   meetingDate: string
   meetingLink: string
   coverImage: string
+  bookLink?: string
 }
 
 interface HomePageClientProps {
@@ -289,17 +290,24 @@ export default function HomePageClient({
               </motion.button>
 
               <div className="flex items-start gap-4 mb-4">
-                <motion.div className="relative w-24 h-36 flex-shrink-0" whileHover={{ scale: 1.02 }}>
+                <Link
+                  href={
+                    featuredBook.bookLink && !featuredBook.bookLink.includes("SINGLE_ITEM_ID")
+                      ? featuredBook.bookLink
+                      : `/books/${featuredBook.id}`
+                  }
+                  className="relative w-16 h-24 flex-shrink-0 group/cover"
+                >
                   <Image
                     src={featuredBook.coverImage || "/placeholder.svg"}
                     alt={`${featuredBook.title} Book Cover`}
                     fill
-                    className="rounded-lg shadow-lg object-cover border-2 border-green-700 animate-float"
+                    className="rounded-lg shadow-lg object-cover transition-transform duration-300 group-hover/cover:scale-105 group-hover/cover:rotate-1 border-2 border-green-700 animate-float"
                   />
-                  <div className="absolute -top-2 -right-2 bg-green-700 text-white text-xs px-2 py-1 rounded-full">
+                  <div className="absolute -top-1 -right-1 bg-green-700 text-white text-[10px] px-1.5 py-0.5 rounded-full">
                     Book of the Month
                   </div>
-                </motion.div>
+                </Link>
                 <div>
                   <motion.h3
                     className="text-xl font-bold text-green-800 dark:text-green-400 font-serif gradient-text"
@@ -556,7 +564,11 @@ export default function HomePageClient({
                     <div className="p-3 relative">
                       <div className="flex items-start gap-3">
                         <Link
-                          href={`/books/${featuredBook.id}`}
+                          href={
+                            featuredBook.bookLink && !featuredBook.bookLink.includes("SINGLE_ITEM_ID")
+                              ? featuredBook.bookLink
+                              : `/books/${featuredBook.id}`
+                          }
                           className="relative w-16 h-24 flex-shrink-0 group/cover"
                         >
                           <Image
@@ -700,7 +712,14 @@ export default function HomePageClient({
                   <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="p-6 relative">
                     <div className="flex items-start gap-6">
-                      <Link href={`/books/${featuredBook.id}`} className="block">
+                      <Link
+                        href={
+                          featuredBook.bookLink && !featuredBook.bookLink.includes("SINGLE_ITEM_ID")
+                            ? featuredBook.bookLink
+                            : `/books/${featuredBook.id}`
+                        }
+                        className="block"
+                      >
                         <motion.div
                           className="relative w-32 h-48 flex-shrink-0 group/cover perspective-1000"
                           ref={bookCoverRef}
@@ -720,7 +739,14 @@ export default function HomePageClient({
                       </Link>
                       <div className="flex-1 space-y-4">
                         <div>
-                          <Link href={`/books/${featuredBook.id}`} className="block hover:underline">
+                          <Link
+                            href={
+                              featuredBook.bookLink && !featuredBook.bookLink.includes("SINGLE_ITEM_ID")
+                                ? featuredBook.bookLink
+                                : `/books/${featuredBook.id}`
+                            }
+                            className="block hover:underline"
+                          >
                             <motion.h3
                               className="text-2xl font-bold text-green-800 dark:text-green-400 font-serif gradient-text"
                               initial={{ opacity: 0, y: -10 }}

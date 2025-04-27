@@ -26,6 +26,7 @@ export async function GET() {
         meetingLink: string
         coverImage?: any
         isBookOfMonth?: boolean
+        bookLink?: string
       } => !!item && typeof item === "object",
     )
 
@@ -86,6 +87,7 @@ export async function GET() {
       meetingDate: formattedDate,
       meetingLink: featuredBook.meetingLink || "",
       coverImage: coverImageUrl,
+      bookLink: featuredBook.bookLink || "",
     }
 
     return NextResponse.json(processedFeaturedBook)
