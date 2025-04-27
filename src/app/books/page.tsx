@@ -9,6 +9,7 @@ import { getServerClient } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { BooksFilter } from "@/components/books-filter"
+import { ClubStatsButton } from "@/components/club-stats-button"
 
 export default async function Home({
   searchParams,
@@ -147,15 +148,10 @@ export default async function Home({
             )}
           </form>
           <div className="flex gap-2">
+          <ClubStatsButton />
             <Button variant="outline" className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white">
               <Link className="text-green-700 dark:text-white flex items-center gap-1" href="/club-events">
                 <Calendar className="w-4 h-4 mr-1" /> <span>Events</span>
-              </Link>
-            </Button>
-
-            <Button variant="outline" className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white">
-              <Link className="text-green-700 dark:text-white flex items-center gap-1" href="/gallery">
-                <Camera className="w-4 h-4 mr-1" /> <span>Gallery</span>
               </Link>
             </Button>
           </div>

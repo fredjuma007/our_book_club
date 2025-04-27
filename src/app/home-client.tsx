@@ -26,6 +26,7 @@ import React, { useEffect, useState, useRef } from "react"
 import Footer from "@/components/footer"
 import GladwellAIWidget from "@/components/gladwell-ai-widget"
 import GladwellButton from "@/components/gladwell-button"
+import { ClubStatsButton } from "@/components/club-stats-button"
 
 // Define the GalleryItem type
 interface GalleryItem {
@@ -544,6 +545,7 @@ export default function HomePageClient({
                     </Link>
                   </Button>
                 </motion.div>
+                <ClubStatsButton />
               </div>
 
               {/* Mobile Book of the Month */}
