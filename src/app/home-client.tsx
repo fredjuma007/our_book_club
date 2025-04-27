@@ -53,12 +53,26 @@ interface Event {
   link?: string
 }
 
+// Define the Testimonial type
+interface Testimonial {
+  id: string
+  name: string
+  role: string
+  quote: string
+  avatar: string
+}
+
 interface HomePageClientProps {
   initialGalleryItems: GalleryItem[]
   upcomingEvents: Event[]
+  testimonials?: Testimonial[]
 }
 
-export default function HomePageClient({ initialGalleryItems = [], upcomingEvents = [] }: HomePageClientProps) {
+export default function HomePageClient({
+  initialGalleryItems = [],
+  upcomingEvents = [],
+  testimonials = [],
+}: HomePageClientProps) {
   // Add state for controlling the AI widget
   const [isOpen, setIsOpen] = useState(false)
   const [showAbout, setShowAbout] = React.useState(false)
@@ -272,9 +286,7 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
                     fill
                     className="rounded-lg shadow-lg object-cover border-2 border-green-700 animate-float"
                   />
-                  <div
-                    className="absolute -top-2 -right-2 bg-green-700 text-white text-xs px-2 py-1 rounded-full"
-                  >
+                  <div className="absolute -top-2 -right-2 bg-green-700 text-white text-xs px-2 py-1 rounded-full">
                     Book of the Month
                   </div>
                 </motion.div>
@@ -538,9 +550,7 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
                           fill
                           className="rounded-lg shadow-lg object-cover transition-transform duration-300 group-hover/cover:scale-105 group-hover/cover:rotate-1 border-2 border-green-700 animate-float"
                         />
-                        <div
-                          className="absolute -top-1 -right-1 bg-green-700 text-white text-[10px] px-1.5 py-0.5 rounded-full"
-                        >
+                        <div className="absolute -top-1 -right-1 bg-green-700 text-white text-[10px] px-1.5 py-0.5 rounded-full">
                           Book of the Month
                         </div>
                       </Link>
@@ -1184,34 +1194,9 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
             </motion.div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[
-                {
-                  name: "Esther Ndunge",
-                  role: "Member since 2024",
-                  quote:
-                    "The Reading Circle has introduced me to books I would have never picked up on my own. The discussions are always insightful and I've made wonderful friends.",
-                  avatar: "/gallery/Ndunge.jpg",
-                  color: "green-700",
-                },
-                {
-                  name: "John King'ori",
-                  role: "Member since 2024",
-                  quote:
-                    "I love how diverse our book selections are. From thrillers to literary fiction to memoirs, there's always something new to discover and discuss.",
-                  avatar: "/gallery/jey.jpg",
-                  color: "green-700",
-                },
-                {
-                  name: "Purity Migwi",
-                  role: "Member since 2024",
-                  quote:
-                    "The Reading Circle has been a great way for me to connect with other book lovers. I've learned so much from our discussions and I look forward to each meeting.",
-                  avatar: "/gallery/maya.jpg",
-                  color: "green-700",
-                },
-              ].map((testimonial, index) => (
+              {testimonials.map((testimonial, index) => (
                 <motion.div
-                  key={index}
+                  key={testimonial.id}
                   className="bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 border-green-700/30 hover:border-green-700 group relative hover-3d"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -1241,7 +1226,7 @@ export default function HomePageClient({ initialGalleryItems = [], upcomingEvent
                       transition={{ duration: 0.3 }}
                     >
                       <Image
-                        src={testimonial.avatar || "/placeholder.svg"}
+                        src={testimonial.avatar || "/placeholder.svg?height=60&width=60"}
                         alt={testimonial.name}
                         width={60}
                         height={60}

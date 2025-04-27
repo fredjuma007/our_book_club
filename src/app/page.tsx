@@ -29,6 +29,15 @@ export default async function HomePage() {
     link?: string
   }[] = []
 
+  // Initialize testimonials array
+  let randomTestimonials: {
+    id: string
+    name: string
+    role: string
+    quote: string
+    avatar: string
+  }[] = []
+
   try {
     // Fetch gallery items and events from Wix
     const client = await getServerClient()
@@ -84,8 +93,37 @@ export default async function HomePage() {
       }
     })
 
-    // Wait for both data fetches with timeouts
-    const [galleryData, eventsData] = await Promise.all([galleryDataPromise, eventsDataPromise])
+    // Fetch testimonials data with a timeout
+    const testimonialsDataPromise = new Promise<any[]>(async (resolve, reject) => {
+      // Set a timeout for the entire operation
+      const timeout = setTimeout(() => {
+        reject(new Error("Testimonials data fetch timed out after 10 seconds"))
+      }, 10000)
+
+      try {
+        const data = await client.items
+          .queryDataItems({ dataCollectionId: "Testimonials" })
+          .find()
+          .then((res) => res.items.map((item) => item.data || {}))
+          .catch((error) => {
+            console.error("Error fetching testimonials:", error)
+            return []
+          })
+
+        clearTimeout(timeout)
+        resolve(data)
+      } catch (error) {
+        clearTimeout(timeout)
+        reject(error)
+      }
+    })
+
+    // Wait for all data fetches with timeouts
+    const [galleryData, eventsData, testimonialsData] = await Promise.all([
+      galleryDataPromise,
+      eventsDataPromise,
+      testimonialsDataPromise,
+    ])
 
     // Process gallery items
     const galleryItems = galleryData.filter(
@@ -208,6 +246,50 @@ export default async function HomePage() {
         link: event.link,
       }
     })
+
+    // Process testimonials data
+    const testimonialItems = testimonialsData.filter(
+      (
+        item,
+      ): item is {
+        _id: string
+        name: string
+        role: string
+        quote: string
+        avatar?: any
+      } => !!item && typeof item === "object",
+    )
+
+    // Process the testimonial items to add proper image URLs
+    const processedTestimonials = testimonialItems.map((item) => {
+      // Get the avatar URL with error handling
+      let avatarUrl = "/placeholder.svg?height=60&width=60"
+      try {
+        if (item.avatar) {
+          avatarUrl = convertWixImageToUrl(item.avatar)
+        }
+      } catch (error) {
+        console.error("Error converting avatar URL:", error)
+      }
+
+      return {
+        id: item._id,
+        name: item.name || "",
+        role: item.role || "",
+        quote: item.quote || "",
+        avatar: avatarUrl,
+      }
+    })
+
+    // Shuffle the testimonials array to get random items
+    const shuffledTestimonials = [...processedTestimonials]
+    for (let i = shuffledTestimonials.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffledTestimonials[i], shuffledTestimonials[j]] = [shuffledTestimonials[j], shuffledTestimonials[i]]
+    }
+
+    // Take the first 3 testimonials for the preview
+    randomTestimonials = shuffledTestimonials.slice(0, 3)
   } catch (error) {
     console.error("Error fetching data:", error)
     // Leave arrays as empty if there's an error
@@ -215,7 +297,11 @@ export default async function HomePage() {
 
   return (
     <ErrorBoundary>
-      <HomePageClient initialGalleryItems={randomGalleryItems} upcomingEvents={upcomingEvents} />
+      <HomePageClient
+        initialGalleryItems={randomGalleryItems}
+        upcomingEvents={upcomingEvents}
+        testimonials={randomTestimonials}
+      />
     </ErrorBoundary>
   )
 }
