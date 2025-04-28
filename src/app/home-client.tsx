@@ -27,6 +27,7 @@ import Footer from "@/components/footer"
 import GladwellAIWidget from "@/components/gladwell-ai-widget"
 import GladwellButton from "@/components/gladwell-button"
 import { ClubStatsButton } from "@/components/club-stats-button"
+import { ClubEventStatsButton } from "@/components/club-event-stats-button"
 
 // Define the GalleryItem type
 interface GalleryItem {
@@ -546,6 +547,7 @@ export default function HomePageClient({
                   </Button>
                 </motion.div>
                 <ClubStatsButton />
+                <ClubEventStatsButton />
               </div>
 
               {/* Mobile Book of the Month */}

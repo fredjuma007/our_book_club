@@ -20,6 +20,7 @@ import Footer from "@/components/footer"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import type { Event } from "@/lib/event-utils"
 import AddToCalendar from "@/components/add-to-calendar"
+import { ClubEventStatsButton } from "@/components/club-event-stats-button"
 
 interface EventsClientProps {
   eventsData: Event[]
@@ -184,14 +185,7 @@ export default function EventsClient({ eventsData, upcomingEvents, pastEvents, f
               <History className="w-4 h-4 mr-2" />
               Previous Events
             </Link>
-            <Link
-              href="/gallery"
-              className="text-green-700 dark:text-white border border-green-700 hover:bg-green-200 font-serif relative overflow-hidden group px-4 py-2 rounded-md flex items-center"
-            >
-              <Camera className="w-4 h-4 mr-2" />
-              <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <span className="mr-2">Gallery</span>
-            </Link>
+            <ClubEventStatsButton />
           </div>
         </div>
 
