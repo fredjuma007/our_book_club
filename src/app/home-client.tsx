@@ -239,7 +239,7 @@ export default function HomePageClient({
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20 animate-fade" />
 
       {/* Main overlay */}
-      <div className="fixed inset-0 bg-white/60 dark:bg-black/70 backdrop-blur-sm animated-bg" />
+      <div className="fixed inset-0 bg-[#f5f0e1]/90 dark:bg-black/70 backdrop-blur-sm animated-bg" />
 
       {/* Floating particles - always render the container for consistent DOM structure */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -276,7 +276,7 @@ export default function HomePageClient({
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="bg-[#fffaf0] dark:bg-gray-800/95 rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] overflow-auto"
+            className="bg-white dark:bg-gray-800/95 rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] overflow-auto"
             initial={{ scale: 0.9, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             transition={{ type: "spring", damping: 15 }}
@@ -320,7 +320,7 @@ export default function HomePageClient({
                     {featuredBook.title}
                   </motion.h3>
                   <motion.p
-                    className="text-gray-600 dark:text-gray-300 font-serif"
+                    className="text-gray-700 dark:text-gray-300 font-serif"
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
@@ -335,7 +335,7 @@ export default function HomePageClient({
                       transition={{ delay: 0.4 }}
                     >
                       <Calendar className="w-4 h-4 text-green-700 animate-pulse-slow" />
-                      <span className="text-sm text-gray-600 dark:text-gray-300 font-serif">
+                      <span className="text-sm text-gray-700 dark:text-gray-300 font-serif">
                         {featuredBook.meetingDate}
                       </span>
                     </motion.div>
@@ -345,13 +345,13 @@ export default function HomePageClient({
 
               {featuredBook.quote && (
                 <motion.div
-                  className="relative mb-4 bg-green-50/50 dark:bg-green-900/20 p-3 rounded-lg"
+                  className="relative mb-4 bg-gray-50 dark:bg-green-900/20 p-3 rounded-lg"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
                   <Quote className="absolute -left-6 -top-2 w-5 h-5 text-green-400/30 animate-float" />
-                  <p className="text-base text-gray-700 dark:text-gray-300 italic pl-6 font-serif">
+                  <p className="text-base text-gray-800 dark:text-gray-300 italic pl-6 font-serif">
                     "{featuredBook.quote}"
                   </p>
                 </motion.div>
@@ -368,7 +368,7 @@ export default function HomePageClient({
                     <BookOpen className="w-5 h-5 mr-2 text-green-700 animate-pulse-slow" />
                     About Book
                   </h4>
-                  <p className="text-gray-700 dark:text-gray-300 font-serif bg-white/50 dark:bg-gray-800/50 p-4 rounded-lg border border-green-700/20 shadow-inner">
+                  <p className="text-gray-800 dark:text-gray-300 font-serif bg-white/50 dark:bg-gray-800/50 p-4 rounded-lg border border-green-700/20 shadow-inner">
                     {featuredBook.description}
                   </p>
                 </motion.div>
@@ -445,14 +445,14 @@ export default function HomePageClient({
                     </motion.div>
                   </div>
                   <motion.h1
-                    className="text-2xl md:text-3xl lg:text-4xl font-bold text-green-800 dark:text-green-400 font-serif relative inline-block group gradient-text"
+                    className="text-2xl md:text-3xl lg:text-4xl font-bold text-green-800 dark:text-green-400 font-serif relative inline-block group gradient-text drop-shadow-md"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.5 }}
                   >
                     The Reading Circle
                     <motion.span
-                      className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
+                      className="absolute -inset-1 bg-green-700/5 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
                       initial={{ scaleX: 0 }}
                       whileHover={{ scaleX: 1 }}
                     />
@@ -465,10 +465,10 @@ export default function HomePageClient({
                   transition={{ delay: 0.4, duration: 0.5 }}
                 >
                   <Sparkles className="absolute -right-8 -top-4 w-6 h-6 text-green-500/40 animate-spin-slow" />
-                  <p className="text-base md:text-xl text-gray-700 dark:text-gray-300 max-w-lg">
+                  <p className="text-base md:text-xl text-gray-900 dark:text-gray-300 max-w-lg bg-white/70 dark:bg-black/30 p-2 rounded-lg shadow-sm">
                     Discover, share, and review your favorite{" "}
                     <motion.span
-                      className="text-green-600 dark:text-green-400 font-bold"
+                      className="text-green-700 dark:text-green-400 font-bold"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >
@@ -476,7 +476,7 @@ export default function HomePageClient({
                     </motion.span>{" "}
                     with a community of{" "}
                     <motion.span
-                      className="text-green-600 dark:text-green-400 font-bold"
+                      className="text-green-700 dark:text-green-400 font-bold"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >
@@ -540,7 +540,7 @@ export default function HomePageClient({
                     className="border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden shadow-lg"
                   >
                     <Link href="/club-events">
-                      <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <span className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <Calendar className="w-6 h-6 transition-transform duration-300 group-hover:scale-110 animate-pulse-slow" />
                       Check Events
                     </Link>
@@ -560,11 +560,11 @@ export default function HomePageClient({
                 >
                   <motion.button
                     onClick={() => setShowMobileBookDetails(true)}
-                    className="w-full text-left bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border-2 border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700 animate-float"
+                    className="bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border-2 border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700 animate-float"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="p-3 relative">
                       <div className="flex items-start gap-3">
                         <Link
@@ -590,14 +590,14 @@ export default function HomePageClient({
                             <h3 className="text-base font-bold text-green-800 dark:text-green-400 font-serif gradient-text">
                               {featuredBook.title}
                             </h3>
-                            <p className="text-xs text-gray-600 dark:text-gray-300 font-serif">
+                            <p className="text-xs text-gray-700 dark:text-gray-300 font-serif">
                               by {featuredBook.author}
                             </p>
                           </div>
                           {featuredBook.quote && (
                             <div className="relative mt-1">
                               <Quote className="absolute -left-4 top-0 w-3 h-3 text-green-400/30 animate-pulse-slow" />
-                              <p className="text-xs text-gray-700 dark:text-gray-300 italic pl-4 font-serif line-clamp-1">
+                              <p className="text-xs text-gray-800 dark:text-gray-300 italic pl-4 font-serif line-clamp-1">
                                 "{featuredBook.quote}"
                               </p>
                             </div>
@@ -613,7 +613,7 @@ export default function HomePageClient({
                       <div className="bg-green-50 dark:bg-gray-700/50 p-2 flex justify-between items-center">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3 text-green-700 animate-pulse-slow" />
-                          <span className="text-xs text-gray-600 dark:text-gray-300 font-serif">
+                          <span className="text-xs text-gray-700 dark:text-gray-300 font-serif">
                             {featuredBook.meetingDate}
                           </span>
                         </div>
@@ -638,7 +638,7 @@ export default function HomePageClient({
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}
-                    className="bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-5 text-center group hover:bg-green-700/10 dark:hover:bg-green-700/20 transition-all duration-300 hover:-translate-y-2 border-2 border-green-700 shadow-lg hover:shadow-xl animate-float hover-3d"
+                    className="bg-white dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-5 text-center group hover:bg-green-700/10 dark:hover:bg-green-700/20 transition-all duration-300 hover:-translate-y-2 border-2 border-green-700 shadow-lg hover:shadow-xl animate-float hover-3d"
                     style={{ animationDelay: `${index * 0.2}s` }}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -664,7 +664,7 @@ export default function HomePageClient({
                     >
                       {stat.value}
                     </motion.div>
-                    <div className="text-sm text-gray-600 dark:text-gray-300">{stat.label}</div>
+                    <div className="text-sm text-gray-700 dark:text-gray-300">{stat.label}</div>
                   </motion.div>
                 ))}
               </div>
@@ -678,7 +678,7 @@ export default function HomePageClient({
               >
                 <motion.button
                   onClick={() => scrollToSection("features")}
-                  className="w-full text-green-700 dark:text-green-400 flex flex-col items-center gap-2 md:gap-3 group font-serif bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm px-4 py-3 md:px-6 md:py-4 rounded-xl border-2 border-green-700/30 hover:border-green-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  className="w-full text-green-700 dark:text-green-400 flex flex-col items-center gap-2 md:gap-3 group font-serif bg-white dark:bg-gray-800/50 backdrop-blur-sm px-4 py-3 md:px-6 md:py-4 rounded-xl border-2 border-green-700/30 hover:border-green-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                   whileHover={{
                     y: -5,
                     boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
@@ -707,13 +707,13 @@ export default function HomePageClient({
               {/* Book of the Month Card - Desktop Only */}
               {featuredBook && (
                 <motion.div
-                  className="hidden md:block bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border-2 border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700 animate-float"
+                  className="hidden md:block bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border-2 border-green-700/30 group hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-green-700 animate-float"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6, duration: 0.5 }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="p-6 relative">
                     <div className="flex items-start gap-6">
                       <Link
@@ -761,7 +761,7 @@ export default function HomePageClient({
                             </motion.h3>
                           </Link>
                           <motion.p
-                            className="text-gray-600 dark:text-gray-300 font-serif"
+                            className="text-gray-700 dark:text-gray-300 font-serif"
                             initial={{ opacity: 0, y: -5 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.8 }}
@@ -771,13 +771,13 @@ export default function HomePageClient({
                         </div>
                         {featuredBook.quote && (
                           <motion.div
-                            className="relative bg-green-50/50 dark:bg-green-900/20 p-3 rounded-lg"
+                            className="relative bg-gray-50 dark:bg-green-900/20 p-3 rounded-lg"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.9 }}
                           >
                             <Quote className="absolute -left-6 -top-2 w-4 h-4 text-green-400/30 animate-float" />
-                            <p className="text-lg text-gray-700 dark:text-gray-300 italic pl-6 font-serif">
+                            <p className="text-lg text-gray-800 dark:text-gray-300 italic pl-6 font-serif">
                               "{featuredBook.quote}"
                             </p>
                           </motion.div>
@@ -807,7 +807,7 @@ export default function HomePageClient({
                         )}
                         {showAbout && featuredBook.description && (
                           <motion.p
-                            className="text-gray-700 dark:text-gray-300 mt-4 font-serif bg-white/50 dark:bg-gray-800/50 p-4 rounded-lg border border-green-700/20 shadow-inner"
+                            className="text-gray-800 dark:text-gray-300 mt-4 font-serif bg-white/50 dark:bg-gray-800/50 p-4 rounded-lg border border-green-700/20 shadow-inner"
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
                             transition={{ duration: 0.5 }}
@@ -822,7 +822,7 @@ export default function HomePageClient({
                     <div className="bg-green-50 dark:bg-gray-700/50 p-4 flex justify-between items-center">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-green-700 animate-pulse-slow" />
-                        <span className="text-sm text-gray-600 dark:text-gray-300 font-serif">
+                        <span className="text-sm text-gray-700 dark:text-gray-300 font-serif">
                           {featuredBook.meetingDate}
                         </span>
                       </div>
@@ -891,7 +891,7 @@ export default function HomePageClient({
               >
                 <motion.button
                   onClick={() => scrollToSection("features")}
-                  className="w-full text-green-700 dark:text-green-400 flex flex-col items-center gap-2 md:gap-3 group font-serif bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm px-4 py-3 md:px-6 md:py-4 rounded-xl border-2 border-green-700/30 hover:border-green-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  className="w-full text-green-700 dark:text-green-400 flex flex-col items-center gap-2 md:gap-3 group font-serif bg-white dark:bg-gray-800/50 backdrop-blur-sm px-4 py-3 md:px-6 md:py-4 rounded-xl border-2 border-green-700/30 hover:border-green-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                   whileHover={{
                     y: -5,
                     boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
@@ -929,20 +929,20 @@ export default function HomePageClient({
               transition={{ duration: 0.6 }}
             >
               <motion.h2
-                className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif mb-4 relative inline-block group gradient-text"
+                className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif mb-4 relative inline-block group gradient-text bg-white/70 dark:bg-transparent px-3 py-1 rounded-lg shadow-sm"
                 whileInView={{ scale: [0.9, 1.05, 1] }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
                 Upcoming Events
                 <motion.span
-                  className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
+                  className="absolute -inset-1 bg-green-700/5 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
                   initial={{ scaleX: 0 }}
                   whileHover={{ scaleX: 1 }}
                 />
               </motion.h2>
               <motion.p
-                className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto font-serif"
+                className="text-xl text-gray-900 dark:text-gray-300 max-w-2xl mx-auto font-serif bg-white/70 dark:bg-transparent px-3 py-1 rounded-lg shadow-sm"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -956,7 +956,7 @@ export default function HomePageClient({
               {upcomingEvents.slice(0, 3).map((event, index) => (
                 <motion.div
                   key={event.id}
-                  className="bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 border-green-700/30 hover:border-green-700 group relative hover-3d"
+                  className="bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 border-green-700/30 hover:border-green-700 group relative hover-3d"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -965,7 +965,7 @@ export default function HomePageClient({
                     boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
                   }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative h-48">
                     <Image
                       src={event.imageUrl || "/placeholder.svg"}
@@ -1008,7 +1008,7 @@ export default function HomePageClient({
                     </motion.div>
                   </div>
                   <div className="p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-600 dark:text-gray-300 font-serif mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 dark:text-gray-300 font-serif mb-4">
                       <motion.div
                         className="flex items-center gap-2 group/item"
                         initial={{ opacity: 0, x: -10 }}
@@ -1106,7 +1106,7 @@ export default function HomePageClient({
                   className="border-2 border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden shadow-lg"
                 >
                   <Link href="/club-events">
-                    <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <span className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <ArrowRight className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
                     View All Events
                   </Link>
@@ -1127,20 +1127,20 @@ export default function HomePageClient({
               transition={{ duration: 0.6 }}
             >
               <motion.h2
-                className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif mb-4 relative inline-block group gradient-text"
+                className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif mb-4 relative inline-block group gradient-text bg-white/70 dark:bg-transparent px-3 py-1 rounded-lg shadow-sm"
                 whileInView={{ scale: [0.9, 1.05, 1] }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
                 What Our Members Say
                 <motion.span
-                  className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
+                  className="absolute -inset-1 bg-green-700/5 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
                   initial={{ scaleX: 0 }}
                   whileHover={{ scaleX: 1 }}
                 />
               </motion.h2>
               <motion.p
-                className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto font-serif"
+                className="text-xl text-gray-900 dark:text-gray-300 max-w-2xl mx-auto font-serif bg-white/70 dark:bg-transparent px-3 py-1 rounded-lg shadow-sm"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -1154,7 +1154,7 @@ export default function HomePageClient({
               {testimonials.map((testimonial, index) => (
                 <motion.div
                   key={testimonial.id}
-                  className="bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 border-green-700/30 hover:border-green-700 group relative hover-3d"
+                  className="bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 border-green-700/30 hover:border-green-700 group relative hover-3d"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -1163,7 +1163,7 @@ export default function HomePageClient({
                     boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
                   }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <motion.div
                     className="relative mb-6"
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -1172,7 +1172,7 @@ export default function HomePageClient({
                     transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
                   >
                     <Quote className="absolute -left-2 -top-2 w-8 h-8 text-green-200 dark:text-green-800 animate-float" />
-                    <p className="text-gray-700 dark:text-gray-300 italic pl-6 relative z-10 font-serif">
+                    <p className="text-gray-800 dark:text-gray-300 italic pl-6 relative z-10 font-serif">
                       "{testimonial.quote}"
                     </p>
                   </motion.div>
@@ -1212,7 +1212,7 @@ export default function HomePageClient({
                         {testimonial.title}
                       </motion.h4>
                       <motion.p
-                        className="text-sm text-gray-600 dark:text-gray-300"
+                        className="text-sm text-gray-700 dark:text-gray-300"
                         initial={{ opacity: 0, x: -10 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
@@ -1227,7 +1227,7 @@ export default function HomePageClient({
             </div>
 
             <motion.div
-              className="mt-16 text-center bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-8 shadow-lg border-2 border-green-700/30 hover:border-green-700 max-w-3xl mx-auto group relative animate-float-slow"
+              className="mt-16 text-center bg-white dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-8 shadow-lg border-2 border-green-700/30 hover:border-green-700 max-w-3xl mx-auto group relative animate-float-slow"
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -1237,7 +1237,7 @@ export default function HomePageClient({
                 scale: 1.02,
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+              <div className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
               <motion.h3
                 className="text-2xl font-bold text-green-800 dark:text-green-400 mb-4 font-serif gradient-text"
                 initial={{ opacity: 0, y: -10 }}
@@ -1293,7 +1293,7 @@ export default function HomePageClient({
                     className="border-2 border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group/btn relative overflow-hidden shadow-lg"
                   >
                     <Link href="/about-us">
-                      <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
+                      <span className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
                       <Smile className="w-5 h-5 mr-2 animate-pulse-slow" />
                       Learn More
                     </Link>
