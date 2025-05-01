@@ -20,6 +20,7 @@ export default function JoinUs() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [formData, setFormData] = useState({
+    name: "",
     phoneNumber: "",
     readingFrequency: "",
     favoriteBook: "",
@@ -43,6 +44,7 @@ export default function JoinUs() {
         dataCollectionId: "ClubApplications", // Use your actual collection ID
         dataItem: {
           data: {
+            name: formData.name,
             phoneNumber: formData.phoneNumber,
             readingFrequency: formData.readingFrequency,
             favoriteBook: formData.favoriteBook,
@@ -174,6 +176,20 @@ export default function JoinUs() {
 
                   <div className="space-y-6">
                     <div className="space-y-2">
+                      <Label htmlFor="name" className="text-gray-600 dark:text-gray-300 font-serif">
+                        Full Name
+                      </Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        type="text"
+                        required
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="bg-white dark:bg-gray-700 border-green-700/30"
+                        placeholder="John Doe"
+                      />
+
                       <Label htmlFor="phoneNumber" className="text-gray-600 dark:text-gray-300 font-serif">
                         Phone Number
                       </Label>
