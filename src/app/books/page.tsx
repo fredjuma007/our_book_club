@@ -2,15 +2,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import Image from "next/image"
-import { BookIcon, BookOpen, BookMarked, Calendar, Search, Sparkles } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { redirect } from "next/navigation"
+import { BookIcon, BookOpen, BookMarked, Calendar, Sparkles } from "lucide-react"
 import { getServerClient } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { BooksFilter } from "@/components/books-filter"
 import { ClubStatsButton } from "@/components/club-stats-button"
-
+import { SemanticSearch } from "@/components/semantic-search"
 
 export default async function Home({
   searchParams,
@@ -96,64 +94,42 @@ export default async function Home({
 
   return (
     <div className="min-h-screen bg-[#f5f0e1] dark:bg-gray-900">
-    {/* Hero Section */}
-    <div className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20" />
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20" />
 
-      <div className="max-w-screen-xl mx-auto py-16 px-4 lg:px-8 relative">
-        <div className="absolute right-10 top-10 hidden lg:block animate-[bounce_6s_ease-in-out_infinite]">
-          <BookOpen className="w-16 h-16 text-green-700/30 transform rotate-12" />
-        </div>
-        <div className="absolute left-20 bottom-10 hidden lg:block animate-[bounce_8s_ease-in-out_infinite]">
-          <BookMarked className="w-12 h-12 text-green-700/20 transform -rotate-12" />
+        <div className="max-w-screen-xl mx-auto py-16 px-4 lg:px-8 relative">
+          <div className="absolute right-10 top-10 hidden lg:block animate-[bounce_6s_ease-in-out_infinite]">
+            <BookOpen className="w-16 h-16 text-green-700/30 transform rotate-12" />
+          </div>
+          <div className="absolute left-20 bottom-10 hidden lg:block animate-[bounce_8s_ease-in-out_infinite]">
+            <BookMarked className="w-12 h-12 text-green-700/20 transform -rotate-12" />
+          </div>
+
+          <div className="text-center relative z-10">
+            <h1 className="text-5xl md:text-6xl font-bold text-green-800 dark:text-green-500 font-serif mb-4 relative inline-block group">
+              <span className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+              All Books 📚
+              <Sparkles className="absolute -right-8 -top-8 w-6 h-6 text-green-700/40" />
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
+              Explore the books we have read and currently reading. Drop a review and share your ratings with the
+              community!
+            </p>
+          </div>
         </div>
 
-        <div className="text-center relative z-10">
-          <h1 className="text-5xl md:text-6xl font-bold text-green-800 dark:text-green-500 font-serif mb-4 relative inline-block group">
-            <span className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-            All Books 📚
-            <Sparkles className="absolute -right-8 -top-8 w-6 h-6 text-green-700/40" />
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
-            Explore the books we have read and currently reading. Drop a review and share your ratings with the
-            community!
-          </p>
-        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-[#fffaf0] dark:bg-gray-800 transform -skew-y-2" />
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-[#fffaf0] dark:bg-gray-800 transform -skew-y-2" />
-    </div>
-
-    <div className="max-w-screen-xl mx-auto px-4 lg:px-8 pb-16 relative">
-
+      <div className="max-w-screen-xl mx-auto px-4 lg:px-8 pb-16 relative">
         {/* Search and buttons */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-          <form
-            action={async (formData) => {
-              "use server"
-              const search = formData.get("search")
-              redirect(`/books?search=${search}`)
-            }}
-            className="flex gap-2 w-full sm:w-auto"
-          >
-            <Input
-              name="search"
-              type="text"
-              placeholder="Title, Author, Genre"
-              defaultValue={searchQuery}
-              className="border-gray-300 dark:border-gray-700 focus:border-green-500 focus:ring-green-500 dark:bg-gray-800 dark:text-white"
-            />
-            <Button
-              variant="secondary"
-              type="submit"
-              className="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white transition-colors"
-            >
-              <Search className="w-4 h-4 mr-2" />
-              Search
-            </Button>
-          </form>
+          <div className="w-full sm:w-auto">
+            <SemanticSearch />
+          </div>
           <div className="flex gap-2">
-          <ClubStatsButton />
+            <ClubStatsButton />
             <Button
               variant="outline"
               className="border-green-600 text-green-600 hover:bg-green-50 dark:border-green-500 dark:text-green-500 dark:hover:bg-green-900/20"
