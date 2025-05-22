@@ -148,54 +148,6 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
               </form>
             )}
           </div>
-
-          {/* Book of the Month */}
-          <div className="pt-2 pb-1 border-b border-green-100 dark:border-green-900">
-            <h3 className="text-xs sm:text-sm font-serif font-medium text-green-600 dark:text-green-400 mb-2 sm:mb-3 flex items-center">
-              <BookOpen className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-              Book of the Month
-            </h3>
-
-            <Link
-              href="https://readingcircle.vercel.app/books/0ff3b310-acd6-4a8d-b468-6542a9f818e0"
-              className="relative block"
-            >
-              <div className="relative bg-green-50 dark:bg-green-900/40 rounded-md p-2 sm:p-3 border border-green-100 dark:border-green-800 mb-3 sm:mb-4 hover:bg-green-100/50 dark:hover:bg-green-800/50 transition-colors">
-                {/* Paper texture */}
-                <div className="absolute inset-0 bg-repeat opacity-10 dark:opacity-5 rounded-md" />
-
-                <div className="flex gap-2 sm:gap-3">
-                  <div className="relative w-12 h-18 sm:w-16 sm:h-24 flex-shrink-0">
-                    <div className="absolute inset-0 shadow-md rounded-sm overflow-hidden">
-                      <Image
-                        src="/the_anxious_generation.jpg"
-                        width={64}
-                        height={96}
-                        alt="Book cover"
-                        className="object-cover"
-                      />
-                    </div>
-                    {/* Book edge effect */}
-                    <div className="absolute top-0 bottom-0 right-0 w-[2px] bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600"></div>
-                  </div>
-
-                  <div className="flex-1">
-                    <h4 className="text-xs sm:text-sm font-serif font-medium text-gray-900 dark:text-gray-100 line-clamp-2">
-                      The Anxious Generation
-                    </h4>
-                    <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 mt-0.5 sm:mt-1">
-                      Jonathan Haidt
-                    </p>
-                    <div className="flex items-center mt-1 sm:mt-2 text-[10px] sm:text-xs text-gray-500 dark:text-gray-500">
-                      <Calendar className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
-                      <span>Review: May 3, 2025</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </div>
-
           {/* Upcoming Event */}
           {upcomingEvent && (
             <div className="pt-2 pb-1">
