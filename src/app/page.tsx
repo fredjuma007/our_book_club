@@ -51,6 +51,14 @@ export default async function HomePage() {
     bookLink: string
   } | null = null
 
+  // Initialize stats data
+  let statsData = {
+    booksCount: 0,
+    eventsCount: 0,
+    reviewsCount: 0,
+    galleryCount: 0,
+  }
+
   try {
     // Fetch gallery items and events from Wix
     const client = await getServerClient()
@@ -156,13 +164,62 @@ export default async function HomePage() {
       }
     })
 
+    // Fetch stats data with a timeout
+    const statsDataPromise = new Promise<{
+      booksCount: number
+      eventsCount: number
+      reviewsCount: number
+      galleryCount: number
+    }>(async (resolve, reject) => {
+      // Set a timeout for the entire operation
+      const timeout = setTimeout(() => {
+        reject(new Error("Stats data fetch timed out after 10 seconds"))
+      }, 10000)
+
+      try {
+        const [booksResult, eventsResult, reviewsResult, galleryResult] = await Promise.all([
+          client.items
+            .queryDataItems({ dataCollectionId: "Books" })
+            .find()
+            .catch(() => ({ items: [] })),
+          client.items
+            .queryDataItems({ dataCollectionId: "Events" })
+            .find()
+            .catch(() => ({ items: [] })),
+          client.items
+            .queryDataItems({ dataCollectionId: "Reviews" })
+            .find()
+            .catch(() => ({ items: [] })),
+          client.items
+            .queryDataItems({ dataCollectionId: "Gallery" })
+            .find()
+            .catch(() => ({ items: [] })),
+        ])
+
+        clearTimeout(timeout)
+        resolve({
+          booksCount: booksResult.items.length,
+          eventsCount: eventsResult.items.length,
+          reviewsCount: reviewsResult.items.length,
+          galleryCount: galleryResult.items.length,
+        })
+      } catch (error) {
+        clearTimeout(timeout)
+        reject(error)
+      }
+    })
+
     // Wait for all data fetches with timeouts
-    const [galleryData, eventsData, testimonialsData, featuredBookData] = await Promise.all([
+    const [galleryData, eventsData, testimonialsData, featuredBookData, fetchedStatsData] = await Promise.all([
       galleryDataPromise,
       eventsDataPromise,
       testimonialsDataPromise,
       featuredBookDataPromise,
+      statsDataPromise,
     ])
+
+    // Update stats data
+    statsData = fetchedStatsData
 
     // Process gallery items
     const galleryItems = galleryData.filter(
@@ -419,7 +476,13 @@ export default async function HomePage() {
     }
   } catch (error) {
     console.error("Error fetching data:", error)
-    // Leave arrays as empty if there's an error
+    // Leave arrays as empty if there's an error and use fallback stats
+    statsData = {
+      booksCount: 16, // Fallback based on your CMS
+      eventsCount: 9,
+      reviewsCount: 85,
+      galleryCount: 15,
+    }
   }
 
   return (
@@ -429,6 +492,7 @@ export default async function HomePage() {
         upcomingEvents={upcomingEvents}
         testimonials={randomTestimonials}
         featuredBook={featuredBook}
+        statsData={statsData}
       />
     </ErrorBoundary>
   )

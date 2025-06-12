@@ -10,7 +10,6 @@ import {
   ImagePlay,
   Quote,
   Sparkles,
-  Users,
   ChevronDown,
   ChevronRight,
   X,
@@ -21,6 +20,7 @@ import {
   CalendarCheck,
   Heart,
   Smile,
+  MessageSquare,
 } from "lucide-react"
 import React, { useEffect, useState, useRef } from "react"
 import Footer from "@/components/footer"
@@ -76,11 +76,20 @@ interface FeaturedBook {
   bookLink?: string
 }
 
+// Define the StatsData type
+interface StatsData {
+  booksCount: number
+  eventsCount: number
+  reviewsCount: number
+  galleryCount: number
+}
+
 interface HomePageClientProps {
   initialGalleryItems: GalleryItem[]
   upcomingEvents: Event[]
   testimonials?: Testimonial[]
   featuredBook?: FeaturedBook | null
+  statsData: StatsData
 }
 
 export default function HomePageClient({
@@ -88,6 +97,7 @@ export default function HomePageClient({
   upcomingEvents = [],
   testimonials = [],
   featuredBook = null,
+  statsData,
 }: HomePageClientProps) {
   // Add state for controlling the AI widget
   const [isOpen, setIsOpen] = useState(false)
@@ -632,9 +642,30 @@ export default function HomePageClient({
               {/* Stats - Desktop Only */}
               <div className="hidden md:grid grid-cols-3 gap-6 mt-8">
                 {[
-                  { label: "Members", value: "100+", icon: Users, color: "green-700", delay: 0.9 },
-                  { label: "Books Read", value: "14", icon: BookOpen, color: "green-700", delay: 1.0 },
-                  { label: "Events", value: "4+", icon: Calendar, color: "green-700", delay: 1.1 },
+                  {
+                    label: "Books Read",
+                    value: `${statsData.booksCount}`,
+                    icon: BookOpen,
+                    color: "green-700",
+                    delay: 0.9,
+                    description: "Curated collection",
+                  },
+                  {
+                    label: "Community Reviews",
+                    value: `${statsData.reviewsCount}+`,
+                    icon: MessageSquare,
+                    color: "green-700",
+                    delay: 1.0,
+                    description: "Member insights",
+                  },
+                  {
+                    label: "Events Hosted",
+                    value: `${statsData.eventsCount}`,
+                    icon: Calendar,
+                    color: "green-700",
+                    delay: 1.1,
+                    description: "Literary gatherings",
+                  },
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}
@@ -664,7 +695,8 @@ export default function HomePageClient({
                     >
                       {stat.value}
                     </motion.div>
-                    <div className="text-sm text-gray-700 dark:text-gray-300">{stat.label}</div>
+                    <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{stat.label}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{stat.description}</div>
                   </motion.div>
                 ))}
               </div>
