@@ -21,6 +21,8 @@ import {
   Heart,
   Smile,
   MessageSquare,
+  BookMarked,
+  Users,
 } from "lucide-react"
 import React, { useEffect, useState, useRef } from "react"
 import Footer from "@/components/footer"
@@ -944,10 +946,107 @@ export default function HomePageClient({
           </div>
         </section>
 
-        {/* Features Section */}
+         {/* Features Section */}
         <section id="features" className="py-20 relative">
-          {/* Features section content */}
-          {/* ... */}
+          <div className="container mx-auto px-4 md:px-8">
+            <motion.div
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <motion.h2
+                className="text-3xl md:text-4xl font-bold text-green-800 dark:text-green-400 font-serif mb-4 relative inline-block group gradient-text"
+                whileInView={{ scale: [0.9, 1.05, 1] }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+              >
+                Why Join Our Reading Circle?
+                <motion.span
+                  className="absolute -inset-1 bg-green-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
+                  initial={{ scaleX: 0 }}
+                  whileHover={{ scaleX: 1 }}
+                />
+              </motion.h2>
+              <motion.p
+                className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto font-serif"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                Discover the benefits of being part of our literary community
+              </motion.p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: BookMarked,
+                  title: "Curated Book Selection",
+                  description:
+                    "Each month, we carefully select thought-provoking books across various genres to expand your literary horizons.",
+                  color: "green-700",
+                },
+                {
+                  icon: Users,
+                  title: "Vibrant Community",
+                  description:
+                    "Connect with fellow book enthusiasts who share your passion for reading and thoughtful discussion.",
+                  color: "green-700",
+                },
+                {
+                  icon: Calendar,
+                  title: "Regular Meetups",
+                  description:
+                    "Join our scheduled in-person and virtual discussions to share insights and perspectives.",
+                  color: "green-700",
+                },
+              ].map((feature, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-[#fffaf0] dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 border-green-700/30 hover:border-green-700 group relative hover-3d"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{
+                    boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <motion.div
+                    className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4 group-hover:bg-green-700/10 transition-colors duration-300"
+                    whileHover={{ rotate: 360, scale: 1.2 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <feature.icon
+                      className={`w-6 h-6 text-${feature.color} dark:text-green-400 transition-transform duration-300 group-hover:scale-110 animate-pulse-slow`}
+                    />
+                  </motion.div>
+                  <motion.h3
+                    className="text-xl font-bold text-green-800 dark:text-green-400 mb-2 font-serif gradient-text"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                  >
+                    {feature.title}
+                  </motion.h3>
+                  <motion.p
+                    className="text-gray-700 dark:text-gray-300 font-serif"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                  >
+                    {feature.description}
+                  </motion.p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* Events Section */}
