@@ -161,28 +161,33 @@ export default async function ReviewsPage() {
 
       {/* Main Content */}
       <div className="max-w-screen-xl mx-auto px-4 lg:px-8 pb-16 relative">
-        
-        {/* Debug Information (only in development) */}
-        {/*{process.env.NODE_ENV === "development" && (
-          <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-            <h3 className="font-bold text-yellow-800">Debug Information</h3>
-            <p>Member ID: {member.id}</p>
-            <p>Total reviews in system: {allReviewsResponse.items.length}</p>
-            <p>Filtered user reviews: {userReviews.length}</p>
-            <p>Processed reviews: {reviews.length}</p>
-            <p>Books with reviews: {books.length}</p>*/}
-
-            {/* Display sample review data structure */}
-            {/*{allReviewsResponse.items.length > 0 && (
-              <div className="mt-2">
-                <p className="font-semibold">Sample review data fields:</p>
-                <pre className="text-xs bg-gray-100 p-2 rounded overflow-auto max-h-40">
-                  {JSON.stringify(Object.keys(allReviewsResponse.items[0].data || {}), null, 2)}
-                </pre>
-              </div>
-            )}
+        {/* Stats Section */}
+        {reviews.length > 0 && (
+          <div className="mb-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="p-6 rounded-xl bg-[#fffaf0] dark:bg-gray-800 border border-green-700 shadow-lg text-center transform hover:rotate-1 transition-transform">
+              <h3 className="text-4xl font-bold text-green-800 dark:text-green-500 font-serif">{reviews.length}</h3>
+              <p className="text-gray-600 dark:text-gray-400 font-serif">Total Reviews</p>
+            </div>
+            <div className="p-6 rounded-xl bg-[#fffaf0] dark:bg-gray-800 border border-green-700 shadow-lg text-center transform hover:-rotate-1 transition-transform">
+              <h3 className="text-4xl font-bold text-green-800 dark:text-green-500 font-serif">
+                {(reviews.reduce((sum, review) => sum + (review.rating || 0), 0) / reviews.length || 0).toFixed(1)}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 font-serif">Avg. Rating</p>
+            </div>
+            <div className="p-6 rounded-xl bg-[#fffaf0] dark:bg-gray-800 border border-green-700 shadow-lg text-center transform hover:rotate-1 transition-transform">
+              <h3 className="text-4xl font-bold text-green-800 dark:text-green-500 font-serif">
+                {reviews.filter((r) => (r.rating || 0) >= 4).length}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 font-serif">Loved Books</p>
+            </div>
+            <div className="p-6 rounded-xl bg-[#fffaf0] dark:bg-gray-800 border border-green-700 shadow-lg text-center transform hover:-rotate-1 transition-transform">
+              <h3 className="text-4xl font-bold text-green-800 dark:text-green-500 font-serif">
+                {new Set(reviews.map((r) => r.bookId)).size}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 font-serif">Unique Books</p>
+            </div>
           </div>
-        )}*/}
+        )}
 
         {/* No Reviews Fallback */}
         {reviews.length === 0 && (
@@ -209,14 +214,17 @@ export default async function ReviewsPage() {
           </div>
         )}
 
-        {/* Reviews List */}
-        <div className="space-y-6">
+        {/* Reviews Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {books.map(({ review, book }) => (
-            <ReviewCard key={review._id} review={review} book={book} />
+            <div key={review._id} className="h-full">
+              <ReviewCard review={review} book={book} />
+            </div>
           ))}
-          {/* Scroll to Top Button */}
-          <ScrollToTop />
         </div>
+
+        {/* Scroll to Top Button */}
+        <ScrollToTop />
       </div>
     </div>
   )
