@@ -2,13 +2,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import Image from "next/image"
-import { BookIcon, BookOpen, BookMarked, Calendar, Sparkles } from "lucide-react"
-import { getServerClient } from "@/lib/wix"
+import { BookIcon, BookOpen, BookMarked, Sparkles } from "lucide-react"
+import { getServerClient, getMember } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { BooksFilter } from "@/components/books-filter"
 import { ClubStatsButton } from "@/components/club-stats-button"
 import { SemanticSearch } from "@/components/semantic-search"
+import { BookSuggestionModal } from "@/components/book-suggestion-modal"
 
 export default async function Home({
   searchParams,
@@ -22,6 +23,7 @@ export default async function Home({
 }) {
   await searchParams
   const client = await getServerClient()
+  const member = await getMember()
 
   const booksData = await client.items
     .queryDataItems({ dataCollectionId: "Books" })
@@ -130,18 +132,11 @@ export default async function Home({
           </div>
           <div className="flex gap-2">
             <ClubStatsButton />
-            <Button
-              variant="outline"
-              className="border-green-600 text-green-600 hover:bg-green-50 dark:border-green-500 dark:text-green-500 dark:hover:bg-green-900/20"
-            >
-              <Link className="flex items-center gap-1" href="/club-events">
-                <Calendar className="w-4 h-4 mr-1" /> <span>Events</span>
-              </Link>
-            </Button>
+            <BookSuggestionModal isLoggedIn={!!member} userEmail={member?.loginEmail} userName={member?.nickname} />
           </div>
         </div>
 
-        {/* Add the new compact filter component */}
+        {/* compact filter component */}
         <BooksFilter
           books={booksData || []}
           initialAuthor={authorFilter}
