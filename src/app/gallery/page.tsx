@@ -47,23 +47,44 @@ export default async function GalleryPage() {
         caption: string
         isVideo?: boolean
         image?: any
-        date?: string
+        videoUrl?: string
+        date?: any // Allow any type for date since it might be an object
         category?: string
       } => !!item && typeof item === "object",
     )
 
-    // Process only image items (filter out videos)
-    const imageItems = galleryItems.filter((item) => !item.isVideo)
+    // Process all gallery items (both images and videos)
+    processedGalleryItems = galleryItems.map((item) => {
+      // Handle date conversion - check if it's an object with $date property
+      let dateString = ""
+      if (item.date) {
+        if (typeof item.date === "object" && item.date.$date) {
+          // Handle MongoDB-style date object
+          dateString = new Date(item.date.$date).toLocaleDateString()
+        } else if (typeof item.date === "string") {
+          // Handle string date
+          dateString = item.date
+        } else if (item.date instanceof Date) {
+          // Handle Date object
+          dateString = item.date.toLocaleDateString()
+        } else {
+          // Try to convert whatever it is to a date
+          try {
+            dateString = new Date(item.date).toLocaleDateString()
+          } catch {
+            dateString = ""
+          }
+        }
+      }
 
-    // Process the gallery items to add proper image URLs
-    processedGalleryItems = imageItems.map((item) => {
       return {
         id: item._id,
         title: item.title || "",
         caption: item.caption || "",
         src: item.image ? convertWixImageToUrl(item.image) : "/placeholder.svg",
-        isVideo: false, // Always false since we're filtering out videos
-        date: item.date || "",
+        isVideo: item.isVideo || false,
+        videoUrl: item.videoUrl || "",
+        date: dateString, // Now always a string
         category: item.category || "",
       }
     })
