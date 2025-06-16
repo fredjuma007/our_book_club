@@ -342,7 +342,7 @@ export default function JoinUs() {
                               htmlFor="hear-social"
                               className="text-sm font-serif text-gray-700 dark:text-gray-300"
                             >
-                              Social Media (Instagram, Facebook, X)
+                              Social Media (Instagram, TikTok, Facebook, X)
                             </Label>
                           </div>
                           <div className="flex items-center space-x-2">
