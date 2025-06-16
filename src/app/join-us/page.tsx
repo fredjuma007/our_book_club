@@ -379,7 +379,7 @@ export default function JoinUs() {
                             </Label>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="friend-referral" id="hear-friend" />
+                            <RadioGroupItem value="ALX" id="ALX" />
                             <Label
                               htmlFor="hear-friend"
                               className="text-sm font-serif text-gray-700 dark:text-gray-300"
