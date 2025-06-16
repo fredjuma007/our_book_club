@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { motion } from "framer-motion"
 import { BookOpen, Sparkles, CheckCircle, BookMarked, Info, CalendarCheck } from "lucide-react"
 import Footer from "@/components/footer"
@@ -25,10 +26,16 @@ export default function JoinUs() {
     readingFrequency: "",
     favoriteBook: "",
     discussionComfort: "",
+    readGuidelines: "",
+    howDidYouHear: "",
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleRadioChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
@@ -49,7 +56,10 @@ export default function JoinUs() {
             readingFrequency: formData.readingFrequency,
             favoriteBook: formData.favoriteBook,
             discussionComfort: formData.discussionComfort,
-            status: "Pending", // Default status for new applications
+            readGuidelines: formData.readGuidelines,
+            howDidYouHear: formData.howDidYouHear,
+            pending: true, // Boolean field - true for pending, false for done
+            createdAt: new Date().toISOString(),
           },
         },
       })
@@ -175,86 +185,213 @@ export default function JoinUs() {
                   </h2>
 
                   <div className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="text-gray-600 dark:text-gray-300 font-serif">
-                        Full Name
-                      </Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={handleChange}
-                        className="bg-white dark:bg-gray-700 border-green-700/30"
-                        placeholder="John Doe"
-                      />
+                    {/* Personal Information */}
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name" className="text-gray-600 dark:text-gray-300 font-serif">
+                          Full Name
+                        </Label>
+                        <Input
+                          id="name"
+                          name="name"
+                          type="text"
+                          required
+                          value={formData.name}
+                          onChange={handleChange}
+                          className="bg-white dark:bg-gray-700 border-green-700/30"
+                          placeholder="John Doe"
+                        />
+                      </div>
 
-                      <Label htmlFor="phoneNumber" className="text-gray-600 dark:text-gray-300 font-serif">
-                        Phone Number
-                      </Label>
-                      <Input
-                        id="phoneNumber"
-                        name="phoneNumber"
-                        type="tel"
-                        required
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                        className="bg-white dark:bg-gray-700 border-green-700/30"
-                        placeholder="+254 700 000 000"
-                      />
+                      <div className="space-y-2">
+                        <Label htmlFor="phoneNumber" className="text-gray-600 dark:text-gray-300 font-serif">
+                          Phone Number
+                        </Label>
+                        <Input
+                          id="phoneNumber"
+                          name="phoneNumber"
+                          type="tel"
+                          required
+                          value={formData.phoneNumber}
+                          onChange={handleChange}
+                          className="bg-white dark:bg-gray-700 border-green-700/30"
+                          placeholder="+254 700 000 000"
+                        />
+                      </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="readingFrequency" className="text-gray-600 dark:text-gray-300 font-serif">
-                        How often do you read, and how much time are you willing to commit to reading each month?
-                      </Label>
-                      <Textarea
-                        id="readingFrequency"
-                        name="readingFrequency"
-                        required
-                        value={formData.readingFrequency}
-                        onChange={handleChange}
-                        className="bg-white dark:bg-gray-700 border-green-700/30 min-h-[100px]"
-                        placeholder="Share your reading habits and time commitment..."
-                      />
+                    {/* Reading Questions */}
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="readingFrequency" className="text-gray-600 dark:text-gray-300 font-serif">
+                          How often do you read, and how much time are you willing to commit to reading each month?
+                        </Label>
+                        <Textarea
+                          id="readingFrequency"
+                          name="readingFrequency"
+                          required
+                          value={formData.readingFrequency}
+                          onChange={handleChange}
+                          className="bg-white dark:bg-gray-700 border-green-700/30 min-h-[100px]"
+                          placeholder="Share your reading habits and time commitment..."
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="favoriteBook" className="text-gray-600 dark:text-gray-300 font-serif">
+                          Can you describe one of your favorite books or authors and why they resonate with you?
+                        </Label>
+                        <Textarea
+                          id="favoriteBook"
+                          name="favoriteBook"
+                          required
+                          value={formData.favoriteBook}
+                          onChange={handleChange}
+                          className="bg-white dark:bg-gray-700 border-green-700/30 min-h-[100px]"
+                          placeholder="Tell us about your favorite books or authors..."
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="discussionComfort" className="text-gray-600 dark:text-gray-300 font-serif">
+                          Are you comfortable discussing books with a group and sharing your opinions in a respectful
+                          manner?
+                        </Label>
+                        <Textarea
+                          id="discussionComfort"
+                          name="discussionComfort"
+                          required
+                          value={formData.discussionComfort}
+                          onChange={handleChange}
+                          className="bg-white dark:bg-gray-700 border-green-700/30 min-h-[100px]"
+                          placeholder="Describe your comfort level with group discussions..."
+                        />
+                      </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="favoriteBook" className="text-gray-600 dark:text-gray-300 font-serif">
-                        Can you describe one of your favorite books or authors and why they resonate with you?
-                      </Label>
-                      <Textarea
-                        id="favoriteBook"
-                        name="favoriteBook"
-                        required
-                        value={formData.favoriteBook}
-                        onChange={handleChange}
-                        className="bg-white dark:bg-gray-700 border-green-700/30 min-h-[100px]"
-                        placeholder="Tell us about your favorite books or authors..."
-                      />
-                    </div>
+                    {/* New Radio Button Fields */}
+                    <div className="space-y-6">
+                      {/* Guidelines Question */}
+                      <div className="space-y-3">
+                        <Label className="text-gray-600 dark:text-gray-300 font-serif">
+                          Have you read the club guidelines?
+                        </Label>
+                        <RadioGroup
+                          value={formData.readGuidelines}
+                          onValueChange={(value) => handleRadioChange("readGuidelines", value)}
+                          className="flex flex-col space-y-2"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="yes" id="guidelines-yes" />
+                            <Label
+                              htmlFor="guidelines-yes"
+                              className="text-sm font-serif text-gray-700 dark:text-gray-300"
+                            >
+                              Yes, I have read and understand the guidelines
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="no" id="guidelines-no" />
+                            <Label
+                              htmlFor="guidelines-no"
+                              className="text-sm font-serif text-gray-700 dark:text-gray-300"
+                            >
+                              No, I haven't read them yet
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="partially" id="guidelines-partially" />
+                            <Label
+                              htmlFor="guidelines-partially"
+                              className="text-sm font-serif text-gray-700 dark:text-gray-300"
+                            >
+                              I've read them partially
+                            </Label>
+                          </div>
+                        </RadioGroup>
+                        {formData.readGuidelines === "no" || formData.readGuidelines === "partially" ? (
+                          <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 p-3 rounded-lg">
+                            <p className="text-sm text-blue-800 dark:text-blue-300 font-serif">
+                              We recommend reading our{" "}
+                              <button
+                                type="button"
+                                onClick={() => setActiveTab("guidelines")}
+                                className="underline hover:text-blue-600 dark:hover:text-blue-200"
+                              >
+                                Club Guidelines
+                              </button>{" "}
+                              before submitting your application.
+                            </p>
+                          </div>
+                        ) : null}
+                      </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="discussionComfort" className="text-gray-600 dark:text-gray-300 font-serif">
-                        Are you comfortable discussing books with a group and sharing your opinions in a respectful
-                        manner?
-                      </Label>
-                      <Textarea
-                        id="discussionComfort"
-                        name="discussionComfort"
-                        required
-                        value={formData.discussionComfort}
-                        onChange={handleChange}
-                        className="bg-white dark:bg-gray-700 border-green-700/30 min-h-[100px]"
-                        placeholder="Describe your comfort level with group discussions..."
-                      />
+                      {/* How did you hear about us */}
+                      <div className="space-y-3">
+                        <Label className="text-gray-600 dark:text-gray-300 font-serif">
+                          How did you hear about our book club?
+                        </Label>
+                        <RadioGroup
+                          value={formData.howDidYouHear}
+                          onValueChange={(value) => handleRadioChange("howDidYouHear", value)}
+                          className="flex flex-col space-y-2"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="social-media" id="hear-social" />
+                            <Label
+                              htmlFor="hear-social"
+                              className="text-sm font-serif text-gray-700 dark:text-gray-300"
+                            >
+                              Social Media (Instagram, Facebook, Twitter)
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="friend-referral" id="hear-friend" />
+                            <Label
+                              htmlFor="hear-friend"
+                              className="text-sm font-serif text-gray-700 dark:text-gray-300"
+                            >
+                              Friend or family referral
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="online-search" id="hear-search" />
+                            <Label
+                              htmlFor="hear-search"
+                              className="text-sm font-serif text-gray-700 dark:text-gray-300"
+                            >
+                              Online search (Google, etc.)
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="local-event" id="hear-event" />
+                            <Label htmlFor="hear-event" className="text-sm font-serif text-gray-700 dark:text-gray-300">
+                              Local event or community board
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="library" id="hear-library" />
+                            <Label
+                              htmlFor="hear-library"
+                              className="text-sm font-serif text-gray-700 dark:text-gray-300"
+                            >
+                              Library or bookstore
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="other" id="hear-other" />
+                            <Label htmlFor="hear-other" className="text-sm font-serif text-gray-700 dark:text-gray-300">
+                              Other
+                            </Label>
+                          </div>
+                        </RadioGroup>
+                      </div>
                     </div>
 
                     <Button
                       type="submit"
-                      disabled={isSubmitting}
-                      className="w-full bg-green-700 hover:bg-green-800 text-white font-serif group relative overflow-hidden"
+                      disabled={isSubmitting || !formData.readGuidelines || !formData.howDidYouHear}
+                      className="w-full bg-green-700 hover:bg-green-800 text-white font-serif group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-green-800/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       {isSubmitting ? "Submitting..." : "Join Us"}
