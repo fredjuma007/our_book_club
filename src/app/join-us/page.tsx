@@ -379,6 +379,15 @@ export default function JoinUs() {
                             </Label>
                           </div>
                           <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="friend-referral" id="hear-friend" />
+                            <Label
+                              htmlFor="hear-friend"
+                              className="text-sm font-serif text-gray-700 dark:text-gray-300"
+                            >
+                              ALX Africa
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
                             <RadioGroupItem value="other" id="hear-other" />
                             <Label htmlFor="hear-other" className="text-sm font-serif text-gray-700 dark:text-gray-300">
                               Other
