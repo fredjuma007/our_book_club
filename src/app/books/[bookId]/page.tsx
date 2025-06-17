@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { BookIcon, ChevronLeft, StarIcon, BookOpen, Calendar, User, MessageCircle } from "lucide-react"
+import { BookIcon, ChevronLeft, StarIcon, BookOpen, Calendar, User, MessageCircle, ExternalLink } from "lucide-react"
 import { PostReviewForm } from "./post-review-form"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -205,7 +205,7 @@ export default async function Page({ params }: PageProps) {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-3 mt-6">
-                  {/* Add the AI Book Insights Button */}
+                  {/* AI Book Insights Button */}
                   <BookAIButton
                     bookId={book._id}
                     bookTitle={book.title}
@@ -215,10 +215,10 @@ export default async function Page({ params }: PageProps) {
                   {book.goodreadsUrl && (
                     <Button
                       asChild
-                      className="bg-green-700 hover:bg-green-800 text-white transition-all duration-300 font-serif relative overflow-hidden group/btn"
+                      className="bg-amber-600 hover:bg-amber-700 text-white font-serif text-sm px-4 py-2 h-auto inline-flex items-center gap-2 transition-colors shadow-lg hover:shadow-xl"
                     >
                       <a href={book.goodreadsUrl} target="_blank" rel="noopener noreferrer">
-                        <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                        <ExternalLink className="w-4 h-4" />
                         View on Goodreads
                       </a>
                     </Button>

@@ -15,14 +15,16 @@ import {
   RefreshCw,
   ChevronLeft,
   ChevronRight,
+  ExternalLink,
+  RotateCcw,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { getBookInsights } from "@/app/actions/book-ai-actions"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { Card, CardContent } from "@/components/ui/card"
 
 interface BookAIInsightsPopupProps {
   isOpen: boolean
@@ -31,6 +33,12 @@ interface BookAIInsightsPopupProps {
   bookTitle: string
   bookAuthor: string
   bookDescription?: string
+  insights: BookInsights | null
+  isLoading: boolean
+  error: string | null
+  onRegenerate: () => Promise<void>
+  recommendationsWithCovers: EnhancedRecommendation[]
+  setRecommendationsWithCovers: (recommendations: EnhancedRecommendation[]) => void
 }
 
 // Match the interface from the server action
@@ -55,6 +63,77 @@ interface BookInsights {
   }[]
 }
 
+interface BookCover {
+  url: string | null
+  loading: boolean
+  error: boolean
+}
+
+type EnhancedRecommendation = BookInsights["recommendations"][0] & {
+  cover?: BookCover
+}
+
+// Function to get book cover from Open Library
+async function getOpenLibraryCover(title: string, author: string): Promise<string | null> {
+  try {
+    // Search for the book
+    const searchQuery = encodeURIComponent(`${title} ${author}`)
+    const searchResponse = await fetch(`https://openlibrary.org/search.json?q=${searchQuery}&limit=1`)
+    const searchData = await searchResponse.json()
+
+    if (searchData.docs && searchData.docs.length > 0) {
+      const book = searchData.docs[0]
+      if (book.cover_i) {
+        return `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+      }
+    }
+    return null
+  } catch (error) {
+    console.error("Error fetching from Open Library:", error)
+    return null
+  }
+}
+
+// Function to get book cover from Google Books
+async function getGoogleBooksCover(title: string, author: string): Promise<string | null> {
+  try {
+    const searchQuery = encodeURIComponent(`${title} ${author}`)
+    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&maxResults=1`)
+    const data = await response.json()
+
+    if (data.items && data.items.length > 0) {
+      const book = data.items[0]
+      if (book.volumeInfo?.imageLinks?.thumbnail) {
+        // Convert to higher resolution if available
+        return book.volumeInfo.imageLinks.thumbnail.replace("zoom=1", "zoom=2")
+      }
+    }
+    return null
+  } catch (error) {
+    console.error("Error fetching from Google Books:", error)
+    return null
+  }
+}
+
+// Function to get book cover with fallback
+async function getBookCover(title: string, author: string): Promise<string | null> {
+  // Try Open Library first
+  let coverUrl = await getOpenLibraryCover(title, author)
+
+  // If Open Library fails, try Google Books
+  if (!coverUrl) {
+    coverUrl = await getGoogleBooksCover(title, author)
+  }
+
+  return coverUrl
+}
+
+// Function to generate Goodreads search URL
+function getGoodreadsSearchUrl(title: string, author: string): string {
+  const searchQuery = encodeURIComponent(`${title} ${author}`)
+  return `https://www.goodreads.com/search?q=${searchQuery}`
+}
+
 export function BookAIInsightsPopup({
   isOpen,
   onClose,
@@ -62,82 +141,56 @@ export function BookAIInsightsPopup({
   bookTitle,
   bookAuthor,
   bookDescription,
+  insights,
+  isLoading,
+  error,
+  onRegenerate,
+  recommendationsWithCovers,
+  setRecommendationsWithCovers,
 }: BookAIInsightsPopupProps) {
-  const [insights, setInsights] = useState<BookInsights | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState("summary")
+  const [isRegenerating, setIsRegenerating] = useState(false)
   const isMobile = useMediaQuery("(max-width: 640px)")
 
-  const fetchInsights = async () => {
-    if (!isOpen) return
+  const fetchBookCovers = async (recommendations: BookInsights["recommendations"]) => {
+    if (!recommendations || recommendations.length === 0) return
 
-    setIsLoading(true)
-    setError(null)
+    // Initialize recommendations with loading state
+    const initialRecommendations: EnhancedRecommendation[] = recommendations.map((rec) => ({
+      ...rec,
+      cover: { url: null, loading: true, error: false },
+    }))
 
-    try {
-      console.log(`Fetching insights for: ${bookTitle} by ${bookAuthor}`)
-      const data = await getBookInsights(bookId, bookTitle, bookAuthor, bookDescription || "")
-      console.log("Insights received:", data ? "success" : "failed")
+    setRecommendationsWithCovers(initialRecommendations)
 
-      // Additional validation to ensure we don't display file content
-      if (data) {
-        // Clean any potential file content from summary
-        if (
-          data.summary &&
-          (data.summary.includes("Attachment") ||
-            data.summary.includes("URL:") ||
-            data.summary.includes("use server") ||
-            data.summary.includes("import {"))
-        ) {
-          data.summary = "Summary not available. Please try again."
+    // Fetch covers for each recommendation
+    const updatedRecommendations = await Promise.all(
+      recommendations.map(async (rec, index) => {
+        try {
+          const coverUrl = await getBookCover(rec.title, rec.author)
+          return {
+            ...rec,
+            cover: { url: coverUrl, loading: false, error: !coverUrl },
+          }
+        } catch (error) {
+          console.error(`Error fetching cover for ${rec.title}:`, error)
+          return {
+            ...rec,
+            cover: { url: null, loading: false, error: true },
+          }
         }
+      }),
+    )
 
-        // Clean themes
-        if (data.themes) {
-          data.themes = data.themes.filter(
-            (theme) =>
-              !theme.includes("Attachment") &&
-              !theme.includes("URL:") &&
-              !theme.includes("use server") &&
-              !theme.includes("import {") &&
-              !theme.includes("function") &&
-              !theme.includes("interface") &&
-              theme.length < 100, // Themes length check
-          )
-        }
-
-        // Ensure recommendations have proper data and styling
-        if (data.recommendations) {
-          data.recommendations = data.recommendations.map((rec) => ({
-            title:
-              rec.title && typeof rec.title === "string" && !rec.title.includes("function")
-                ? rec.title
-                : `Book similar to ${bookTitle}`,
-            author:
-              rec.author && typeof rec.author === "string" && !rec.author.includes("function")
-                ? rec.author
-                : "Recommended Author",
-            reason:
-              rec.reason && typeof rec.reason === "string" && !rec.reason.includes("function")
-                ? rec.reason
-                : `For fans of ${bookAuthor}'s writing style.`,
-          }))
-        }
-      }
-
-      setInsights(data)
-    } catch (err: any) {
-      console.error("Error fetching book insights:", err)
-      setError(err?.message || "Failed to load AI insights. Please try again later.")
-    } finally {
-      setIsLoading(false)
-    }
+    setRecommendationsWithCovers(updatedRecommendations)
   }
 
+  // Fetch book covers when insights change
   useEffect(() => {
-    fetchInsights()
-  }, [isOpen, bookId, bookTitle, bookAuthor, bookDescription])
+    if (insights?.recommendations && insights.recommendations.length > 0) {
+      fetchBookCovers(insights.recommendations)
+    }
+  }, [insights])
 
   // Helper function to safely render text content
   const renderSafeContent = (content: string) => {
@@ -183,6 +236,15 @@ export function BookAIInsightsPopup({
     setActiveTab(tabs[newIndex])
   }
 
+  const handleRegenerate = async () => {
+    setIsRegenerating(true)
+    try {
+      await onRegenerate()
+    } finally {
+      setIsRegenerating(false)
+    }
+  }
+
   if (!isOpen) return null
 
   return (
@@ -206,15 +268,30 @@ export function BookAIInsightsPopup({
                 <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                 <h3 className="font-serif font-bold text-sm sm:text-lg truncate">Gladwell Insights: {bookTitle}</h3>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="text-white hover:bg-white/20"
-                aria-label="Close"
-              >
-                <X className="w-4 h-4 sm:w-5 sm:h-5" />
-              </Button>
+              <div className="flex items-center gap-2">
+                {/* Regenerate Button */}
+                {insights && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleRegenerate}
+                    disabled={isRegenerating}
+                    className="text-white hover:bg-white/20"
+                    title="Regenerate insights"
+                  >
+                    <RotateCcw className={`w-4 h-4 sm:w-5 sm:h-5 ${isRegenerating ? "animate-spin" : ""}`} />
+                  </Button>
+                )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onClose}
+                  className="text-white hover:bg-white/20"
+                  aria-label="Close"
+                >
+                  <X className="w-4 h-4 sm:w-5 sm:h-5" />
+                </Button>
+              </div>
             </div>
 
             {/* Content */}
@@ -228,7 +305,7 @@ export function BookAIInsightsPopup({
                     </div>
                   </div>
                   <p className="text-center text-gray-600 dark:text-gray-400 font-serif text-sm sm:text-base mb-4 sm:mb-8">
-                    Generating AI insights for "{bookTitle}" by {bookAuthor}...
+                    {isRegenerating ? "Regenerating" : "Generating"} AI insights for "{bookTitle}" by {bookAuthor}...
                   </p>
                   <div className="space-y-2">
                     <Skeleton className="h-5 sm:h-6 w-1/3" />
@@ -254,10 +331,13 @@ export function BookAIInsightsPopup({
                   </p>
                   <div className="flex justify-center gap-2 sm:gap-4 mt-3 sm:mt-4">
                     <Button
-                      onClick={fetchInsights}
+                      onClick={handleRegenerate}
+                      disabled={isRegenerating}
                       className="bg-green-700 hover:bg-green-800 text-white font-serif text-xs sm:text-sm"
                     >
-                      <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                      <RefreshCw
+                        className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 ${isRegenerating ? "animate-spin" : ""}`}
+                      />
                       Try Again
                     </Button>
                     <Button
@@ -473,10 +553,79 @@ export function BookAIInsightsPopup({
                           <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2 text-green-700" />
                           If You Liked This, You'll Like...
                         </h4>
-                        <div className="space-y-3 sm:space-y-4">
-                          {insights.recommendations &&
-                          Array.isArray(insights.recommendations) &&
-                          insights.recommendations.length > 0 ? (
+                        <div className="space-y-4 sm:space-y-6">
+                          {recommendationsWithCovers && recommendationsWithCovers.length > 0 ? (
+                            recommendationsWithCovers.map((rec, index) => (
+                              <Card
+                                key={index}
+                                className="overflow-hidden border border-green-700/20 hover:shadow-lg transition-all duration-300 hover:border-green-700/40"
+                              >
+                                <CardContent className="p-0">
+                                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 p-3 sm:p-4">
+                                    {/* Book Cover */}
+                                    <div className="flex-shrink-0 mx-auto sm:mx-0">
+                                      <div className="relative w-20 h-28 sm:w-24 sm:h-32 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 rounded-lg shadow-md overflow-hidden border border-green-700/20">
+                                        {rec.cover?.loading ? (
+                                          <div className="absolute inset-0 flex items-center justify-center">
+                                            <RefreshCw className="w-6 h-6 text-green-600 animate-spin" />
+                                          </div>
+                                        ) : rec.cover?.url ? (
+                                          <img
+                                            src={rec.cover.url || "/placeholder.svg"}
+                                            alt={`Cover of ${rec.title}`}
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => {
+                                              // Hide broken image and show fallback
+                                              e.currentTarget.style.display = "none"
+                                              const fallback = e.currentTarget.nextElementSibling as HTMLElement
+                                              if (fallback) fallback.style.display = "flex"
+                                            }}
+                                          />
+                                        ) : null}
+                                        {/* Fallback when no cover or error */}
+                                        <div
+                                          className={`absolute inset-0 flex flex-col items-center justify-center text-center p-2 ${rec.cover?.url ? "hidden" : "flex"}`}
+                                          style={{ display: rec.cover?.url ? "none" : "flex" }}
+                                        >
+                                          <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 mb-1" />
+                                          <span className="text-xs text-green-700 dark:text-green-400 font-serif leading-tight">
+                                            {rec.title.length > 20 ? rec.title.substring(0, 20) + "..." : rec.title}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Book Details */}
+                                    <div className="flex-1 min-w-0 text-center sm:text-left">
+                                      <h5 className="font-bold text-green-800 dark:text-green-400 font-serif text-base sm:text-lg mb-1 leading-tight">
+                                        {renderSafeContent(rec.title)}
+                                      </h5>
+                                      <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm mb-2 sm:mb-3">
+                                        by {renderSafeContent(rec.author)}
+                                      </p>
+                                      <p className="text-gray-700 dark:text-gray-300 font-serif text-sm sm:text-base leading-relaxed mb-3">
+                                        {renderSafeContent(rec.reason)}
+                                      </p>
+
+                                      {/* Add to Goodreads Button */}
+                                      <Button
+                                        onClick={() =>
+                                          window.open(getGoodreadsSearchUrl(rec.title, rec.author), "_blank")
+                                        }
+                                        className="bg-amber-600 hover:bg-amber-700 text-white font-serif 
+                                        text-xs sm:text-sm px-3 py-1.5 h-auto inline-flex items-center gap-1.5 transition-colors"
+                                        size="sm"
+                                      >
+                                        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                                        Add to Goodreads
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            ))
+                          ) : insights?.recommendations && insights.recommendations.length > 0 ? (
+                            // Fallback to original layout if covers haven't loaded yet
                             insights.recommendations.map((rec, index) => (
                               <div
                                 key={index}
@@ -488,9 +637,19 @@ export function BookAIInsightsPopup({
                                 <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm mb-1 sm:mb-2">
                                   by {renderSafeContent(rec.author)}
                                 </p>
-                                <p className="text-gray-700 dark:text-gray-300 font-serif text-sm sm:text-base mt-1">
+                                <p className="text-gray-700 dark:text-gray-300 font-serif text-sm sm:text-base mt-1 mb-3">
                                   {renderSafeContent(rec.reason)}
                                 </p>
+
+                                {/* Add to Goodreads Button */}
+                                <Button
+                                  onClick={() => window.open(getGoodreadsSearchUrl(rec.title, rec.author), "_blank")}
+                                  className="bg-amber-600 hover:bg-amber-700 text-white font-serif text-xs sm:text-sm px-3 py-1.5 h-auto inline-flex items-center gap-1.5 transition-colors"
+                                  size="sm"
+                                >
+                                  <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                                  Add to Goodreads
+                                </Button>
                               </div>
                             ))
                           ) : (

@@ -230,10 +230,10 @@ export async function getBookInsights(
 
     // Generate insights using Groq AI
     const { text } = await generateText({
-      model: groq("llama-3.1-8b-instant"),
+      model: groq("llama3-70b-8192"),
       prompt: prompt,
-      temperature: 0.7,
-      maxTokens: 800,
+      temperature: 0.8,
+      maxTokens: 2000,
       topP: 0.9,
     })
 
