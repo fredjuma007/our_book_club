@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Sparkles, BookOpen, ChevronRight } from "lucide-react"
+import { Sparkles, BookOpen, ExternalLink, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { generateAIRecommendations } from "@/app/actions/stats-actions"
 import { useTheme } from "next-themes"
@@ -33,9 +33,75 @@ interface Recommendation {
   reason: string
 }
 
+interface BookCover {
+  url: string | null
+  loading: boolean
+  error: boolean
+}
+
+type EnhancedRecommendation = Recommendation & {
+  cover?: BookCover
+}
+
+// Function to get book cover from Open Library
+async function getOpenLibraryCover(title: string, author: string): Promise<string | null> {
+  try {
+    // Search for the book
+    const searchQuery = encodeURIComponent(`${title} ${author}`)
+    const searchResponse = await fetch(`https://openlibrary.org/search.json?q=${searchQuery}&limit=1`)
+    const searchData = await searchResponse.json()
+
+    if (searchData.docs && searchData.docs.length > 0) {
+      const book = searchData.docs[0]
+      if (book.cover_i) {
+        return `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+      }
+    }
+    return null
+  } catch (error) {
+    console.error("Error fetching from Open Library:", error)
+    return null
+  }
+}
+
+// Function to get book cover from Google Books
+async function getGoogleBooksCover(title: string, author: string): Promise<string | null> {
+  try {
+    const searchQuery = encodeURIComponent(`${title} ${author}`)
+    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&maxResults=1`)
+    const data = await response.json()
+
+    if (data.items && data.items.length > 0) {
+      const book = data.items[0]
+      if (book.volumeInfo?.imageLinks?.thumbnail) {
+        // Convert to higher resolution if available
+        return book.volumeInfo.imageLinks.thumbnail.replace("zoom=1", "zoom=2")
+      }
+    }
+    return null
+  } catch (error) {
+    console.error("Error fetching from Google Books:", error)
+    return null
+  }
+}
+
+// Function to get book cover with fallback
+async function getBookCover(title: string, author: string): Promise<string | null> {
+  // Try Open Library first
+  let coverUrl = await getOpenLibraryCover(title, author)
+
+  // If Open Library fails, try Google Books
+  if (!coverUrl) {
+    coverUrl = await getGoogleBooksCover(title, author)
+  }
+
+  return coverUrl
+}
+
 export function AIRecommendations({ books, reviews }: AIRecommendationsProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [recommendations, setRecommendations] = useState<Recommendation[]>([])
+  const [recommendationsWithCovers, setRecommendationsWithCovers] = useState<EnhancedRecommendation[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const { theme } = useTheme()
@@ -50,6 +116,46 @@ export function AIRecommendations({ books, reviews }: AIRecommendationsProps) {
       generateRecommendations()
     }
   }, [])
+
+  // Fetch book covers when recommendations change
+  useEffect(() => {
+    if (recommendations.length > 0) {
+      fetchBookCovers(recommendations)
+    }
+  }, [recommendations])
+
+  const fetchBookCovers = async (recs: Recommendation[]) => {
+    if (!recs || recs.length === 0) return
+
+    // Initialize recommendations with loading state
+    const initialRecommendations: EnhancedRecommendation[] = recs.map((rec) => ({
+      ...rec,
+      cover: { url: null, loading: true, error: false },
+    }))
+
+    setRecommendationsWithCovers(initialRecommendations)
+
+    // Fetch covers for each recommendation
+    const updatedRecommendations = await Promise.all(
+      recs.map(async (rec) => {
+        try {
+          const coverUrl = await getBookCover(rec.title, rec.author)
+          return {
+            ...rec,
+            cover: { url: coverUrl, loading: false, error: !coverUrl },
+          }
+        } catch (error) {
+          console.error(`Error fetching cover for ${rec.title}:`, error)
+          return {
+            ...rec,
+            cover: { url: null, loading: false, error: true },
+          }
+        }
+      }),
+    )
+
+    setRecommendationsWithCovers(updatedRecommendations)
+  }
 
   // Determine if we're in light or dark mode
   const isDark =
@@ -126,7 +232,7 @@ export function AIRecommendations({ books, reviews }: AIRecommendationsProps) {
       setError("Failed to generate recommendations. Please try again later.")
 
       // Set fallback recommendations
-      setRecommendations([
+      const fallbackRecs = [
         {
           title: "The Midnight Library",
           author: "Matt Haig",
@@ -142,7 +248,8 @@ export function AIRecommendations({ books, reviews }: AIRecommendationsProps) {
           author: "Taylor Jenkins Reid",
           reason: "A compelling story about a Hollywood icon with complex characters.",
         },
-      ])
+      ]
+      setRecommendations(fallbackRecs)
     } finally {
       setIsLoading(false)
     }
@@ -168,6 +275,11 @@ export function AIRecommendations({ books, reviews }: AIRecommendationsProps) {
     },
   }
 
+  const displayRecommendations =
+    recommendationsWithCovers.length > 0
+      ? recommendationsWithCovers
+      : recommendations.map((rec) => ({ ...rec, cover: undefined }))
+
   return (
     <motion.div
       className={`bg-gradient-to-br ${bgGradient} rounded-xl p-6 border ${borderColor} shadow-lg backdrop-blur-sm`}
@@ -179,13 +291,13 @@ export function AIRecommendations({ books, reviews }: AIRecommendationsProps) {
         <div className={`${iconBgColor} p-2 rounded-full`}>
           <Sparkles className={`w-5 h-5 ${textColor}`} />
         </div>
-        <h3 className={`text-xl font-serif font-bold ${textColor}`}>AI Book Recommendations</h3>
+        <h3 className={`text-xl font-serif font-bold ${textColor}`}>Gladwell AI Book Recommendations</h3>
       </div>
 
       {isLoading ? (
         <div className="flex flex-col items-center justify-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500 mb-4"></div>
-          <p className={loadingTextColor}>Generating personalized recommendations...</p>
+          <p className={loadingTextColor}>Generating Gladwell AI recommendations...</p>
         </div>
       ) : error ? (
         <div className="text-center py-8">
@@ -201,23 +313,49 @@ export function AIRecommendations({ books, reviews }: AIRecommendationsProps) {
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
         >
-          {recommendations.map((rec, index) => (
+          {displayRecommendations.map((rec, index) => (
             <motion.div
               key={index}
               className={`${itemBgColor} rounded-lg p-5 border ${itemBorderColor} backdrop-blur-sm ${itemHoverBgColor} transition-colors`}
               variants={itemVariants}
             >
               <div className="flex items-start gap-3 mb-3">
-                <div className={`${iconBgColor} p-2 rounded-full mt-1`}>
-                  <BookOpen className={`w-4 h-4 ${textColor}`} />
+                {/* Book Cover */}
+                <div className="flex-shrink-0">
+                  <div className="relative w-12 h-16 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 rounded-md shadow-sm overflow-hidden border border-green-700/20">
+                    {rec.cover?.loading ? (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <RefreshCw className="w-4 h-4 text-green-600 animate-spin" />
+                      </div>
+                    ) : rec.cover?.url ? (
+                      <img
+                        src={rec.cover.url || "/placeholder.svg"}
+                        alt={`Cover of ${rec.title}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Hide broken image and show fallback
+                          e.currentTarget.style.display = "none"
+                          const fallback = e.currentTarget.nextElementSibling as HTMLElement
+                          if (fallback) fallback.style.display = "flex"
+                        }}
+                      />
+                    ) : null}
+                    {/* Fallback when no cover or error */}
+                    <div
+                      className={`absolute inset-0 flex flex-col items-center justify-center text-center p-1 ${rec.cover?.url ? "hidden" : "flex"}`}
+                      style={{ display: rec.cover?.url ? "none" : "flex" }}
+                    >
+                      <BookOpen className="w-4 h-4 text-green-600 mb-1" />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h4 className={`font-serif font-bold ${titleColor}`}>{rec.title}</h4>
+                <div className="flex-1 min-w-0">
+                  <h4 className={`font-serif font-bold ${titleColor} leading-tight`}>{rec.title}</h4>
                   <p className={`${authorColor} text-sm`}>by {rec.author}</p>
                 </div>
               </div>
-              <p className={`${reasonColor} text-sm ml-11`}>{rec.reason}</p>
-              <div className="mt-4 ml-11">
+              <p className={`${reasonColor} text-sm mb-4`}>{rec.reason}</p>
+              <div className="flex justify-end">
                 <Button
                   variant="outline"
                   size="sm"
@@ -229,8 +367,8 @@ export function AIRecommendations({ books, reviews }: AIRecommendationsProps) {
                     )
                   }
                 >
-                  <span>Learn More</span>
-                  <ChevronRight className="w-3 h-3 ml-1" />
+                  <ExternalLink className="w-3 h-3 mr-1" />
+                  <span>Add to Goodreads</span>
                 </Button>
               </div>
             </motion.div>
