@@ -245,7 +245,7 @@ export default function HomePageClient({
   }, [])
 
   return (
-    <div className="relative bg-[url('/picnic.jpg')] bg-cover bg-fixed bg-center bg-no-repeat text-green-600 dark:text-green-500 overflow-x-hidden selection:bg-green-700/30">
+    <div className="relative bg-[url('/pachinko.jpg')] bg-cover bg-fixed bg-center bg-no-repeat text-green-600 dark:text-green-500 overflow-x-hidden selection:bg-green-700/30">
       {isOpen && <GladwellAIWidget isOpen={isOpen} onClose={() => setIsOpen(false)} />}
       {/* Animated particles */}
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20 animate-fade" />
