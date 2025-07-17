@@ -456,19 +456,28 @@ export default function HomePageClient({
                       </div>
                     </motion.div>
                   </div>
-                  <motion.h1
-                    className="text-2xl md:text-3xl lg:text-4xl font-bold text-green-800 dark:text-green-400 font-serif relative inline-block group gradient-text drop-shadow-md"
+                    <motion.h1
+                    className="text-2xl md:text-3xl lg:text-4xl font-bold text-green-800 dark:text-green-400 
+                           font-serif relative inline-block group drop-shadow-md"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.5 }}
-                  >
-                    The Reading Circle
+                    >
+                    The Reading Circle{" "}
+                    <span className="inline-flex space-x-1 ml-1">
+                      <span className="text-black dark:text-white">2</span>
+                      <span className="text-red-600">5</span>
+                      <span className="text-green-700">4</span>
+                    </span>
+
+                    {/* Hover background overlay */}
                     <motion.span
-                      className="absolute -inset-1 bg-green-700/5 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left"
+                      className="absolute -inset-1 bg-green-700/5 rounded-lg scale-x-0 group-hover:scale-x-100 
+                           transition-transform origin-left"
                       initial={{ scaleX: 0 }}
                       whileHover={{ scaleX: 1 }}
                     />
-                  </motion.h1>
+                    </motion.h1>
                 </div>
                 <motion.div
                   className="relative"
