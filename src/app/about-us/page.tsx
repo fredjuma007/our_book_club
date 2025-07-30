@@ -39,7 +39,7 @@ export default function AboutUs() {
 
       // Submit to Wix CMS collection
       await client.items.insertDataItem({
-        dataCollectionId: "Feedback", // Use your actual collection ID
+        dataCollectionId: "Feedback",
         dataItem: {
           data: {
             email: formData.email,

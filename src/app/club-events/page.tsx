@@ -80,14 +80,14 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
     })
 
     // Log the sorting results to verify
-    console.log(
-      "Upcoming events sorted:",
-      upcomingEvents.map((e) => ({ title: e.title, date: e.date })),
-    )
-    console.log(
-      "Past events sorted:",
-      pastEvents.map((e) => ({ title: e.title, date: e.date })),
-    )
+    // console.log(
+    //   "Upcoming events sorted:",
+    //   upcomingEvents.map((e) => ({ title: e.title, date: e.date })),
+    // )
+    // console.log(
+    //   "Past events sorted:",
+    //   pastEvents.map((e) => ({ title: e.title, date: e.date })),
+    // )
 
     return (
       <EventsClient eventsData={eventsData} upcomingEvents={upcomingEvents} pastEvents={pastEvents} filter={filter} />
