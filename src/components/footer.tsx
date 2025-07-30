@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { FaInstagram, FaTiktok } from "react-icons/fa"
+import { FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa"
 
 export default function Footer() {
   return (
@@ -29,6 +29,15 @@ export default function Footer() {
             aria-label="TikTok"
           >
             <FaTiktok size={18} />
+          </Link>
+          <Link
+            href="https://www.youtube.com/@TheReadingCircle254"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-500 hover:text-red-600"
+            aria-label="YouTube"
+          >
+            <FaYoutube size={18} />
           </Link>
           {/* Developed by */}
           <p className="text-xs text-gray-600 dark:text-gray-300 flex items-center">
