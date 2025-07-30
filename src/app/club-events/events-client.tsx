@@ -16,7 +16,6 @@ import {
   Camera,
   ArrowRight,
 } from "lucide-react"
-import Footer from "@/components/footer"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import type { Event } from "@/lib/event-utils"
 import AddToCalendar from "@/components/add-to-calendar"
@@ -278,7 +277,6 @@ export default function EventsClient({ eventsData, upcomingEvents, pastEvents, f
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   )
 }

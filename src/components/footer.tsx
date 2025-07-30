@@ -8,7 +8,7 @@ export default function Footer() {
     <footer className="fixed bottom-0 left-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-green-200 dark:border-green-800">
       <div className="max-w-7xl mx-auto px-3 py-1.5 flex justify-between items-center">
         <p className="text-xs text-gray-600 dark:text-gray-300 whitespace-nowrap">
-          © {new Date().getFullYear()} The Reading Circle 254
+          © {new Date().getFullYear()} TRC254
         </p>
         <div className="flex items-center space-x-4">
           {/* Social media icons in the middle */}

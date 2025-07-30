@@ -18,7 +18,6 @@ import {
   Play,
 } from "lucide-react"
 import { ScrollToTop } from "@/components/scroll-to-top"
-import Footer from "@/components/footer"
 import MuxPlayer from "@mux/mux-player-react"
 
 export interface GalleryItem {
@@ -407,7 +406,6 @@ export default function GalleryClient({ galleryItems }: { galleryItems: GalleryI
       </AnimatePresence>
 
       <ScrollToTop />
-      <Footer />
     </div>
   )
 }

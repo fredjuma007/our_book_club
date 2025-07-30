@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
 import { BookOpen, MapPin, CalendarCheck, Users, Tag, ChevronLeft } from "lucide-react"
-import Footer from "@/components/footer"
 import { getServerClient } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import { notFound } from "next/navigation"
@@ -263,7 +262,6 @@ export default async function EventPage({ params }: { params: Promise<{ eventId:
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     )
   } catch (error) {

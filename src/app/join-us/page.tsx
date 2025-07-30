@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { motion } from "framer-motion"
 import { BookOpen, Sparkles, CheckCircle, BookMarked, Info, CalendarCheck } from "lucide-react"
-import Footer from "@/components/footer"
 import { getClient } from "@/lib/wix-client"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -538,7 +537,6 @@ export default function JoinUs() {
             </div>
           </div>
         </motion.div>
-        <Footer />
       </div>
 
       <style jsx global>{`

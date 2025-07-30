@@ -25,7 +25,6 @@ import {
   Users,
 } from "lucide-react"
 import React, { useEffect, useState, useRef } from "react"
-import Footer from "@/components/footer"
 import GladwellAIWidget from "@/components/gladwell-ai-widget"
 import GladwellButton from "@/components/gladwell-button"
 import { ClubStatsButton } from "@/components/club-stats-button"
@@ -1444,8 +1443,7 @@ export default function HomePageClient({
           </div>
         </section>
 
-        {/* Footer */}
-        <Footer />
+        
       </div>
     </div>
   )

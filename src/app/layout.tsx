@@ -7,6 +7,7 @@ import { Header } from "./header"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 import ChatBotProvider from "@/components/chat-bot-provider"
+import Footer from "@/components/footer"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -45,6 +46,8 @@ export default function RootLayout({
           <Analytics />
           <ChatBotProvider />
         </ThemeProvider>
+        {/* Footer */}
+        <Footer />
       </body>
     </html>
   )

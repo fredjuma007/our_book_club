@@ -10,7 +10,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { BookOpen, Sparkles, Send, CheckCircle } from "lucide-react"
-import Footer from "@/components/footer"
 import { useState } from "react"
 import { getClient } from "@/lib/wix-client"
 import { useRouter } from "next/navigation"
@@ -352,7 +351,6 @@ export default function AboutUs() {
             </div>
           </div>
         </motion.div>
-        <Footer />
       </div>
 
       <style jsx global>{`
