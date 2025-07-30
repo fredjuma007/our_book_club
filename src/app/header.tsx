@@ -103,14 +103,14 @@ export async function Header() {
           <Button variant="link" asChild>
             <Link href="/" className="flex items-center gap-3 text-gray-900 dark:text-gray-100 group">
               <div className="relative">
-                {/*<div className="absolute -inset-2 rounded-full bg-green-100 dark:bg-green-900/30 opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute -inset-2 rounded-full bg-green-100 dark:bg-green-900/30 opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
                 <Image
                   src="/logo.jpeg"
                   width={55}
                   height={55}
                   alt="TheBookClub"
                   className="rounded-full border-2 border-green-200 dark:border-green-800 shadow-md hover:scale-105 transition-transform duration-300 relative z-10 w-[45px] h-[45px] sm:w-[55px] sm:h-[55px]"
-                />*/}
+                />
                 <div className="absolute -inset-1 rounded-full bg-green-100 dark:bg-green-800/30 opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
               </div>
               <div className="relative overflow-hidden">
