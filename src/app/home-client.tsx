@@ -427,7 +427,7 @@ export default function HomePageClient({
                       onClick={() => setIsOpen(true)}
                     >
                       <Image
-                        src="/logo.jpeg"
+                        src="/pachinko.jpg"
                         alt="Reading Circle Logo"
                         width={80}
                         height={80}
