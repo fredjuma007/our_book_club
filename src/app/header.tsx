@@ -140,7 +140,7 @@ export async function Header() {
                 </div>
                 <div className="relative overflow-hidden">
                   <span className="hidden sm:block text-lg sm:text-xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-500 to-green-400 tracking-wide group-hover:text-shadow-neon transition-all">
-                    THE READING CIRCLE{" "}
+                    TRC{" "}
                     <span>
                       <span className="text-black dark:text-white">2</span>
                       <span className="text-red-600">5</span>
