@@ -13,8 +13,9 @@ import {
   Info,
   History,
   Archive,
-  Camera,
   ArrowRight,
+  Zap,
+  Star,
 } from "lucide-react"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import type { Event } from "@/lib/event-utils"
@@ -25,29 +26,49 @@ interface EventsClientProps {
   eventsData: Event[]
   upcomingEvents: Event[]
   pastEvents: Event[]
+  happeningTodayEvents: Event[]
   filter: string
 }
 
-export default function EventsClient({ eventsData, upcomingEvents, pastEvents, filter }: EventsClientProps) {
+export default function EventsClient({
+  eventsData,
+  upcomingEvents,
+  pastEvents,
+  happeningTodayEvents,
+  filter,
+}: EventsClientProps) {
   // Determine which events to display based on filter
   let eventsToDisplay = eventsData
   let showPastEvents = true
+  let showHappeningToday = true
 
   if (filter === "upcoming") {
     eventsToDisplay = upcomingEvents
     showPastEvents = false
+    showHappeningToday = false
   } else if (filter === "previous" || filter === "past") {
     eventsToDisplay = pastEvents
     showPastEvents = false
+    showHappeningToday = false
+  } else if (filter === "today") {
+    eventsToDisplay = happeningTodayEvents
+    showPastEvents = false
+    showHappeningToday = false
   } else if (filter === "all") {
-    // For "all" filter, only show upcoming events in the main grid
-    eventsToDisplay = upcomingEvents
+    // For "all" filter, show happening today first, then upcoming
+    eventsToDisplay = [...happeningTodayEvents, ...upcomingEvents]
   }
 
   // Function to render event card in grid format
-  const renderEventCard = (event: Event, isPast = false) => (
+  const renderEventCard = (event: Event, isPast = false, isHappeningToday = false) => (
     <Link href={`/club-events/${event._id}`} className="block group" key={event._id}>
-      <div className="h-full bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+      <div
+        className={`h-full rounded-xl shadow-lg border overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
+          isHappeningToday
+            ? "bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-400 shadow-yellow-200/50 dark:shadow-yellow-900/20"
+            : "bg-[#fffaf0] dark:bg-gray-800 border-green-700"
+        }`}
+      >
         {/* Image Section */}
         <div className="relative w-full h-48 overflow-hidden">
           <Image
@@ -56,47 +77,81 @@ export default function EventsClient({ eventsData, upcomingEvents, pastEvents, f
             fill
             className={`object-cover transition-transform duration-500 group-hover:scale-110 ${
               isPast ? "filter grayscale-[30%] group-hover:grayscale-0" : ""
+            } ${isHappeningToday ? "filter brightness-110" : ""}`}
+          />
+          <div
+            className={`absolute inset-0 ${
+              isHappeningToday
+                ? "bg-gradient-to-t from-yellow-600/60 to-transparent"
+                : "bg-gradient-to-t from-black/60 to-transparent"
             }`}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
           {/* Event Type Badge */}
-          <div className="absolute top-2 left-2 bg-green-700/90 text-white px-3 py-1 rounded-full text-sm font-serif backdrop-blur-sm">
+          <div
+            className={`absolute top-2 left-2 px-3 py-1 rounded-full text-sm font-serif backdrop-blur-sm ${
+              isHappeningToday ? "bg-yellow-500/90 text-white" : "bg-green-700/90 text-white"
+            }`}
+          >
             {event.type || "Event"}
           </div>
 
-          {/* Past Event Badge */}
-          {isPast && (
+          {/* Special Badges */}
+          {isHappeningToday && (
+            <div className="absolute top-2 right-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-serif backdrop-blur-sm flex items-center animate-pulse">
+              <Zap className="w-3 h-3 mr-1" />
+              Happening Today!
+            </div>
+          )}
+
+          {isPast && !isHappeningToday && (
             <div className="absolute top-2 right-2 bg-gray-800/80 text-white px-3 py-1 rounded-full text-xs font-serif backdrop-blur-sm">
               Past Event
             </div>
           )}
 
           {/* Date */}
-          <div className="absolute bottom-2 left-2 text-white font-serif">
-            {new Date(event.date).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
+          <div
+            className={`absolute bottom-2 left-2 font-serif ${
+              isHappeningToday ? "text-yellow-100 font-bold" : "text-white"
+            }`}
+          >
+            {isHappeningToday
+              ? "TODAY"
+              : new Date(event.date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
           </div>
+
+          {/* Sparkle animation for today's events */}
+          {isHappeningToday && (
+            <div className="absolute top-4 right-16 animate-bounce">
+              <Star className="w-4 h-4 text-yellow-300 fill-current" />
+            </div>
+          )}
         </div>
 
         {/* Content Section */}
         <div className="p-4 space-y-2">
-          <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif group-hover:text-green-700 dark:group-hover:text-green-400 transition-colors line-clamp-1">
+          <h3
+            className={`text-xl font-bold font-serif group-hover:text-green-700 dark:group-hover:text-green-400 transition-colors line-clamp-1 ${
+              isHappeningToday ? "text-yellow-800 dark:text-yellow-400" : "text-green-800 dark:text-green-500"
+            }`}
+          >
             {event.title}
           </h3>
 
           {/* Location and Time */}
           <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 font-serif">
-            <MapPin className="w-4 h-4 text-green-700 flex-shrink-0" />
+            <MapPin className={`w-4 h-4 flex-shrink-0 ${isHappeningToday ? "text-yellow-600" : "text-green-700"}`} />
             <span className="truncate">{event.location}</span>
           </div>
 
           <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 font-serif">
-            <Clock className="w-4 h-4 text-green-700 flex-shrink-0" />
-            <span>{event.time}</span>
+            <Clock className={`w-4 h-4 flex-shrink-0 ${isHappeningToday ? "text-yellow-600" : "text-green-700"}`} />
+            <span className={isHappeningToday ? "font-semibold" : ""}>{event.time}</span>
           </div>
 
           {/* Add to Calendar Button */}
@@ -104,17 +159,23 @@ export default function EventsClient({ eventsData, upcomingEvents, pastEvents, f
             <div
               onClick={(e) => {
                 e.preventDefault()
-                e.stopPropagation() // This is crucial to stop the event from bubbling up
+                e.stopPropagation()
               }}
             >
               <AddToCalendar
                 event={event}
                 variant="ghost"
                 size="sm"
-                className="text-xs text-green-700 dark:text-green-500 hover:bg-green-100 dark:hover:bg-green-900/20"
+                className={`text-xs hover:bg-green-100 dark:hover:bg-green-900/20 ${
+                  isHappeningToday ? "text-yellow-700 dark:text-yellow-500" : "text-green-700 dark:text-green-500"
+                }`}
               />
             </div>
-            <span className="text-green-700 dark:text-green-500 text-sm font-serif flex items-center group-hover:underline">
+            <span
+              className={`text-sm font-serif flex items-center group-hover:underline ${
+                isHappeningToday ? "text-yellow-700 dark:text-yellow-500" : "text-green-700 dark:text-green-500"
+              }`}
+            >
               View Details
               <ArrowRight className="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
             </span>
@@ -164,6 +225,22 @@ export default function EventsClient({ eventsData, upcomingEvents, pastEvents, f
               <CalendarCheck className="w-4 h-4 mr-2" />
               All Events
             </Link>
+
+            {happeningTodayEvents.length > 0 && (
+              <Link
+                href="/club-events?filter=today"
+                className={`${
+                  filter === "today"
+                    ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-white"
+                    : "text-yellow-600 border-yellow-500 hover:bg-yellow-100"
+                } font-serif relative overflow-hidden group px-4 py-2 rounded-md border cursor-pointer flex items-center animate-pulse`}
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-yellow-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <Zap className="w-4 h-4 mr-2" />
+                Happening Today ({happeningTodayEvents.length})
+              </Link>
+            )}
+
             <Link
               href="/club-events?filter=upcoming"
               className={`${
@@ -195,7 +272,57 @@ export default function EventsClient({ eventsData, upcomingEvents, pastEvents, f
       {/* Main Content */}
       <div className="max-w-screen-xl mx-auto px-4 lg:px-8 pb-16 relative">
         <div className="space-y-8">
-          {/* Section Title */}
+          {/* Happening Today Section */}
+          {filter === "all" && happeningTodayEvents.length > 0 && (
+            <>
+              <div className="flex items-center justify-center mb-6">
+                <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-3 rounded-full shadow-lg animate-pulse">
+                  <h2 className="text-2xl font-bold font-serif flex items-center">
+                    <Zap className="w-6 h-6 mr-2" />
+                    Happening Today!
+                    <Star className="w-5 h-5 ml-2 fill-current" />
+                  </h2>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {happeningTodayEvents.map((event) => renderEventCard(event, false, true))}
+              </div>
+            </>
+          )}
+
+          {/* Today Filter View */}
+          {filter === "today" && (
+            <>
+              <div className="flex items-center justify-center mb-6">
+                <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-3 rounded-full shadow-lg">
+                  <h2 className="text-2xl font-bold font-serif flex items-center">
+                    <Zap className="w-6 h-6 mr-2" />
+                    Events Happening Today
+                    <Star className="w-5 h-5 ml-2 fill-current" />
+                  </h2>
+                </div>
+              </div>
+
+              {happeningTodayEvents.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {happeningTodayEvents.map((event) => renderEventCard(event, false, true))}
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl shadow-lg border border-yellow-400">
+                  <Zap className="w-16 h-16 mx-auto text-yellow-500 mb-4" />
+                  <h3 className="text-2xl font-bold text-yellow-800 dark:text-yellow-400 font-serif mb-2">
+                    No Events Today
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 font-serif">
+                    Check back tomorrow or view our upcoming events!
+                  </p>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Section Titles for other filters */}
           {filter === "all" && upcomingEvents.length > 0 && (
             <h2 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-6 flex items-center">
               <CalendarCheck className="w-6 h-6 mr-2" />
@@ -217,25 +344,31 @@ export default function EventsClient({ eventsData, upcomingEvents, pastEvents, f
             </h2>
           )}
 
-          {/* Grid of Events */}
-          {eventsToDisplay.length > 0 ? (
+          {/* Grid of Events (excluding today filter which is handled above) */}
+          {filter !== "today" && eventsToDisplay.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {eventsToDisplay.map((event) => renderEventCard(event, filter === "previous"))}
+              {eventsToDisplay.map((event) => {
+                const isToday = event.isHappeningToday || false
+                const isPast = filter === "previous"
+                return renderEventCard(event, isPast, isToday)
+              })}
             </div>
           ) : (
-            <div className="text-center py-12 bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700">
-              <Archive className="w-16 h-16 mx-auto text-green-700/50 mb-4" />
-              <h3 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-2">
-                No {filter === "upcoming" ? "Upcoming" : filter === "previous" ? "Previous" : ""} Events
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 font-serif">
-                {filter === "upcoming"
-                  ? "Check back soon for new events or view our previous gatherings!"
-                  : filter === "previous"
-                    ? "No previous events found. Check out our upcoming events!"
-                    : "No events found."}
-              </p>
-            </div>
+            filter !== "today" && (
+              <div className="text-center py-12 bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700">
+                <Archive className="w-16 h-16 mx-auto text-green-700/50 mb-4" />
+                <h3 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-2">
+                  No {filter === "upcoming" ? "Upcoming" : filter === "previous" ? "Previous" : ""} Events
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 font-serif">
+                  {filter === "upcoming"
+                    ? "Check back soon for new events or view our previous gatherings!"
+                    : filter === "previous"
+                      ? "No previous events found. Check out our upcoming events!"
+                      : "No events found."}
+                </p>
+              </div>
+            )
           )}
 
           {/* Past Events Section (only on "all" view) */}
@@ -267,7 +400,7 @@ export default function EventsClient({ eventsData, upcomingEvents, pastEvents, f
             <Link href="/about-us">
               <Button
                 variant="outline"
-                className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden"
+                className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden bg-transparent"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <Info className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:rotate-12" />

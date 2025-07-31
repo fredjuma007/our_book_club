@@ -1,4 +1,4 @@
-import { convertWixEventData } from "@/lib/event-utils"
+import { convertWixEventData, isEventHappeningToday } from "@/lib/event-utils"
 import EventsClient from "@/app/club-events/events-client"
 import { getServerClient } from "@/lib/wix"
 
@@ -27,6 +27,7 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
         ): event is {
           date: string
           isPast?: boolean
+          isHappeningToday?: boolean
           _id: string
           title: string
           time: string
@@ -52,45 +53,62 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
       const dateA = new Date(a.date)
       const dateB = new Date(b.date)
 
-      // If one is past and one is upcoming, upcoming comes first
-      const aIsPast = dateA < currentDate || a.isPast
-      const bIsPast = dateB < currentDate || b.isPast
+      // Check if events are happening today, past, or upcoming
+      const aIsToday = a.isHappeningToday || isEventHappeningToday(a.date)
+      const bIsToday = b.isHappeningToday || isEventHappeningToday(b.date)
+      const aIsPast = (dateA < currentDate || a.isPast) && !aIsToday
+      const bIsPast = (dateB < currentDate || b.isPast) && !bIsToday
 
-      if (aIsPast && !bIsPast) return 1 // a is past, b is upcoming, so b comes first
-      if (!aIsPast && bIsPast) return -1 // a is upcoming, b is past, so a comes first
+      // Priority order: Today events first, then upcoming, then past
+      if (aIsToday && !bIsToday) return -1 // a is today, b is not, so a comes first
+      if (!aIsToday && bIsToday) return 1 // b is today, a is not, so b comes first
+
+      if (aIsPast && !bIsPast && !bIsToday) return 1 // a is past, b is upcoming, so b comes first
+      if (!aIsPast && bIsPast && !aIsToday) return -1 // a is upcoming, b is past, so a comes first
+
+      // If both are today, sort by time if available, otherwise by title
+      if (aIsToday && bIsToday) {
+        return a.title.localeCompare(b.title)
+      }
 
       // If both are upcoming, sort by nearest first
-      if (!aIsPast && !bIsPast) {
+      if (!aIsPast && !bIsPast && !aIsToday && !bIsToday) {
         return dateA.getTime() - dateB.getTime() // Ascending for upcoming
       }
 
       // If both are past, sort by most recent first
-      return dateB.getTime() - dateA.getTime() // Descending for past
+      if (aIsPast && bIsPast) {
+        return dateB.getTime() - dateA.getTime() // Descending for past
+      }
+
+      return dateA.getTime() - dateB.getTime()
     })
 
-    // Now filter the already sorted data
+    // Filter events into categories
+    const happeningTodayEvents = eventsData.filter((event) => {
+      return event.isHappeningToday || isEventHappeningToday(event.date)
+    })
+
     const upcomingEvents = eventsData.filter((event) => {
       const eventDate = new Date(event.date)
-      return eventDate >= currentDate && !event.isPast
+      const isToday = event.isHappeningToday || isEventHappeningToday(event.date)
+      return eventDate >= currentDate && !event.isPast && !isToday
     })
 
     const pastEvents = eventsData.filter((event) => {
       const eventDate = new Date(event.date)
-      return eventDate < currentDate || event.isPast
+      const isToday = event.isHappeningToday || isEventHappeningToday(event.date)
+      return (eventDate < currentDate || event.isPast) && !isToday
     })
 
-    // Log the sorting results to verify
-    // console.log(
-    //   "Upcoming events sorted:",
-    //   upcomingEvents.map((e) => ({ title: e.title, date: e.date })),
-    // )
-    // console.log(
-    //   "Past events sorted:",
-    //   pastEvents.map((e) => ({ title: e.title, date: e.date })),
-    // )
-
     return (
-      <EventsClient eventsData={eventsData} upcomingEvents={upcomingEvents} pastEvents={pastEvents} filter={filter} />
+      <EventsClient
+        eventsData={eventsData}
+        upcomingEvents={upcomingEvents}
+        pastEvents={pastEvents}
+        happeningTodayEvents={happeningTodayEvents}
+        filter={filter}
+      />
     )
   } catch (error) {
     console.error("Error in events page:", error)
