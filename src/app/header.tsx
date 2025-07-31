@@ -6,7 +6,7 @@ import { getMember, getServerClient } from "@/lib/wix"
 import { ThemeToggle } from "@/components/ModeToggle"
 import { MobileMenu } from "@/components/mobile-menu"
 import { HeaderCountdown } from "@/components/header-countdown"
-import { convertWixEventData } from "@/lib/event-utils"
+import { convertWixEventData, isEventHappeningToday } from "@/lib/event-utils"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 
 export async function Header() {
@@ -31,20 +31,43 @@ export async function Header() {
           typeof event.description === "string",
       )
 
-    // Filter for upcoming events
-    const upcoming = processedEvents.filter((event) => {
-      const eventDate = new Date(event.date)
-      return eventDate >= currentDate && !event.isPast
+    // First, check for events happening today
+    const todayEvents = processedEvents.filter((event) => {
+      return isEventHappeningToday(event.date) && !event.isPast
     })
+
+    // Then filter for future upcoming events (excluding today)
+    const futureUpcoming = processedEvents.filter((event) => {
+      const eventDate = new Date(event.date)
+      const today = new Date()
+
+      // Set both dates to start of day for accurate comparison
+      eventDate.setHours(0, 0, 0, 0)
+      today.setHours(0, 0, 0, 0)
+
+      return eventDate.getTime() > today.getTime() && !event.isPast
+    })
+
+    // Prioritize today's events first, then future events
+    const upcoming = [...todayEvents, ...futureUpcoming]
 
     // Sort by date (nearest first)
     upcoming.sort((a, b) => {
       const dateA = new Date(a.date)
       const dateB = new Date(b.date)
+
+      // If one is today and one is not, today comes first
+      const aIsToday = isEventHappeningToday(a.date)
+      const bIsToday = isEventHappeningToday(b.date)
+
+      if (aIsToday && !bIsToday) return -1
+      if (!aIsToday && bIsToday) return 1
+
+      // Otherwise sort by date
       return dateA.getTime() - dateB.getTime()
     })
 
-    // Get the first upcoming event
+    // Get the first upcoming event (prioritizing today's events)
     if (upcoming.length > 0) {
       const event = upcoming[0]
 
@@ -118,8 +141,8 @@ export async function Header() {
                   THE READING CIRCLE{" "}
                   <span>
                     <span className="text-black dark:text-white">2</span>
-                      <span className="text-red-600">5</span>
-                      <span className="text-green-700">4</span>
+                    <span className="text-red-600">5</span>
+                    <span className="text-green-700">4</span>
                   </span>
                 </span>
                 <span className="absolute inset-0 hidden md:block bg-gradient-to-r from-green-400/0 via-green-500/20 to-green-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
@@ -199,7 +222,7 @@ export async function Header() {
                   <form action={logoutAction}>
                     <Button
                       variant="outline"
-                      className="border-green-600 dark:border-green-400 text-green-600 dark:text-green-400 hover:bg-green-600 hover:text-white dark:hover:bg-green-400 dark:hover:text-gray-900 transition-all relative overflow-hidden group font-serif"
+                      className="border-green-600 dark:border-green-400 text-green-600 dark:text-green-400 hover:bg-green-600 hover:text-white dark:hover:bg-green-400 dark:hover:text-gray-900 transition-all relative overflow-hidden group font-serif bg-transparent"
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
                       <span className="relative z-10">Logout</span>
@@ -211,7 +234,7 @@ export async function Header() {
                 <form action={loginAction}>
                   <Button
                     variant="outline"
-                    className="border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-400 dark:hover:text-gray-900 transition-all relative overflow-hidden group font-serif"
+                    className="border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-400 dark:hover:text-gray-900 transition-all relative overflow-hidden group font-serif bg-transparent"
                   >
                     <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
                     <span className="relative z-10">Login</span>
