@@ -13,7 +13,7 @@ export default function Footer() {
         <div className="flex items-center space-x-4">
           {/* Social media icons in the middle */}
           <Link
-            href="https://www.instagram.com/readingcircle254/"
+            href="https://www.instagram.com/thereadingcircle254/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-500 hover:text-pink-600"

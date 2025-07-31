@@ -8,6 +8,7 @@ import { MobileMenu } from "@/components/mobile-menu"
 import { HeaderCountdown } from "@/components/header-countdown"
 import { convertWixEventData, isEventHappeningToday } from "@/lib/event-utils"
 import { convertWixImageToUrl } from "@/lib/wix-client"
+import { FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa"
 
 export async function Header() {
   const [member, client] = await Promise.all([getMember(), getServerClient()])
@@ -123,47 +124,80 @@ export async function Header() {
         </div>
 
         <div className="container mx-auto flex justify-between items-center px-3 sm:px-4 md:px-8 py-2 sm:py-3 relative">
-          <Button variant="link" asChild>
-            <Link href="/" className="flex items-center gap-3 text-gray-900 dark:text-gray-100 group">
-              <div className="relative">
-                <div className="absolute -inset-2 rounded-full bg-green-100 dark:bg-green-900/30 opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
-                <Image
-                  src="/logo.jpeg"
-                  width={55}
-                  height={55}
-                  alt="TheBookClub"
-                  className="rounded-full border-2 border-green-200 dark:border-green-800 shadow-md hover:scale-105 transition-transform duration-300 relative z-10 w-[45px] h-[45px] sm:w-[55px] sm:h-[55px]"
-                />
-                <div className="absolute -inset-1 rounded-full bg-green-100 dark:bg-green-800/30 opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
-              </div>
-              <div className="relative overflow-hidden">
-                <span className="hidden sm:block text-lg sm:text-xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-500 to-green-400 tracking-wide group-hover:text-shadow-neon transition-all">
-                  THE READING CIRCLE{" "}
-                  <span>
-                    <span className="text-black dark:text-white">2</span>
-                    <span className="text-red-600">5</span>
-                    <span className="text-green-700">4</span>
-                  </span>
-                </span>
-                <span className="absolute inset-0 hidden md:block bg-gradient-to-r from-green-400/0 via-green-500/20 to-green-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                <div className="absolute inset-0 hidden md:block rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-green-400/0 via-green-500/30 to-green-400/0 blur-lg"></div>
-                <div className="absolute -right-6 -top-3 w-5 h-5 text-green-600 dark:text-green-400 opacity-70 hidden lg:block">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                  </svg>
+          <div className="flex items-center gap-4">
+            <Button variant="link" asChild>
+              <Link href="/" className="flex items-center gap-3 text-gray-900 dark:text-gray-100 group">
+                <div className="relative">
+                  <div className="absolute -inset-2 rounded-full bg-green-100 dark:bg-green-900/30 opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
+                  <Image
+                    src="/logo.jpeg"
+                    width={55}
+                    height={55}
+                    alt="TheBookClub"
+                    className="rounded-full border-2 border-green-200 dark:border-green-800 shadow-md hover:scale-105 transition-transform duration-300 relative z-10 w-[45px] h-[45px] sm:w-[55px] sm:h-[55px]"
+                  />
+                  <div className="absolute -inset-1 rounded-full bg-green-100 dark:bg-green-800/30 opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
                 </div>
-              </div>
-            </Link>
-          </Button>
+                <div className="relative overflow-hidden">
+                  <span className="hidden sm:block text-lg sm:text-xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-500 to-green-400 tracking-wide group-hover:text-shadow-neon transition-all">
+                    THE READING CIRCLE{" "}
+                    <span>
+                      <span className="text-black dark:text-white">2</span>
+                      <span className="text-red-600">5</span>
+                      <span className="text-green-700">4</span>
+                    </span>
+                  </span>
+                  <span className="absolute inset-0 hidden md:block bg-gradient-to-r from-green-400/0 via-green-500/20 to-green-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                  <div className="absolute inset-0 hidden md:block rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-green-400/0 via-green-500/30 to-green-400/0 blur-lg"></div>
+                  <div className="absolute -right-6 -top-3 w-5 h-5 text-green-600 dark:text-green-400 opacity-70 hidden lg:block">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                    </svg>
+                  </div>
+                </div>
+              </Link>
+            </Button>
+
+            {/* Social media icons - Show on all screen sizes */}
+            <div className="flex items-center gap-3 sm:gap-4">
+              <Link
+                href="https://www.instagram.com/thereadingcircle254/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-pink-500 dark:text-gray-500 dark:hover:text-pink-400 transition-colors duration-300 hover:scale-110 transform"
+                aria-label="Instagram"
+              >
+                <FaInstagram size={20} className="sm:w-5 sm:h-5" />
+              </Link>
+              <Link
+                href="https://www.tiktok.com/@reading.circle.254"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-gray-800 dark:text-gray-500 dark:hover:text-white transition-colors duration-300 hover:scale-110 transform"
+                aria-label="TikTok"
+              >
+                <FaTiktok size={20} className="sm:w-5 sm:h-5" />
+              </Link>
+              <Link
+                href="https://www.youtube.com/@TheReadingCircle254"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors duration-300 hover:scale-110 transform"
+                aria-label="YouTube"
+              >
+                <FaYoutube size={20} className="sm:w-5 sm:h-5" />
+              </Link>
+            </div>
+          </div>
 
           <div className="hidden lg:flex items-center gap-2 lg:gap-4 xl:gap-6 relative z-10">
             <HeaderCountdown upcomingEvent={upcomingEvent} />
