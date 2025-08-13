@@ -53,13 +53,13 @@ export async function Header() {
     const upcoming = [...todayEvents, ...futureUpcoming]
 
     // Sort by date (nearest first)
-    upcoming.sort((a, b) => {
+    upcoming.sort((a: { date: string | number | Date }, b: { date: string | number | Date }) => {
       const dateA = new Date(a.date)
       const dateB = new Date(b.date)
 
       // If one is today and one is not, today comes first
-      const aIsToday = isEventHappeningToday(a.date)
-      const bIsToday = isEventHappeningToday(b.date)
+      const aIsToday = isEventHappeningToday(String(a.date))
+      const bIsToday = isEventHappeningToday(String(b.date))
 
       if (aIsToday && !bIsToday) return -1
       if (!aIsToday && bIsToday) return 1
@@ -130,7 +130,7 @@ export async function Header() {
                 <div className="relative">
                   <div className="absolute -inset-2 rounded-full bg-green-100 dark:bg-green-900/30 opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
                   <Image
-                    src="/logo.jpeg"
+                    src="/logo.jpg"
                     width={55}
                     height={55}
                     alt="TheBookClub"
