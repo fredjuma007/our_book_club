@@ -179,7 +179,7 @@ export async function Header() {
                 <FaInstagram size={20} className="sm:w-5 sm:h-5" />
               </Link>
               <Link
-                href="https://www.tiktok.com/@reading.circle.254"
+                href="https://www.tiktok.com/@thereadingcircle254"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-gray-800 dark:text-gray-500 dark:hover:text-white transition-colors duration-300 hover:scale-110 transform"

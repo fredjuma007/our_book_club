@@ -22,7 +22,7 @@ export default function Footer() {
             <FaInstagram size={18} />
           </Link>
           <Link
-            href="https://www.tiktok.com/@reading.circle.254"
+            href="https://www.tiktok.com/@thereadingcircle254"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-500 hover:text-black"
