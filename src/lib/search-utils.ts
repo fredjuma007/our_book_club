@@ -54,7 +54,7 @@ async function generateBookTags(book: Book): Promise<BookTag> {
     `
 
     const { text } = await generateText({
-      model: groq("llama3-8b-8192"),
+      model: groq("llama-3.3-70b-versatile"),
       prompt: `You are a literary expert who specializes in categorizing books accurately. Respond only with the requested JSON format.
       
       ${prompt}`,

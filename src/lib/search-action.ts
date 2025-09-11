@@ -129,7 +129,7 @@ ${book.tags ? `Tags - Mood: ${book.tags.mood?.join(", ") || "None"}. Themes: ${b
 
     // Use Groq to find the best matches
     const { text } = await generateText({
-      model: groq("llama3-8b-8192"),
+      model: groq("llama-3.3-70b-versatile"),
       prompt: `You are a book recommendation expert. Given the following query and list of books, identify the top 5 books that best match the query. Focus on finding books that truly match the query's intent.
 
 Query: "${query}"
@@ -179,7 +179,7 @@ async function addExplanationsToBooks(query: string, books: BookWithMatch[]): Pr
     books.map(async (book) => {
       try {
         const { text } = await generateText({
-          model: groq("llama3-8b-8192"),
+          model: groq("llama-3.3-70b-versatile"),
           prompt: `Explain in ONE SHORT SENTENCE (max 15 words) why this book matches the query "${query}":
         
 Book: "${book.title}" by ${book.author}
