@@ -237,68 +237,78 @@ export default async function StorePage({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {sortedMerchandise.map((item) => (
-              <Card
+                <Card
                 key={item?._id}
                 className="hover:shadow-lg transition-all duration-300 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 group hover:-translate-y-1"
-              >
+                >
                 <CardHeader className="pb-2 border-b border-gray-100 dark:border-gray-700">
                   <CardTitle className="text-lg font-semibold text-emerald-800 dark:text-emerald-500 font-serif group-hover:text-emerald-700 dark:group-hover:text-emerald-400">
-                    {item?.name}
+                  {item?.name}
                   </CardTitle>
                   <CardDescription className="text-sm text-gray-600 dark:text-gray-400 font-serif capitalize">
-                    {item?.category}
+                  {item?.category}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center pt-4">
                   {item?.image ? (
-                    <div className="relative w-full h-40 flex items-center justify-center">
-                      <div className="absolute inset-0 bg-gradient-to-t from-emerald-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 rounded-lg" />
-                      <Image
-                        width={150}
-                        height={150}
-                        src={
-                          convertWixImageToUrl(item.image) ||
-                          "/placeholder.svg?height=150&width=150&query=book club merchandise" ||
-                          "/placeholder.svg" ||
-                          "/placeholder.svg" ||
-                          "/placeholder.svg" ||
-                          "/placeholder.svg" ||
-                          "/placeholder.svg"
-                        }
-                        alt={item?.name}
-                        className="max-w-full max-h-full object-contain rounded-lg cursor-pointer border border-gray-200 dark:border-gray-700 transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
+                  <div className="relative w-full h-40 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-gradient-to-t from-emerald-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 rounded-lg" />
+                    <Image
+                    width={150}
+                    height={150}
+                    src={
+                      convertWixImageToUrl(item.image) ||
+                      "/placeholder.svg?height=150&width=150&query=book club merchandise" ||
+                      "/placeholder.svg" ||
+                      "/placeholder.svg" ||
+                      "/placeholder.svg" ||
+                      "/placeholder.svg" ||
+                      "/placeholder.svg"
+                    }
+                    alt={item?.name}
+                    className="max-w-full max-h-full object-contain rounded-lg cursor-pointer border border-gray-200 dark:border-gray-700 transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
                   ) : (
-                    <div className="flex flex-col gap-2 items-center justify-center w-full h-40 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30">
-                      {item?.category === "bookmark" && (
-                        <Bookmark className="w-8 h-8 text-emerald-500 group-hover:scale-110 transition-transform" />
-                      )}
-                      {item?.category === "mug" && (
-                        <Coffee className="w-8 h-8 text-emerald-500 group-hover:scale-110 transition-transform" />
-                      )}
-                      {item?.category === "t-shirt" && (
-                        <Shirt className="w-8 h-8 text-emerald-500 group-hover:scale-110 transition-transform" />
-                      )}
-                      <p className="text-emerald-600 dark:text-emerald-400 font-serif text-sm">No Image</p>
-                    </div>
+                  <div className="flex flex-col gap-2 items-center justify-center w-full h-40 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30">
+                    {item?.category === "bookmark" && (
+                    <Bookmark className="w-8 h-8 text-emerald-500 group-hover:scale-110 transition-transform" />
+                    )}
+                    {item?.category === "mug" && (
+                    <Coffee className="w-8 h-8 text-emerald-500 group-hover:scale-110 transition-transform" />
+                    )}
+                    {item?.category === "t-shirt" && (
+                    <Shirt className="w-8 h-8 text-emerald-500 group-hover:scale-110 transition-transform" />
+                    )}
+                    <p className="text-emerald-600 dark:text-emerald-400 font-serif text-sm">No Image</p>
+                  </div>
                   )}
                   <div className="mt-3 text-center">
-                    <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400 font-serif">
-                      KES {item?.price?.toLocaleString()}
-                    </p>
+                  <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400 font-serif">
+                    KES {item?.price?.toLocaleString()}
+                  </p>
                   </div>
                 </CardContent>
-                <CardFooter className="flex justify-center pt-2">
+                <CardFooter className="flex flex-col gap-2 pt-2">
                   <Button
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white transition-colors font-serif w-full"
-                    disabled={!item?.inStock}
-                    asChild
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white transition-colors font-serif w-full"
+                  disabled={!item?.inStock}
+                  asChild
                   >
-                    <Link href={`/store/${item?._id}`}>{item?.inStock ? "View Details" : "Out of Stock"}</Link>
+                  <Link href={`/store/${item?._id}`}>{item?.inStock ? "View Details" : "Out of Stock"}</Link>
+                  </Button>
+                  <Button
+                  variant="outline"
+                  className="border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-serif w-full"
+                  asChild
+                  >
+                  <Link href="tel:+254700000000">
+                    <Phone className="w-4 h-4 mr-2" />
+                    Call to Order
+                  </Link>
                   </Button>
                 </CardFooter>
-              </Card>
+                </Card>
             ))}
           </div>
         </div>
