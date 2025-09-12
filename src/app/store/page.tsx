@@ -22,7 +22,23 @@ export default async function StorePage({
   const merchandiseData = await client.items
     .queryDataItems({ dataCollectionId: "Merchandise" })
     .find()
-    .then((res) => res.items.map((item) => item.data || {}))
+    .then((res) => {
+      console.log("[v0] Raw merchandise data from Wix:", JSON.stringify(res.items.slice(0, 1), null, 2))
+      return res.items.map((item) => {
+        const mappedItem = {
+          _id: item.data?._id,
+          name: item.data?.title_fld, // Map title_fld to name
+          category: item.data?.category,
+          price: item.data?.price,
+          description: item.data?.description_fld, // Map description_fld to description
+          image: item.data?.image_fld, // Map image_fld to image
+          inStock: item.data?.inStock,
+          featured: item.data?.featured,
+        }
+        console.log("[v0] Processing item:", mappedItem._id, "Image data:", mappedItem.image)
+        return mappedItem
+      })
+    })
     .catch((error) => {
       console.error("Error fetching merchandise:", error)
       return []
@@ -37,10 +53,10 @@ export default async function StorePage({
       name: string
       category: string
       price: number
-      description?: string
-      image?: any
-      inStock?: boolean
-      featured?: boolean
+      description: string
+      image: any
+      inStock: boolean
+      featured: boolean
     } => !!item && typeof item === "object",
   )
 
@@ -151,6 +167,8 @@ export default async function StorePage({
                             "/placeholder.svg?height=200&width=200&query=book club merchandise" ||
                             "/placeholder.svg" ||
                             "/placeholder.svg" ||
+                            "/placeholder.svg" ||
+                            "/placeholder.svg" ||
                             "/placeholder.svg"
                           }
                           alt={item?.name}
@@ -240,6 +258,8 @@ export default async function StorePage({
                         src={
                           convertWixImageToUrl(item.image) ||
                           "/placeholder.svg?height=150&width=150&query=book club merchandise" ||
+                          "/placeholder.svg" ||
+                          "/placeholder.svg" ||
                           "/placeholder.svg" ||
                           "/placeholder.svg" ||
                           "/placeholder.svg"

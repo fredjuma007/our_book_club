@@ -15,7 +15,13 @@ export function CategoryFilter({ merchandise, initialCategory }: CategoryFilterP
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const categories = Array.from(new Set(merchandise.map((item) => item.category).filter(Boolean)))
+  const categories = Array.from(
+    new Set(
+      merchandise
+        .map((item) => item.category)
+        .filter((category): category is string => typeof category === "string" && category.length > 0)
+    )
+  )
 
   const handleCategoryChange = (category: string) => {
     const params = new URLSearchParams(searchParams.toString())
