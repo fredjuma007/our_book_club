@@ -93,12 +93,13 @@ export default async function StorePage({
           <div className="text-center relative z-10">
             <h1 className="text-5xl md:text-6xl font-bold text-emerald-800 dark:text-emerald-500 font-serif mb-4 relative inline-block group">
               <span className="absolute -inset-1 bg-emerald-700/10 rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-              Book Club Store 🛍️
+              TRC 254 Store 🛍️
               <Sparkles className="absolute -right-8 -top-8 w-6 h-6 text-emerald-700/40" />
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto mb-8">
-              Show your love for reading with our exclusive book club merchandise! From bookmarks to mugs, we've got
-              everything for the book lover in you.
+              Show your love for reading with our exclusive book club merchandise! 
+              From stylish bookmarks to amazing t-shirts and mugs.
+              Every purchase supports our community initiatives. Happy shopping!
             </p>
 
             {/* Call to Action Buttons */}
