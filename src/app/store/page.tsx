@@ -114,7 +114,7 @@ export default async function StorePage({
               <Button
                 variant="outline"
                 size="lg"
-                className="border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-serif px-8 py-3 rounded-full bg-transparent"
+                className="border-emerald-600 text-emerald-700"
                 asChild
               >
                 <Link href="tel:+254700000000">
@@ -213,7 +213,7 @@ export default async function StorePage({
           <div className="w-full sm:w-auto">
             <CategoryFilter merchandise={merchandise} initialCategory={categoryFilter} />
           </div>
-          <CartButton />
+          {/*<CartButton />*/}
         </div>
 
         {/* All Products Grid */}
@@ -299,7 +299,7 @@ export default async function StorePage({
                   </Button>
                   <Button
                   variant="outline"
-                  className="border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-serif w-full"
+                  className="border-emerald-600 text-emerald-700"
                   asChild
                   >
                   <Link href="tel:+254700000000">
@@ -316,7 +316,7 @@ export default async function StorePage({
         {/* Call to Action Footer */}
         <div className="mt-16 text-center bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-8 border border-emerald-200 dark:border-emerald-700">
           <h3 className="text-2xl font-bold text-emerald-800 dark:text-emerald-500 font-serif mb-4">
-            Prefer to Order by Phone?
+            Order by Phone!
           </h3>
           <p className="text-gray-600 dark:text-gray-300 font-serif mb-6">
             Call us directly to place your order. We're here to help you find the perfect book club merchandise!
