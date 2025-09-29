@@ -212,7 +212,6 @@ export default function HomePageClient({
     // Generate particles only on the client side
     const generateParticles = () => {
       const newParticles = []
-      // Use a fixed seed or fewer particles to reduce the chance of hydration errors
       const particleCount = 10
 
       for (let i = 0; i < particleCount; i++) {
@@ -244,7 +243,7 @@ export default function HomePageClient({
   }, [])
 
   return (
-    <div className="relative bg-[url('/chess.jpg')] bg-cover bg-fixed bg-center bg-no-repeat text-green-600 dark:text-green-500 overflow-x-hidden selection:bg-green-700/30">
+    <div className="relative bg-[url('/karara.JPG')] bg-cover bg-fixed bg-center bg-no-repeat text-green-600 dark:text-green-500 overflow-x-hidden selection:bg-green-700/30">
       {isOpen && <GladwellAIWidget isOpen={isOpen} onClose={() => setIsOpen(false)} />}
       {/* Animated particles */}
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20 animate-fade" />
