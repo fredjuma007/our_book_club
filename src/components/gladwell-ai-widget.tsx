@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, Maximize2, Minimize2, Send, ChevronDown, ChevronUp, BookOpen } from "lucide-react"
+import { X, Maximize2, Minimize2, Send, ChevronDown, ChevronUp, BookOpen, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useTheme } from "next-themes"
@@ -30,7 +30,7 @@ interface BookItem {
   description?: string
   genre?: string
   _createdDate?: string
-  publisher?: string // Used for storing who recommended the book
+  publisher?: string
 }
 
 type Message = {
@@ -40,7 +40,6 @@ type Message = {
   timestamp: Date
 }
 
-// Define conversation history type for AI context
 type ConversationExchange = {
   role: "user" | "assistant"
   content: string
@@ -49,59 +48,6 @@ type ConversationExchange = {
 interface GladwellAIWidgetProps {
   isOpen: boolean
   onClose: () => void
-}
-
-// Star animation component
-const StarAnimation = () => {
-  // Generate random stars with different properties
-  const stars = Array.from({ length: 20 }).map((_, i) => ({
-    id: i,
-    size: Math.random() * 10 + 5, // Size between 5-15px
-    left: Math.random() * 60 - 30, // Position between -30px and 30px from center
-    delay: Math.random() * 0.5, // Random delay for staggered animation
-    duration: Math.random() * 1 + 1.5, // Duration between 1.5-2.5s
-  }))
-
-  return (
-    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none">
-      {stars.map((star) => (
-        <motion.div
-          key={star.id}
-          initial={{ y: 0, opacity: 0, scale: 0 }}
-          animate={{
-            y: -200,
-            opacity: [0, 1, 0],
-            scale: [0, 1, 0.5],
-            x: star.left,
-          }}
-          transition={{
-            duration: star.duration * 1.5, // Make animation last longer
-            delay: star.delay,
-            repeat: Number.POSITIVE_INFINITY,
-            repeatDelay: 3 + Math.random() * 2,
-          }}
-          className="absolute bottom-0"
-        >
-          <div
-            className="text-green-500 flex items-center justify-center"
-            style={{
-              width: `${star.size}px`,
-              height: `${star.size}px`,
-            }}
-          >
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12 2L14.2451 8.90983H21.5106L15.6327 13.1803L17.8779 20.0902L12 15.8197L6.12215 20.0902L8.36729 13.1803L2.48944 8.90983H9.75486L12 2Z"
-                fill="currentColor"
-                className="drop-shadow-[0_0_3px_rgba(34,197,94,0.7)]"
-              />
-            </svg>
-            <div className="absolute inset-0 rounded-full bg-green-400 blur-sm opacity-40"></div>
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  )
 }
 
 export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetProps) {
@@ -128,17 +74,14 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
   const pastEventsCount = (initialEvents || []).length - upcomingEventsCount
   const totalEventsCount = (initialEvents || []).length
 
-  // Count books by author to identify authors we've read multiple times
+  // Count books by author
   const authorCounts: Record<string, number> = {}
   const booksByAuthor: Record<string, { title: string; genre?: string; publisher?: string }[]> = {}
 
   if (allBooks && allBooks.length > 0) {
     allBooks.forEach((book) => {
       if (book.author) {
-        // Count books by author
         authorCounts[book.author] = (authorCounts[book.author] || 0) + 1
-
-        // Group books by author
         if (!booksByAuthor[book.author]) {
           booksByAuthor[book.author] = []
         }
@@ -151,7 +94,6 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
     })
   }
 
-  // Get authors we've read multiple times
   const multipleReadAuthors = Object.keys(authorCounts)
     .filter((author) => authorCounts[author] > 1)
     .map((author) => ({
@@ -160,7 +102,6 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
       books: booksByAuthor[author],
     }))
 
-  // Sample suggestions
   const suggestions = [
     "Book of the month?",
     "Who are the moderators?",
@@ -192,7 +133,7 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
     fetchData()
   }, [])
 
-  // Initialize with welcome message when opened
+  // Initialize with welcome message
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       setMessages([
@@ -225,7 +166,6 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
     }
   }, [showGreeting])
 
-  // Handle escape key to exit full screen
   useEffect(() => {
     const handleEscKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isFullScreen) {
@@ -237,13 +177,9 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
     return () => window.removeEventListener("keydown", handleEscKey)
   }, [isFullScreen])
 
-  // Update conversation history when messages change
   useEffect(() => {
     if (messages.length > 1) {
-      // Skip the welcome message
       const newHistory: ConversationExchange[] = []
-
-      // Start from index 1 to skip welcome message
       for (let i = 1; i < messages.length; i++) {
         const message = messages[i]
         newHistory.push({
@@ -251,7 +187,6 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
           content: message.content,
         })
       }
-
       setConversationHistory(newHistory)
     }
   }, [messages])
@@ -263,7 +198,6 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
   const handleSend = async () => {
     if (!inputValue.trim()) return
 
-    // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
       content: inputValue,
@@ -276,7 +210,6 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
     setIsTyping(true)
 
     try {
-      // Call the chat API
       const response = await fetch("/api/chat-ai", {
         method: "POST",
         headers: {
@@ -296,7 +229,6 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
       const data = await response.json()
 
       if (response.ok && !data.fallback) {
-        // AI response successful
         setMessages((prev) => [
           ...prev,
           {
@@ -310,7 +242,6 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
         return
       }
 
-      // Fallback to rule-based responses if AI fails
       setTimeout(() => {
         const botResponse = generateResponse(inputValue)
         setMessages((prev) => [
@@ -327,7 +258,6 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
     } catch (error) {
       console.error("Error getting AI response:", error)
 
-      // Fallback to rule-based responses
       setTimeout(() => {
         const botResponse = generateResponse(inputValue)
         setMessages((prev) => [
@@ -357,15 +287,12 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
 
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen)
-    // Ensure messages scroll to bottom after resize
     setTimeout(scrollToBottom, 300)
   }
 
-  // Fallback response generator (used when AI is unavailable)
   const generateResponse = (query: string): string => {
     const lowerQuery = query.toLowerCase().trim()
 
-    // Small talk responses
     if (
       lowerQuery === "hello" ||
       lowerQuery === "hi" ||
@@ -382,7 +309,7 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
       lowerQuery.includes("how's it going") ||
       lowerQuery.includes("how are things")
     ) {
-      return `I'm doing great, thanks for asking! As Gladwell, I'm always excited to talk about books and our reading club. How can I assist you today?`
+      return `I'm doing great, thanks for asking! 😊 As Gladwell, I'm always excited to talk about books and our reading club. How can I assist you today?`
     }
 
     if (
@@ -391,10 +318,9 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
       lowerQuery.includes("your name") ||
       lowerQuery.includes("gladwell")
     ) {
-      return `I'm Gladwell, the Reading Circle's digital assistant! My name is a little nod to the three main moderators of the club The Gladwells. I'm here to help you with information about our events, current book selections, and how to join our community of book lovers!`
+      return `I'm Gladwell, the Reading Circle's digital assistant! 🤖 My name is a little nod to the three main moderators of the club The Gladwells. I'm here to help you with information about our events, current book selections, and how to join our community of book lovers! 📚`
     }
 
-    // Book club statistics
     if (
       lowerQuery.includes("statistics") ||
       lowerQuery.includes("stats") ||
@@ -402,36 +328,79 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
       lowerQuery.includes("how many")
     ) {
       if (lowerQuery.includes("book") || lowerQuery.includes("read")) {
-        return `<h4 class="text-lg font-medium mb-2">📚 Gladwell's Book Statistics</h4>
-<ul class="list-disc pl-5 space-y-2">
-  <li><strong>Total books read:</strong> ${bookCount}</li>
-  <li><strong>Authors explored:</strong> ${authors.length}</li>
-  <li><strong>Genres covered:</strong> ${genres.length}</li>
-</ul>
-<p class="mb-3">Our members are always excited to discover new literary worlds together!</p>`
+        return `<div class="space-y-3">
+  <h4 class="text-lg font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+    📚 Book Statistics
+  </h4>
+  <div class="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 p-4 rounded-lg border-l-4 border-blue-500">
+    <ul class="space-y-2">
+      <li class="flex items-start gap-2">
+        <span class="text-blue-600 dark:text-blue-400 font-bold">📖</span>
+        <span><strong class="text-blue-700 dark:text-blue-300">Total books read:</strong> <span class="text-purple-600 dark:text-purple-400 font-bold">${bookCount}</span></span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-blue-600 dark:text-blue-400 font-bold">✍️</span>
+        <span><strong class="text-blue-700 dark:text-blue-300">Authors explored:</strong> <span class="text-purple-600 dark:text-purple-400 font-bold">${authors.length}</span></span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-blue-600 dark:text-blue-400 font-bold">🎭</span>
+        <span><strong class="text-blue-700 dark:text-blue-300">Genres covered:</strong> <span class="text-purple-600 dark:text-purple-400 font-bold">${genres.length}</span></span>
+      </li>
+    </ul>
+  </div>
+  <p class="text-sm text-gray-600 dark:text-gray-300 italic">Our members are always excited to discover new literary worlds together! ✨</p>
+</div>`
       }
 
       if (lowerQuery.includes("event") || lowerQuery.includes("meeting")) {
-        return `<h4 class="text-lg font-medium mb-2">📅 Gladwell's Event Statistics</h4>
-<ul class="list-disc pl-5 space-y-2">
-  <li><strong>Total events:</strong> ${totalEventsCount}</li>
-  <li><strong>Upcoming events:</strong> ${upcomingEventsCount}</li>
-  <li><strong>Past gatherings:</strong> ${pastEventsCount}</li>
-</ul>
-<p class="mb-3">Our events include book discussions, author talks, and social gatherings.</p>`
+        return `<div class="space-y-3">
+  <h4 class="text-lg font-bold text-pink-600 dark:text-pink-400 flex items-center gap-2">
+    📅 Event Statistics
+  </h4>
+  <div class="bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20 p-4 rounded-lg border-l-4 border-pink-500">
+    <ul class="space-y-2">
+      <li class="flex items-start gap-2">
+        <span class="text-pink-600 dark:text-pink-400 font-bold">🎉</span>
+        <span><strong class="text-pink-700 dark:text-pink-300">Total events:</strong> <span class="text-purple-600 dark:text-purple-400 font-bold">${totalEventsCount}</span></span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-pink-600 dark:text-pink-400 font-bold">🔜</span>
+        <span><strong class="text-pink-700 dark:text-pink-300">Upcoming events:</strong> <span class="text-purple-600 dark:text-purple-400 font-bold">${upcomingEventsCount}</span></span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-pink-600 dark:text-pink-400 font-bold">✅</span>
+        <span><strong class="text-pink-700 dark:text-pink-300">Past gatherings:</strong> <span class="text-purple-600 dark:text-purple-400 font-bold">${pastEventsCount}</span></span>
+      </li>
+    </ul>
+  </div>
+  <p class="text-sm text-gray-600 dark:text-gray-300 italic">Our events include book discussions, author talks, and social gatherings! 🎊</p>
+</div>`
       }
 
-      // General statistics
-      return `<h4 class="text-lg font-medium mb-2">📊 Gladwell's Club Statistics</h4>
-<ul class="list-disc pl-5 space-y-2">
-  <li><strong>Books read:</strong> ${bookCount} books from ${authors.length} authors across ${genres.length} genres</li>
-  <li><strong>Events hosted:</strong> ${totalEventsCount} events (${pastEventsCount} past, ${upcomingEventsCount} upcoming)</li>
-  <li><strong>Community size:</strong> 100+ passionate readers</li>
-</ul>
-<p class="mb-3">Our community is growing with passionate readers who love to share their literary journeys!</p>`
+      return `<div class="space-y-3">
+  <h4 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
+    📊 Club Statistics
+  </h4>
+  <div class="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-4 rounded-lg border-l-4 border-indigo-500">
+    <ul class="space-y-2">
+      <li class="flex items-start gap-2">
+        <span class="text-indigo-600 dark:text-indigo-400 font-bold">📚</span>
+        <span><strong class="text-indigo-700 dark:text-indigo-300">Books read:</strong> <span class="text-purple-600 dark:text-purple-400 font-bold">${bookCount}</span> books from <span class="text-purple-600 dark:text-purple-400 font-bold">${authors.length}</span> authors across <span class="text-purple-600 dark:text-purple-400 font-bold">${genres.length}</span> genres</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-indigo-600 dark:text-indigo-400 font-bold">🎪</span>
+        <span><strong class="text-indigo-700 dark:text-indigo-300">Events hosted:</strong> <span class="text-purple-600 dark:text-purple-400 font-bold">${totalEventsCount}</span> events (<span class="text-purple-600 dark:text-purple-400 font-bold">${pastEventsCount}</span> past, <span class="text-purple-600 dark:text-purple-400 font-bold">${upcomingEventsCount}</span> upcoming)</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-indigo-600 dark:text-indigo-400 font-bold">👥</span>
+        <span><strong class="text-indigo-700 dark:text-indigo-300">Community size:</strong> <span class="text-purple-600 dark:text-purple-400 font-bold">100+</span> passionate readers</span>
+      </li>
+    </ul>
+  </div>
+  <p class="text-sm text-gray-600 dark:text-gray-300 italic">Our community is growing with passionate readers who love to share their literary journeys! 🌟</p>
+</div>`
     }
 
-    // Authors information
     if (
       lowerQuery.includes("author") ||
       lowerQuery.includes("writer") ||
@@ -439,18 +408,28 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
       lowerQuery.includes("who has written")
     ) {
       const authorsList = authors.slice(0, 5)
-      const formattedAuthors = authorsList.map((author) => `<li>${author}</li>`).join("")
+      const formattedAuthors = authorsList
+        .map(
+          (author) =>
+            `<li class="flex items-start gap-2"><span class="text-teal-600 dark:text-teal-400">✍️</span><span>${author}</span></li>`,
+        )
+        .join("")
 
-      return `<h4 class="text-lg font-medium mb-2">✍️ Gladwell's Author Insights</h4>
-<p class="mb-3">The Reading Circle has explored works from ${authors.length} different authors, including:</p>
-<ul class="list-disc pl-5 space-y-2">
-  ${formattedAuthors}
-  ${authors.length > 5 ? "<li>...and more!</li>" : ""}
-</ul>
-<p class="mb-3">We love discovering diverse voices and perspectives through our reading selections!</p>`
+      return `<div class="space-y-3">
+  <h4 class="text-lg font-bold text-teal-600 dark:text-teal-400 flex items-center gap-2">
+    ✍️ Author Insights
+  </h4>
+  <div class="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 p-4 rounded-lg border-l-4 border-teal-500">
+    <p class="mb-3 text-gray-700 dark:text-gray-200">The Reading Circle has explored works from <strong class="text-teal-700 dark:text-teal-300">${authors.length}</strong> different authors, including:</p>
+    <ul class="space-y-2">
+      ${formattedAuthors}
+      ${authors.length > 5 ? '<li class="flex items-start gap-2"><span class="text-teal-600 dark:text-teal-400">📖</span><span class="italic">...and more!</span></li>' : ""}
+    </ul>
+  </div>
+  <p class="text-sm text-gray-600 dark:text-gray-300 italic">We love discovering diverse voices and perspectives through our reading selections! 🌍</p>
+</div>`
     }
 
-    // Authors we've read multiple times
     if (
       lowerQuery.includes("multiple") ||
       lowerQuery.includes("twice") ||
@@ -489,7 +468,6 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
 ${authorContent}`
     }
 
-    // Genres information
     if (lowerQuery.includes("genre") || lowerQuery.includes("type of book") || lowerQuery.includes("category")) {
       const genresList = genres.slice(0, 5)
       const formattedGenres = genresList.map((genre) => `<li>${genre}</li>`).join("")
@@ -503,7 +481,6 @@ ${authorContent}`
 <p class="mb-3">We enjoy diversifying our reading experiences across different literary categories!</p>`
     }
 
-    // Book count
     if (
       lowerQuery.includes("how many books") ||
       lowerQuery.includes("book count") ||
@@ -513,7 +490,6 @@ ${authorContent}`
 <p class="mb-3">The Reading Circle has read <strong>${bookCount} books</strong> so far! Our members are always excited to add more great titles to this growing list.</p>`
     }
 
-    // Events information
     if (
       lowerQuery.includes("what is the reading circle") ||
       lowerQuery.includes("what's the reading circle") ||
@@ -542,7 +518,6 @@ ${authorContent}`
       return `Goodbye! Gladwell will be here whenever you have more questions. Happy reading! 📚`
     }
 
-    // Next event
     if (lowerQuery.includes("next event") || lowerQuery.includes("upcoming event")) {
       if (initialEvents && initialEvents.length > 0) {
         const nextEvent = initialEvents[0]
@@ -566,7 +541,6 @@ ${authorContent}`
 <p class="mb-3">You can find our upcoming events on the <a href="/club-events" class="underline">events page</a>. We regularly host book discussions, author talks, and social gatherings.</p>`
     }
 
-    // Current book
     if (
       lowerQuery.includes("book of the month") ||
       lowerQuery.includes("current book") ||
@@ -585,14 +559,12 @@ ${authorContent}`
 <p class="mb-3">You can find our current book selection on the <a href="/books" class="underline">books page</a>. We select a new book each month through member voting.</p>`
     }
 
-    // Book recommender
     if (
       lowerQuery.includes("who recommend") ||
       lowerQuery.includes("who suggested") ||
       lowerQuery.includes("recommender") ||
       lowerQuery.includes("recommended by")
     ) {
-      // Extract book title from query
       let bookTitle = ""
       const words = lowerQuery.split(" ")
 
@@ -603,7 +575,6 @@ ${authorContent}`
           words[i] === "suggests" ||
           words[i] === "suggested"
         ) {
-          // Look for book title after these words
           if (i + 1 < words.length) {
             bookTitle = words.slice(i + 1).join(" ")
             break
@@ -611,7 +582,6 @@ ${authorContent}`
         }
       }
 
-      // If no title found after recommend words, look for it before
       if (!bookTitle) {
         for (let i = 0; i < words.length; i++) {
           if (
@@ -620,7 +590,6 @@ ${authorContent}`
             words[i] === "suggests" ||
             words[i] === "suggested"
           ) {
-            // Look for book title before these words
             if (i > 0) {
               bookTitle = words.slice(0, i).join(" ")
               break
@@ -629,10 +598,8 @@ ${authorContent}`
         }
       }
 
-      // Clean up the title
       bookTitle = bookTitle.replace(/^who|^did|^who did|^the book/, "").trim()
 
-      // Search for the book in allBooks
       const matchingBook = allBooks.find(
         (book) => book.title.toLowerCase().includes(bookTitle) || bookTitle.includes(book.title.toLowerCase()),
       )
@@ -655,7 +622,6 @@ ${authorContent}`
       }
     }
 
-    // All books
     if (
       lowerQuery.includes("all books") ||
       lowerQuery.includes("book list") ||
@@ -678,19 +644,32 @@ ${authorContent}`
 <p class="mb-3">You can view our complete reading history on the <a href="/books" class="underline">books page</a>.</p>`
     }
 
-    // Moderators
     if (lowerQuery.includes("moderator") || lowerQuery.includes("leader") || lowerQuery.includes("who runs")) {
-      return `<h4 class="text-lg font-medium mb-2">👥 Gladwell's Moderator Info</h4>
-<p class="mb-3">Our club is moderated by:</p>
-<ul class="list-disc pl-5 space-y-2">
-  <li><strong>Esther Mboche</strong> - Events Coordinator</li>
-  <li><strong>Brenda Frenjo</strong> - Membership & Reviews</li>
-  <li><strong>Fred Juma</strong> - Books & Reviews</li>
-</ul>
-<p class="mb-3">You can learn more about them on our <a href="/about-us" class="underline">about us page</a>.</p>`
+      return `<div class="space-y-3">
+  <h4 class="text-lg font-bold text-orange-600 dark:text-orange-400 flex items-center gap-2">
+    👥 Meet Our Moderators
+  </h4>
+  <div class="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 p-4 rounded-lg border-l-4 border-orange-500">
+    <p class="mb-3 text-gray-700 dark:text-gray-200">Our club is moderated by:</p>
+    <ul class="space-y-3">
+      <li class="flex items-start gap-2">
+        <span class="text-orange-600 dark:text-orange-400 font-bold">📅</span>
+        <span><strong class="text-orange-700 dark:text-orange-300">Esther Mboche</strong> - Events Coordinator</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-orange-600 dark:text-orange-400 font-bold">👤</span>
+        <span><strong class="text-orange-700 dark:text-orange-300">Brenda Frenjo</strong> - Membership & Reviews</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-orange-600 dark:text-orange-400 font-bold">📚</span>
+        <span><strong class="text-orange-700 dark:text-orange-300">Fred Juma</strong> - Books & Reviews</span>
+      </li>
+    </ul>
+  </div>
+  <p class="text-sm text-gray-600 dark:text-gray-300">You can learn more about them on our <a href="/about-us" class="underline text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300">about us page</a>. 🌟</p>
+</div>`
     }
 
-    // How to join
     if (lowerQuery.includes("join") || lowerQuery.includes("become member") || lowerQuery.includes("sign up")) {
       return `<div class="p-3 rounded-md border mb-3">
   <h4 class="text-lg font-medium mb-2">🎉 Join The Reading Circle</h4>
@@ -699,7 +678,6 @@ ${authorContent}`
 </div>`
     }
 
-    // Meeting schedule
     if (lowerQuery.includes("schedule") || lowerQuery.includes("when") || lowerQuery.includes("meeting time")) {
       return `<h4 class="text-lg font-medium mb-2">🕒 Gladwell's Schedule Update</h4>
 <p class="mb-3">We typically meet a maximum of twice a month:</p>
@@ -710,7 +688,6 @@ ${authorContent}`
 <p class="mb-3">We've hosted ${totalEventsCount} events so far! Check our <a href="/club-events" class="underline">events calendar</a> for specific dates and times.</p>`
     }
 
-    // Guidelines
     if (lowerQuery.includes("guideline") || lowerQuery.includes("rule") || lowerQuery.includes("expectation")) {
       return `<h4 class="text-lg font-medium mb-2">📝 Gladwell's Club Guidelines</h4>
 <p class="mb-3">Our club guidelines include:</p>
@@ -722,7 +699,6 @@ ${authorContent}`
 <p class="mb-3">You can read the full guidelines on our <a href="/join-us?tab=guidelines" class="underline">join us page</a>.</p>`
     }
 
-    // Handsome member
     if (
       lowerQuery.includes("handsome") ||
       lowerQuery.includes("who is handsome") ||
@@ -733,14 +709,12 @@ ${authorContent}`
 </div>`
     }
 
-    // fact about Brenda's height
     if (lowerQuery.includes("brenda") || lowerQuery.includes("height") || lowerQuery.includes("how tall is brenda")) {
       return `<div class="p-3 rounded-md border mb-3">
   <p class="mb-3"><strong>Brenda Frenjo</strong> is 5'8" tall. She can clearly see tomorrow's book club meeting from her house!</p>
 </div>`
     }
 
-    // fact about Esther's prefect vibes
     if (
       lowerQuery.includes("esther") ||
       lowerQuery.includes("vibes") ||
@@ -751,7 +725,6 @@ ${authorContent}`
 </div>`
     }
 
-    // book voting and selection
     if (
       lowerQuery.includes("book voting") ||
       lowerQuery.includes("how do we select books") ||
@@ -767,7 +740,6 @@ ${authorContent}`
 <p class="mb-3">It's a fun way to ensure everyone has a say in our reading list.</p>`
     }
 
-    // Gallery
     if (
       lowerQuery.includes("photo") ||
       lowerQuery.includes("picture") ||
@@ -778,13 +750,11 @@ ${authorContent}`
 <p class="mb-3">You can view photos from our past events and gatherings in our <a href="/gallery" class="underline">gallery page</a>. We love capturing memories from our book discussions and social events!</p>`
     }
 
-    // Book recommendations
     if (
       lowerQuery.includes("recommend") ||
       lowerQuery.includes("suggestion") ||
       lowerQuery.includes("what should i read")
     ) {
-      // Get random books from different genres for recommendations
       const randomBooks = allBooks
         .sort(() => 0.5 - Math.random())
         .slice(0, 3)
@@ -801,7 +771,6 @@ ${authorContent}`
 <p class="mb-3">We've read ${bookCount} books across ${genres.length} genres so far! What genres do you typically enjoy?</p>`
     }
 
-    // Fallback response
     return `<div class="p-3 rounded-md border mb-3">
   <p class="mb-3">This is Gladwell! I'm not sure about that, but I can tell you that The Reading Circle has read ${bookCount} books and hosted ${totalEventsCount} events so far!</p>
   <p class="mb-3">Would you like to know about our:</p>
@@ -832,79 +801,120 @@ ${authorContent}`
         style={{ height: isFullScreen ? "85vh" : "min(80vh, 600px)" }}
       >
         {/* Header */}
-        <div className="bg-green-700 text-white p-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5 mr-2" />
-            <h3 className="font-serif font-bold">Gladwell</h3>
+        <div className="bg-gradient-to-r from-emerald-600 to-green-700 text-white p-4 flex items-center justify-between shadow-lg">
+          <div className="flex items-center gap-3">
+            <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+              <BookOpen className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-serif font-bold text-lg">Gladwell</h3>
+              <p className="text-xs text-emerald-100">Reading Circle Assistant</p>
+            </div>
           </div>
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleFullScreen}
-              className="text-white hover:bg-green-800 h-8 w-8"
+              className="text-white hover:bg-white/20 h-8 w-8 transition-colors"
               title={isFullScreen ? "Minimize" : "Maximize"}
             >
               {isFullScreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
             </Button>
-            <Button variant="ghost" size="icon" onClick={onClose} className="text-white hover:bg-green-800 h-8 w-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="text-white hover:bg-white/20 h-8 w-8 transition-colors"
+            >
               <X className="w-4 h-4" />
             </Button>
           </div>
         </div>
 
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 bg-[#f5f0e1] dark:bg-gray-900 space-y-4">
+        <div className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-emerald-50/30 to-green-50/30 dark:from-gray-900 dark:to-gray-800 space-y-4">
           {messages.map((message) => (
-            <div key={message.id} className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
+            <motion.div
+              key={message.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
+            >
               <div
-                className={`max-w-[80%] rounded-lg p-3 ${
+                className={`max-w-[85%] rounded-2xl p-4 shadow-md ${
                   message.sender === "user"
-                    ? "bg-green-700 text-white"
-                    : "bg-[#fffaf0] dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-green-700/30"
+                    ? "bg-gradient-to-br from-emerald-600 to-green-600 text-white ml-auto"
+                    : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 border-2 border-emerald-100 dark:border-emerald-900/30"
                 }`}
               >
-                <div className="text-sm font-serif" dangerouslySetInnerHTML={{ __html: message.content }} />
-                <div className="text-xs opacity-70 mt-1">
+                {message.sender === "bot" && (
+                  <div className="flex items-center gap-2 mb-2 pb-2 border-b border-emerald-100 dark:border-emerald-900/30">
+                    <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">Gladwell</span>
+                  </div>
+                )}
+                <div
+                  className={`text-sm leading-relaxed font-serif ${
+                    message.sender === "user" ? "text-white" : "text-gray-700 dark:text-gray-200"
+                  }`}
+                  dangerouslySetInnerHTML={{ __html: message.content }}
+                />
+                <div
+                  className={`text-xs mt-2 pt-2 border-t ${
+                    message.sender === "user"
+                      ? "border-white/20 text-emerald-100"
+                      : "border-emerald-100 dark:border-emerald-900/30 text-gray-500 dark:text-gray-400"
+                  }`}
+                >
                   {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
           {isTyping && (
-            <div className="flex justify-start">
-              <div className="bg-[#fffaf0] dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg p-3 max-w-[80%] border border-green-700/30">
-                <div className="flex space-x-1">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-start">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 max-w-[85%] border-2 border-emerald-100 dark:border-emerald-900/30 shadow-md">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                    Gladwell is typing...
+                  </span>
+                </div>
+                <div className="flex space-x-2">
                   <div
-                    className="w-2 h-2 rounded-full bg-green-700 animate-bounce"
+                    className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 animate-bounce"
                     style={{ animationDelay: "0ms" }}
                   ></div>
                   <div
-                    className="w-2 h-2 rounded-full bg-green-700 animate-bounce"
+                    className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 animate-bounce"
                     style={{ animationDelay: "150ms" }}
                   ></div>
                   <div
-                    className="w-2 h-2 rounded-full bg-green-700 animate-bounce"
+                    className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 animate-bounce"
                     style={{ animationDelay: "300ms" }}
                   ></div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
           <div ref={messagesEndRef} />
         </div>
 
         {/* Suggestions */}
-        <div className="border-t border-green-700/20 bg-[#fffaf0] dark:bg-gray-800">
+        <div className="border-t-2 border-emerald-100 dark:border-emerald-900/30 bg-white dark:bg-gray-800">
           <div
-            className="px-4 py-2 flex justify-between items-center cursor-pointer hover:bg-green-50 dark:hover:bg-gray-700"
+            className="px-4 py-3 flex justify-between items-center cursor-pointer hover:bg-emerald-50 dark:hover:bg-gray-700/50 transition-colors"
             onClick={() => setSuggestionsOpen(!suggestionsOpen)}
           >
-            <span className="text-sm font-medium text-green-800 dark:text-green-500">Ask Gladwell</span>
+            <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              Quick Questions
+            </span>
             {suggestionsOpen ? (
-              <ChevronUp className="w-4 h-4 text-green-700" />
+              <ChevronUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             ) : (
-              <ChevronDown className="w-4 h-4 text-green-700" />
+              <ChevronDown className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             )}
           </div>
 
@@ -916,12 +926,12 @@ ${authorContent}`
                 exit={{ height: 0, opacity: 0 }}
                 className="overflow-hidden"
               >
-                <div className="px-2 pb-2 flex flex-wrap gap-2">
+                <div className="px-4 pb-3 flex flex-wrap gap-2">
                   {suggestions.map((suggestion) => (
                     <button
                       key={suggestion}
                       onClick={() => handleSuggestionClick(suggestion)}
-                      className="text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 px-2 py-1 rounded-full hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
+                      className="text-xs bg-gradient-to-r from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 text-emerald-800 dark:text-emerald-300 px-3 py-1.5 rounded-full hover:from-emerald-200 hover:to-green-200 dark:hover:from-emerald-900/50 dark:hover:to-green-900/50 transition-all shadow-sm hover:shadow-md font-medium"
                     >
                       {suggestion}
                     </button>
@@ -933,19 +943,19 @@ ${authorContent}`
         </div>
 
         {/* Input */}
-        <div className="p-3 border-t border-green-700/20 bg-white dark:bg-gray-800 flex items-center gap-2">
+        <div className="p-4 border-t-2 border-emerald-100 dark:border-emerald-900/30 bg-white dark:bg-gray-800 flex items-center gap-3">
           <Input
             ref={inputRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Ask Gladwell something..."
-            className="flex-1 border-green-700/30 focus-visible:ring-green-700"
+            className="flex-1 border-2 border-emerald-200 dark:border-emerald-900/50 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 rounded-xl px-4 py-2 text-sm"
           />
           <Button
             onClick={handleSend}
             disabled={!inputValue.trim()}
-            className="bg-green-700 hover:bg-green-800 text-white"
+            className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded-xl px-4"
             size="icon"
           >
             <Send className="w-4 h-4" />
