@@ -297,7 +297,7 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="fixed bottom-24 right-6 w-[28rem] lg:w-[32rem] h-[600px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700"
+            className="fixed bottom-24 right-6 w-96 h-[600px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-emerald-600 to-green-600 p-4 flex items-center justify-between">
@@ -477,7 +477,7 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
               >
                 <MessageSquare className="w-6 h-6" />
               </Button>
-              {showGreeting && (
+             {/* {showGreeting && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -485,12 +485,13 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
                   transition={{ delay: 1, duration: 0.5 }}
                   className="absolute -top-12 right-0 bg-white dark:bg-gray-800 text-green-700 dark:text-green-400 text-sm rounded-lg px-3 py-2 shadow-md border border-green-200 dark:border-green-800 whitespace-nowrap"
                 >
-                  <div className="relative">
+                  *<div className="relative">
                     Hi👋
-                    <div className="absolute -bottom-2 right-4 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-white dark:border-t-gray-800"></div>
+                    <div className="absolute -bottom-2 right-4 w-0 h-0 border-l-8 border-l-transparent 
+                    border-r-8 border-r-transparent border-t-8 border-t-white dark:border-t-gray-800"></div>*
                   </div>
                 </motion.div>
-              )}
+              )}*/}
               <motion.div
                 className="absolute -top-3 -right-3 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full px-2 py-0.5 flex items-center justify-center shadow-lg"
                 animate={{
