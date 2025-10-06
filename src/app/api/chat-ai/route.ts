@@ -298,6 +298,20 @@ ${
     : "- No upcoming events are currently scheduled."
 }
 
+# PAST EVENTS (${pastEventsCount})
+${
+  pastEvents.length > 0
+    ? pastEvents
+        .map(
+          (e: any) =>
+            `- "${e.title}" on ${e.date} at ${e.time}, ${e.location}${e.type ? `, Type: ${e.type}` : ""}${
+              e.moderators && e.moderators.length > 0 ? `, Moderated by: ${e.moderators.join(", ")}` : ""
+            }${e.bookTitle ? `, Book: "${e.bookTitle}"${e.bookAuthor ? ` by ${e.bookAuthor}` : ""}` : ""}`,
+        )
+        .join("\n")
+    : "- No past events recorded yet."
+}
+
 # ALL BOOKS (${allProcessedBooks.length})
 ${
   allProcessedBooks.length > 0
