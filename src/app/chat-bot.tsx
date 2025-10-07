@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect, useRef } from "react"
 import type React from "react"
-
+import { BookOpen, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MessageSquare, X, Send, ChevronDown, ChevronUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -47,7 +47,7 @@ export default function ChatBot({
   const [allBooks, setAllBooks] = useState(propBooks)
   const [isLoadingData, setIsLoadingData] = useState(true)
 
-  const suggestions: string[] = []
+  const suggestions: string[] = ["Book of the month?", "Next event?", "Who are the moderators?", "How to join"]
 
   useEffect(() => {
     const fetchData = async () => {
@@ -397,27 +397,70 @@ export default function ChatBot({
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-950">
               {messages.length === 0 && (
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-gradient-to-br from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <MessageSquare className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Hi! I'm Gladwell</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    Ask me anything about our book club like, upcoming events, or the current book selection!
-                  </p>
-                  {suggestions.length > 0 && (
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      {suggestions.map((suggestion) => (
-                        <button
-                          key={suggestion}
-                          onClick={() => handleSuggestionClick(suggestion)}
-                          className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                        >
-                          {suggestion}
-                        </button>
-                      ))}
+                <div className="flex flex-col items-center justify-center h-full py-12">
+                  <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-center space-y-6 max-w-md"
+                  >
+                    {/* Icon with gradient background */}
+                    <div className="relative mx-auto w-24 h-24">
+                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 to-green-600 rounded-full animate-pulse opacity-20"></div>
+                      <div className="relative w-24 h-24 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center shadow-xl">
+                        <BookOpen className="w-12 h-12 text-white" />
+                      </div>
+                      <motion.div
+                        className="absolute -top-2 -right-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-2 shadow-lg"
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          rotate: [0, 10, -10, 0],
+                        }}
+                        transition={{
+                          repeat: Number.POSITIVE_INFINITY,
+                          duration: 2,
+                        }}
+                      >
+                        <Sparkles className="w-5 h-5 text-white" />
+                      </motion.div>
                     </div>
-                  )}
+
+                    {/* Welcome text */}
+                    <div className="space-y-3">
+                      <h4 className="font-bold text-2xl bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
+                        Hi! I'm Gladwell
+                      </h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        Your friendly Reading Circle assistant. Ask me about upcoming events, book selections, club
+                        statistics, or how to join our community!
+                      </p>
+                    </div>
+
+                    {/* Feature highlights */}
+                    <div className="grid grid-cols-2 gap-3 pt-4">
+                      <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800">
+                        <div className="text-2xl mb-1">📚</div>
+                        <div className="text-xs font-semibold text-blue-700 dark:text-blue-300">
+                          {bookCount} Books Read
+                        </div>
+                      </div>
+                      <div className="bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20 p-3 rounded-lg border border-pink-200 dark:border-pink-800">
+                        <div className="text-2xl mb-1">🎉</div>
+                        <div className="text-xs font-semibold text-pink-700 dark:text-pink-300">
+                          {totalEventsCount} Events
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Prompt to start */}
+                    <motion.p
+                      className="text-xs text-emerald-600 dark:text-emerald-400 font-medium"
+                      animate={{ opacity: [0.5, 1, 0.5] }}
+                      transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
+                    >
+                      Type a message below to get started ↓
+                    </motion.p>
+                  </motion.div>
                 </div>
               )}
 
@@ -440,7 +483,7 @@ export default function ChatBot({
                     </div>
                   )}
                   {message.role === "user" && (
-                    <div className="bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%] shadow-sm">
+                    <div className="bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%] shadow-sm">
                       {message.content}
                     </div>
                   )}
@@ -498,48 +541,50 @@ export default function ChatBot({
                   <Send className="w-4 h-4" />
                 </Button>
               </div>
-
-              {suggestions.length > 0 && (
-                <div className="mt-3 border-t border-gray-200 dark:border-gray-700 pt-3">
-                  <div
-                    className="flex justify-between items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg px-2 py-1 transition-colors"
-                    onClick={() => setSuggestionsOpen(!suggestionsOpen)}
-                  >
-                    <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
-                      Quick Questions
-                    </span>
-                    {suggestionsOpen ? (
-                      <ChevronUp className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                    ) : (
-                      <ChevronDown className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                    )}
-                  </div>
-
-                  <AnimatePresence>
-                    {suggestionsOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          {suggestions.map((suggestion) => (
-                            <button
-                              key={suggestion}
-                              onClick={() => handleSuggestionClick(suggestion)}
-                              className="text-xs bg-gradient-to-r from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 text-emerald-800 dark:text-emerald-300 px-3 py-1.5 rounded-full hover:from-emerald-200 hover:to-green-200 dark:hover:from-emerald-900/50 dark:hover:to-green-900/50 transition-all shadow-sm hover:shadow-md font-medium"
-                            >
-                              {suggestion}
-                            </button>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              )}
             </div>
+
+            {/* Suggestions */}
+            {suggestions.length > 0 && (
+              <div className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+                <div
+                  className="flex justify-between items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 px-4 py-3 transition-colors"
+                  onClick={() => setSuggestionsOpen(!suggestionsOpen)}
+                >
+                  <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    Quick Questions
+                  </span>
+                  {suggestionsOpen ? (
+                    <ChevronUp className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  ) : (
+                    <ChevronDown className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  )}
+                </div>
+
+                <AnimatePresence>
+                  {suggestionsOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-4 pb-3 flex flex-wrap gap-2">
+                        {suggestions.map((suggestion) => (
+                          <button
+                            key={suggestion}
+                            onClick={() => handleSuggestionClick(suggestion)}
+                            className="text-xs bg-gradient-to-r from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 text-emerald-800 dark:text-emerald-300 px-3 py-1.5 rounded-full hover:from-emerald-200 hover:to-green-200 dark:hover:from-emerald-900/50 dark:hover:to-green-900/50 transition-all shadow-sm hover:shadow-md font-medium"
+                          >
+                            {suggestion}
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
