@@ -47,7 +47,7 @@ export default function ChatBot({
   const [allBooks, setAllBooks] = useState(propBooks)
   const [isLoadingData, setIsLoadingData] = useState(true)
 
-  const suggestions = ["Book of the month?", "Who are the moderators?", "Next event?", "Club statistics", "How to join"]
+  const suggestions: string[] = []
 
   useEffect(() => {
     const fetchData = async () => {
@@ -351,7 +351,7 @@ export default function ChatBot({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
       handleSend()
     }
@@ -371,7 +371,7 @@ export default function ChatBot({
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="fixed bottom-24 right-6 w-96 md:w-[500px] lg:w-[600px] h-[600px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700"
+            className="fixed bottom-0 right-0 w-full h-full sm:bottom-24 sm:right-6 sm:w-96 md:w-[500px] lg:w-[600px] sm:h-[600px] bg-white dark:bg-gray-900 sm:rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border-0 sm:border border-gray-200 dark:border-gray-700"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-emerald-600 to-green-600 p-4 flex items-center justify-between">
@@ -405,17 +405,19 @@ export default function ChatBot({
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                     Ask me anything about our book club like, upcoming events, or the current book selection!
                   </p>
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {suggestions.map((suggestion) => (
-                      <button
-                        key={suggestion}
-                        onClick={() => handleSuggestionClick(suggestion)}
-                        className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                      >
-                        {suggestion}
-                      </button>
-                    ))}
-                  </div>
+                  {suggestions.length > 0 && (
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {suggestions.map((suggestion) => (
+                        <button
+                          key={suggestion}
+                          onClick={() => handleSuggestionClick(suggestion)}
+                          className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          {suggestion}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -485,7 +487,7 @@ export default function ChatBot({
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask me anything... (Cmd/Ctrl+Enter to send)"
+                  placeholder="Ask me anything... (Enter to send)"
                   rows={1}
                   className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-800 dark:text-white resize-none max-h-32 overflow-y-auto"
                 />
@@ -497,47 +499,46 @@ export default function ChatBot({
                 </Button>
               </div>
 
-              {/* Collapsible suggestions section */}
-              <div className="mt-3 border-t border-gray-200 dark:border-gray-700 pt-3">
-                <div
-                  className="flex justify-between items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg px-2 py-1 transition-colors"
-                  onClick={() => setSuggestionsOpen(!suggestionsOpen)}
-                >
-                  <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">Quick Questions</span>
-                  {suggestionsOpen ? (
-                    <ChevronUp className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                  ) : (
-                    <ChevronDown className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                  )}
+              {suggestions.length > 0 && (
+                <div className="mt-3 border-t border-gray-200 dark:border-gray-700 pt-3">
+                  <div
+                    className="flex justify-between items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg px-2 py-1 transition-colors"
+                    onClick={() => setSuggestionsOpen(!suggestionsOpen)}
+                  >
+                    <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                      Quick Questions
+                    </span>
+                    {suggestionsOpen ? (
+                      <ChevronUp className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                    ) : (
+                      <ChevronDown className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                    )}
+                  </div>
+
+                  <AnimatePresence>
+                    {suggestionsOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {suggestions.map((suggestion) => (
+                            <button
+                              key={suggestion}
+                              onClick={() => handleSuggestionClick(suggestion)}
+                              className="text-xs bg-gradient-to-r from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 text-emerald-800 dark:text-emerald-300 px-3 py-1.5 rounded-full hover:from-emerald-200 hover:to-green-200 dark:hover:from-emerald-900/50 dark:hover:to-green-900/50 transition-all shadow-sm hover:shadow-md font-medium"
+                            >
+                              {suggestion}
+                            </button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-
-                <AnimatePresence>
-                  {suggestionsOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {suggestions.map((suggestion) => (
-                          <button
-                            key={suggestion}
-                            onClick={() => handleSuggestionClick(suggestion)}
-                            className="text-xs bg-gradient-to-r from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 text-emerald-800 dark:text-emerald-300 px-3 py-1.5 rounded-full hover:from-emerald-200 hover:to-green-200 dark:hover:from-emerald-900/50 dark:hover:to-green-900/50 transition-all shadow-sm hover:shadow-md font-medium"
-                          >
-                            {suggestion}
-                          </button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-                Press Enter for new line, Cmd/Ctrl+Enter to send
-              </p>
+              )}
             </div>
           </motion.div>
         )}
