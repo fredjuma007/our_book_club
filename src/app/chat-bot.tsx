@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect, useRef } from "react"
 import type React from "react"
-import { BookOpen, Sparkles, Trash2 } from "lucide-react"
+import { BookOpen, Sparkles, Trash2, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MessageSquare, X, Send, ChevronDown, ChevronUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -41,6 +41,7 @@ export default function ChatBot({
   const [suggestionsOpen, setSuggestionsOpen] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [copiedMessageId, setCopiedMessageId] = useState<number | null>(null)
 
   const [initialEvents, setInitialEvents] = useState(propEvents)
   const [initialBook, setInitialBook] = useState(propBook)
@@ -367,6 +368,19 @@ export default function ChatBot({
     setConversationHistory([])
   }
 
+  const copyToClipboard = async (content: string, messageIndex: number) => {
+    // Strip HTML tags for plain text copy
+    const plainText = content.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ")
+
+    try {
+      await navigator.clipboard.writeText(plainText)
+      setCopiedMessageId(messageIndex)
+      setTimeout(() => setCopiedMessageId(null), 2000)
+    } catch (err) {
+      console.error("Failed to copy:", err)
+    }
+  }
+
   return (
     <>
       {/* Chat window */}
@@ -448,8 +462,8 @@ export default function ChatBot({
                         Hi! I'm Gladwell
                       </h4>
                       <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                        Your friendly Reading Circle assistant. Ask me about upcoming events, book selections, club
-                        statistics, or how to join our community!
+                        Your friendly Reading Circle assistant.
+                        I'm here to help you with information about our book club, upcoming events, and more 📚
                       </p>
                     </div>
 
@@ -491,9 +505,24 @@ export default function ChatBot({
                   {message.role === "assistant" && (
                     <div className="flex items-start gap-2 max-w-[85%]">
                       <div className="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-sm p-4 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <div className="flex items-center gap-2 mb-2 pb-2 border-b border-emerald-100 dark:border-emerald-900/30">
-                          <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                          <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">Gladwell</span>
+                        <div className="flex items-center justify-between mb-2 pb-2 border-b border-emerald-100 dark:border-emerald-900/30">
+                          <div className="flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                            <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                              Gladwell
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => copyToClipboard(message.content, index)}
+                            className="text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                            title="Copy message"
+                          >
+                            {copiedMessageId === index ? (
+                              <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                            ) : (
+                              <Copy className="w-3.5 h-3.5" />
+                            )}
+                          </button>
                         </div>
                         <div
                           className="text-sm leading-relaxed font-serif text-gray-700 dark:text-gray-200"

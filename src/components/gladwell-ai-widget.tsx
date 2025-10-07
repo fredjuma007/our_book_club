@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, Maximize2, Minimize2, Send, ChevronDown, ChevronUp, BookOpen, Sparkles } from "lucide-react"
+import { X, Maximize2, Minimize2, Send, ChevronDown, ChevronUp, BookOpen, Sparkles, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "next-themes"
 
@@ -71,6 +71,7 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const { theme } = useTheme()
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null)
 
   // Extract book club statistics
   const bookCount = allBooks?.length || 0
@@ -800,6 +801,19 @@ ${authorContent}`
 </div>`
   }
 
+  const copyToClipboard = async (content: string, messageId: string) => {
+    // Strip HTML tags for plain text copy
+    const plainText = content.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ")
+
+    try {
+      await navigator.clipboard.writeText(plainText)
+      setCopiedMessageId(messageId)
+      setTimeout(() => setCopiedMessageId(null), 2000)
+    } catch (err) {
+      console.error("Failed to copy:", err)
+    }
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -867,9 +881,22 @@ ${authorContent}`
                 }`}
               >
                 {message.sender === "bot" && (
-                  <div className="flex items-center gap-2 mb-2 pb-2 border-b border-emerald-100 dark:border-emerald-900/30">
-                    <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                    <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">Gladwell</span>
+                  <div className="flex items-center justify-between mb-2 pb-2 border-b border-emerald-100 dark:border-emerald-900/30">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">Gladwell</span>
+                    </div>
+                    <button
+                      onClick={() => copyToClipboard(message.content, message.id)}
+                      className="text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                      title="Copy message"
+                    >
+                      {copiedMessageId === message.id ? (
+                        <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                      ) : (
+                        <Copy className="w-3.5 h-3.5" />
+                      )}
+                    </button>
                   </div>
                 )}
                 <div
