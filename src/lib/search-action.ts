@@ -129,7 +129,7 @@ ${book.tags ? `Tags - Mood: ${book.tags.mood?.join(", ") || "None"}. Themes: ${b
 
     // Use Groq to find the best matches
     const { text } = await generateText({
-      model: groq("llama-3.3-70b-versatile"),
+      model: groq("llama-3.1-8b-instant"),
       prompt: `You are a book recommendation expert. Given the following query and list of books, identify the top 5 books that best match the query. Focus on finding books that truly match the query's intent.
 
 Query: "${query}"
