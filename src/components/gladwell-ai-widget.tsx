@@ -6,7 +6,6 @@ import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, Maximize2, Minimize2, Send, ChevronDown, ChevronUp, BookOpen, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { useTheme } from "next-themes"
 
 // Define types for the data
@@ -50,6 +49,13 @@ interface GladwellAIWidgetProps {
   onClose: () => void
 }
 
+const linkifyText = (text: string): string => {
+  const urlRegex = /(https?:\/\/[^\s<]+)/g
+  return text.replace(urlRegex, (url) => {
+    return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 underline hover:text-blue-700 dark:hover:text-blue-300 font-medium break-all">${url}</a>`
+  })
+}
+
 export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetProps) {
   const [inputValue, setInputValue] = useState("")
   const [messages, setMessages] = useState<Message[]>([])
@@ -63,7 +69,7 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
   const [isLoading, setIsLoading] = useState(true)
   const [showGreeting, setShowGreeting] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
   const { theme } = useTheme()
 
   // Extract book club statistics
@@ -148,10 +154,17 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
   }, [isOpen, messages.length])
 
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus()
+    if (isOpen && textareaRef.current) {
+      textareaRef.current.focus()
     }
   }, [isOpen])
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+    }
+  }, [inputValue])
 
   useEffect(() => {
     scrollToBottom()
@@ -209,6 +222,10 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
     setInputValue("")
     setIsTyping(true)
 
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"
+    }
+
     try {
       const response = await fetch("/api/chat-ai", {
         method: "POST",
@@ -233,7 +250,7 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
           ...prev,
           {
             id: (Date.now() + 1).toString(),
-            content: data.response,
+            content: linkifyText(data.response),
             sender: "bot",
             timestamp: new Date(),
           },
@@ -248,7 +265,7 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
           ...prev,
           {
             id: (Date.now() + 1).toString(),
-            content: botResponse,
+            content: linkifyText(botResponse),
             sender: "bot",
             timestamp: new Date(),
           },
@@ -264,7 +281,7 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
           ...prev,
           {
             id: (Date.now() + 1).toString(),
-            content: botResponse,
+            content: linkifyText(botResponse),
             sender: "bot",
             timestamp: new Date(),
           },
@@ -274,8 +291,9 @@ export default function GladwellAIWidget({ isOpen, onClose }: GladwellAIWidgetPr
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault()
       handleSend()
     }
   }
@@ -943,23 +961,29 @@ ${authorContent}`
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t-2 border-emerald-100 dark:border-emerald-900/30 bg-white dark:bg-gray-800 flex items-center gap-3">
-          <Input
-            ref={inputRef}
+        <div className="p-4 border-t-2 border-emerald-100 dark:border-emerald-900/30 bg-white dark:bg-gray-800 flex items-end gap-3">
+          <textarea
+            ref={textareaRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyDown}
             placeholder="Ask Gladwell something..."
-            className="flex-1 border-2 border-emerald-200 dark:border-emerald-900/50 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 rounded-xl px-4 py-2 text-sm"
+            rows={1}
+            className="flex-1 border-2 border-emerald-200 dark:border-emerald-900/50 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 rounded-xl px-4 py-2 text-sm resize-none max-h-32 overflow-y-auto focus:outline-none focus:ring-2"
           />
           <Button
             onClick={handleSend}
             disabled={!inputValue.trim()}
-            className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded-xl px-4"
+            className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded-xl px-4 flex-shrink-0"
             size="icon"
           >
             <Send className="w-4 h-4" />
           </Button>
+        </div>
+        <div className="px-4 pb-2 bg-white dark:bg-gray-800">
+          <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+            Press Enter for new line, Cmd/Ctrl+Enter to send
+          </p>
         </div>
       </motion.div>
     </motion.div>

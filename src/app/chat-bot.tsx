@@ -1,7 +1,9 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import type React from "react"
+
 import { Button } from "@/components/ui/button"
-import { MessageSquare, X, Send } from "lucide-react"
+import { MessageSquare, X, Send, ChevronDown, ChevronUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 type ChatBotProps = {
@@ -10,7 +12,18 @@ type ChatBotProps = {
   allBooks: any[]
 }
 
-export default function ChatBot({ initialEvents = [], initialBook = null, allBooks = [] }: ChatBotProps) {
+const linkifyText = (text: string): string => {
+  const urlRegex = /(https?:\/\/[^\s<]+)/g
+  return text.replace(urlRegex, (url) => {
+    return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 underline hover:text-blue-700 dark:hover:text-blue-300 font-medium break-all">${url}</a>`
+  })
+}
+
+export default function ChatBot({
+  initialEvents: propEvents = [],
+  initialBook: propBook = null,
+  allBooks: propBooks = [],
+}: ChatBotProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [showGreeting, setShowGreeting] = useState(true)
   const [bookCount, setBookCount] = useState(0)
@@ -25,6 +38,36 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
     Array<{ role: "user" | "assistant"; content: string }>
   >([])
   const [isTyping, setIsTyping] = useState(false)
+  const [suggestionsOpen, setSuggestionsOpen] = useState(true)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const [initialEvents, setInitialEvents] = useState(propEvents)
+  const [initialBook, setInitialBook] = useState(propBook)
+  const [allBooks, setAllBooks] = useState(propBooks)
+  const [isLoadingData, setIsLoadingData] = useState(true)
+
+  const suggestions = ["Book of the month?", "Who are the moderators?", "Next event?", "Club statistics", "How to join"]
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/chat-data")
+        if (response.ok) {
+          const data = await response.json()
+          setInitialEvents(data.events || [])
+          setInitialBook(data.currentBook || null)
+          setAllBooks(data.allBooks || [])
+        }
+      } catch (error) {
+        console.error("[v0] Failed to fetch chat data:", error)
+      } finally {
+        setIsLoadingData(false)
+      }
+    }
+
+    fetchData()
+  }, [])
 
   useEffect(() => {
     setBookCount(allBooks.length)
@@ -47,6 +90,21 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       setConversationHistory(newHistory)
     }
   }, [messages])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages, isTyping])
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+    }
+  }, [input])
 
   const generateResponse = (query: string): string => {
     const lowerQuery = query.toLowerCase().trim()
@@ -247,6 +305,10 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
     setInput("")
     setIsTyping(true)
 
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"
+    }
+
     try {
       const response = await fetch("/api/chat-ai", {
         method: "POST",
@@ -267,14 +329,14 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
       const data = await response.json()
 
       if (response.ok && !data.fallback) {
-        setMessages((prev) => [...prev, { role: "assistant", content: data.response }])
+        setMessages((prev) => [...prev, { role: "assistant", content: linkifyText(data.response) }])
         setIsTyping(false)
         return
       }
 
       setTimeout(() => {
         const fallbackResponse = generateResponse(userMessage)
-        setMessages((prev) => [...prev, { role: "assistant", content: fallbackResponse }])
+        setMessages((prev) => [...prev, { role: "assistant", content: linkifyText(fallbackResponse) }])
         setIsTyping(false)
       }, 500)
     } catch (error) {
@@ -282,10 +344,22 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
 
       setTimeout(() => {
         const fallbackResponse = generateResponse(userMessage)
-        setMessages((prev) => [...prev, { role: "assistant", content: fallbackResponse }])
+        setMessages((prev) => [...prev, { role: "assistant", content: linkifyText(fallbackResponse) }])
         setIsTyping(false)
       }, 500)
     }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault()
+      handleSend()
+    }
+  }
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setInput(suggestion)
+    setTimeout(() => handleSend(), 100)
   }
 
   return (
@@ -297,7 +371,7 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="fixed bottom-24 right-6 w-96 h-[600px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700"
+            className="fixed bottom-24 right-6 w-96 md:w-[500px] lg:w-[600px] h-[600px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-emerald-600 to-green-600 p-4 flex items-center justify-between">
@@ -332,51 +406,15 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
                     Ask me anything about our book club like, upcoming events, or the current book selection!
                   </p>
                   <div className="flex flex-wrap gap-2 justify-center">
-                    <button
-                      onClick={() => {
-                        setInput("Club statistics")
-                        setTimeout(() => handleSend(), 100)
-                      }}
-                      className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      Club statistics
-                    </button>
-                    <button
-                      onClick={() => {
-                        setInput("Who are the moderators?")
-                        setTimeout(() => handleSend(), 100)
-                      }}
-                      className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      Who are the moderators?
-                    </button>
-                    <button
-                      onClick={() => {
-                        setInput("Who are the moderators?")
-                        setTimeout(() => handleSend(), 100)
-                      }}
-                      className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      Book of the month
-                    </button>
-                    <button
-                      onClick={() => {
-                        setInput("How to join the club?")
-                        setTimeout(() => handleSend(), 100)
-                      }}
-                      className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      How to join the club?
-                    </button>
-                    <button
-                      onClick={() => {
-                        setInput("Who are the moderators?")
-                        setTimeout(() => handleSend(), 100)
-                      }}
-                      className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      Upcoming events
-                    </button>
+                    {suggestions.map((suggestion) => (
+                      <button
+                        key={suggestion}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-xs hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}
@@ -414,7 +452,7 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
                   className="flex justify-start"
                 >
                   <div className="flex items-start gap-2 max-w-[85%]">
-                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                       <span className="text-white text-xs font-bold">AI</span>
                     </div>
                     <div className="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-sm p-4 shadow-sm border border-gray-200 dark:border-gray-700">
@@ -436,26 +474,70 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
                   </div>
                 </motion.div>
               )}
+              <div ref={messagesEndRef} />
             </div>
 
             {/* Input */}
             <div className="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
-              <div className="flex gap-2">
-                <input
-                  type="text"
+              <div className="flex gap-2 items-end">
+                <textarea
+                  ref={textareaRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleSend()}
-                  placeholder="Ask me anything..."
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-800 dark:text-white"
+                  onKeyDown={handleKeyDown}
+                  placeholder="Ask me anything... (Cmd/Ctrl+Enter to send)"
+                  rows={1}
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-800 dark:text-white resize-none max-h-32 overflow-y-auto"
                 />
                 <Button
                   onClick={handleSend}
-                  className="rounded-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-4"
+                  className="rounded-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-4 flex-shrink-0"
                 >
                   <Send className="w-4 h-4" />
                 </Button>
               </div>
+
+              {/* Collapsible suggestions section */}
+              <div className="mt-3 border-t border-gray-200 dark:border-gray-700 pt-3">
+                <div
+                  className="flex justify-between items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg px-2 py-1 transition-colors"
+                  onClick={() => setSuggestionsOpen(!suggestionsOpen)}
+                >
+                  <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">Quick Questions</span>
+                  {suggestionsOpen ? (
+                    <ChevronUp className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  ) : (
+                    <ChevronDown className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  )}
+                </div>
+
+                <AnimatePresence>
+                  {suggestionsOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {suggestions.map((suggestion) => (
+                          <button
+                            key={suggestion}
+                            onClick={() => handleSuggestionClick(suggestion)}
+                            className="text-xs bg-gradient-to-r from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 text-emerald-800 dark:text-emerald-300 px-3 py-1.5 rounded-full hover:from-emerald-200 hover:to-green-200 dark:hover:from-emerald-900/50 dark:hover:to-green-900/50 transition-all shadow-sm hover:shadow-md font-medium"
+                          >
+                            {suggestion}
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                Press Enter for new line, Cmd/Ctrl+Enter to send
+              </p>
             </div>
           </motion.div>
         )}
@@ -477,21 +559,6 @@ export default function ChatBot({ initialEvents = [], initialBook = null, allBoo
               >
                 <MessageSquare className="w-6 h-6" />
               </Button>
-             {/* {showGreeting && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ delay: 1, duration: 0.5 }}
-                  className="absolute -top-12 right-0 bg-white dark:bg-gray-800 text-green-700 dark:text-green-400 text-sm rounded-lg px-3 py-2 shadow-md border border-green-200 dark:border-green-800 whitespace-nowrap"
-                >
-                  *<div className="relative">
-                    Hi👋
-                    <div className="absolute -bottom-2 right-4 w-0 h-0 border-l-8 border-l-transparent 
-                    border-r-8 border-r-transparent border-t-8 border-t-white dark:border-t-gray-800"></div>*
-                  </div>
-                </motion.div>
-              )}*/}
               <motion.div
                 className="absolute -top-3 -right-3 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full px-2 py-0.5 flex items-center justify-center shadow-lg"
                 animate={{
