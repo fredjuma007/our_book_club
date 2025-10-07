@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect, useRef } from "react"
 import type React from "react"
-import { BookOpen, Sparkles } from "lucide-react"
+import { BookOpen, Sparkles, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MessageSquare, X, Send, ChevronDown, ChevronUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -362,6 +362,11 @@ export default function ChatBot({
     setTimeout(() => handleSend(), 100)
   }
 
+  const clearConversation = () => {
+    setMessages([])
+    setConversationHistory([])
+  }
+
   return (
     <>
       {/* Chat window */}
@@ -384,14 +389,26 @@ export default function ChatBot({
                   <p className="text-xs text-emerald-100">Your Reading Circle Assistant</p>
                 </div>
               </div>
-              <Button
-                onClick={() => setIsOpen(false)}
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/20 rounded-full"
-              >
-                <X className="w-5 h-5" />
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={clearConversation}
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-white/20 rounded-full"
+                  title="Clear conversation"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </Button>
+                <Button
+                  onClick={() => setIsOpen(false)}
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-white/20 rounded-full"
+                  title="Close chat"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
             </div>
 
             {/* Messages */}
@@ -473,13 +490,16 @@ export default function ChatBot({
                 >
                   {message.role === "assistant" && (
                     <div className="flex items-start gap-2 max-w-[85%]">
-                      <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-white text-xs font-bold">AI</span>
+                      <div className="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-sm p-4 shadow-sm border border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center gap-2 mb-2 pb-2 border-b border-emerald-100 dark:border-emerald-900/30">
+                          <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                          <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">Gladwell</span>
+                        </div>
+                        <div
+                          className="text-sm leading-relaxed font-serif text-gray-700 dark:text-gray-200"
+                          dangerouslySetInnerHTML={{ __html: message.content }}
+                        />
                       </div>
-                      <div
-                        className="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-sm p-4 shadow-sm border border-gray-200 dark:border-gray-700"
-                        dangerouslySetInnerHTML={{ __html: message.content }}
-                      />
                     </div>
                   )}
                   {message.role === "user" && (
@@ -497,10 +517,13 @@ export default function ChatBot({
                   className="flex justify-start"
                 >
                   <div className="flex items-start gap-2 max-w-[85%]">
-                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <span className="text-white text-xs font-bold">AI</span>
-                    </div>
                     <div className="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-sm p-4 shadow-sm border border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                        <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                          Gladwell is typing...
+                        </span>
+                      </div>
                       <div className="flex space-x-2">
                         <div
                           className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 animate-bounce"
