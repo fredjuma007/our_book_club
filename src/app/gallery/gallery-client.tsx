@@ -14,73 +14,29 @@ import {
   Sparkles,
   BookMarked,
   CalendarCheck,
-  Video,
-  Play,
+  Youtube,
+  Instagram,
 } from "lucide-react"
 import { ScrollToTop } from "@/components/scroll-to-top"
-import MuxPlayer from "@mux/mux-player-react"
 
 export interface GalleryItem {
   id: string
   title: string
   caption: string
   src: string
-  isVideo?: boolean
-  videoUrl?: string
-  date?: string // Always a string now
+  date?: string
   category?: string
 }
 
-type TabType = "images" | "videos"
-
 export default function GalleryClient({ galleryItems }: { galleryItems: GalleryItem[] }) {
-  const [activeTab, setActiveTab] = useState<TabType>("images")
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null)
 
-  // Filter items based on type
-  const images = galleryItems?.filter((item) => !item.isVideo) || []
-  const videos = galleryItems?.filter((item) => item.isVideo && item.videoUrl) || []
-
-  const currentItems = activeTab === "images" ? images : videos
+  const currentItems = galleryItems || []
 
   // Optimized Click Handler
   const openImage = useCallback((index: number) => {
     setSelectedImageIndex(index)
   }, [])
-
-  // Extract playback ID from MUX URL or return the ID directly
-  const getPlaybackId = (videoUrl: string) => {
-    if (!videoUrl) return ""
-
-    // If it's already just the playback ID (alphanumeric string)
-    if (/^[a-zA-Z0-9]+$/.test(videoUrl.trim())) {
-      return videoUrl.trim()
-    }
-
-    // Handle MUX streaming URLs
-    if (videoUrl.includes("stream.mux.com")) {
-      // Format: https://stream.mux.com/PLAYBACK_ID.m3u8
-      const match = videoUrl.match(/stream\.mux\.com\/([a-zA-Z0-9]+)/)
-      return match ? match[1] : ""
-    }
-
-    // Handle other MUX URL formats
-    if (videoUrl.includes("mux.com")) {
-      const match = videoUrl.match(/([a-zA-Z0-9]{20,})/)
-      return match ? match[1] : ""
-    }
-
-    // Extract from any URL that contains the playback ID
-    const match = videoUrl.match(/([a-zA-Z0-9]{20,})/)
-    return match ? match[1] : videoUrl
-  }
-
-  // Generate MUX thumbnail URL
-  const getMuxThumbnail = (playbackId: string) => {
-    if (!playbackId) return null
-    // MUX provides automatic thumbnails at different time points
-    return `https://image.mux.com/${playbackId}/thumbnail.jpg?time=1`
-  }
 
   return (
     <div className="min-h-screen bg-[#f5f0e1] dark:bg-gray-900 selection:bg-green-700/30">
@@ -126,40 +82,67 @@ export default function GalleryClient({ galleryItems }: { galleryItems: GalleryI
             </p>
           </motion.div>
 
-          {/* Tab Navigation */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex flex-wrap justify-center gap-4 mt-8"
           >
-            <button
-              onClick={() => setActiveTab("images")}
-              className={`${
-                activeTab === "images"
-                  ? "bg-green-700 text-white"
-                  : "text-green-700 border-green-700 hover:bg-green-200"
-              } font-serif relative overflow-hidden group px-4 py-2 rounded-md border cursor-pointer flex items-center`}
-            >
-              <ImageIcon className="w-4 h-4 mr-2" />
-              Images ({images.length})
-            </button>
-            <button
-              onClick={() => setActiveTab("videos")}
-              className={`${
-                activeTab === "videos"
-                  ? "bg-green-700 text-white"
-                  : "text-green-700 border-green-700 hover:bg-green-200"
-              } font-serif relative overflow-hidden group px-4 py-2 rounded-md border cursor-pointer flex items-center`}
-            >
-              <Video className="w-4 h-4 mr-2" />
-              Videos ({videos.length})
-            </button>
             <Button
               variant="outline"
-              className="text-green-700 border-green-700 hover:bg-green-200 font-serif group relative overflow-hidden"
+              className="text-green-700 border-green-700 bg-transparent hover:bg-[#FF0000] hover:text-white hover:border-[#FF0000] font-serif transition-colors"
+              asChild
             >
-              <Link className="text-green-700 dark:text-white flex items-center gap-1" href="/club-events">
+              <Link
+                href="https://www.youtube.com/@TheReadingCircle254"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2"
+              >
+                <Youtube className="w-4 h-4" />
+                <span>YouTube</span>
+              </Link>
+            </Button>
+
+            <Button
+              variant="outline"
+              className="text-green-700 border-green-700 bg-transparent hover:bg-black hover:text-white hover:border-black font-serif transition-colors"
+              asChild
+            >
+              <Link
+                href="https://www.tiktok.com/@thereadingcircle254"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+                </svg>
+                <span>TikTok</span>
+              </Link>
+            </Button>
+
+            <Button
+              variant="outline"
+              className="text-green-700 border-green-700 bg-transparent hover:bg-[#E4405F] hover:text-white hover:border-[#E4405F] font-serif transition-colors"
+              asChild
+            >
+              <Link
+                href="https://www.instagram.com/thereadingcircle254/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2"
+              >
+                <Instagram className="w-4 h-4" />
+                <span>Instagram</span>
+              </Link>
+            </Button>
+
+            <Button
+              variant="outline"
+              className="text-green-700 border-green-700 hover:bg-green-700 hover:text-white font-serif group relative overflow-hidden bg-transparent transition-colors"
+            >
+              <Link className="flex items-center gap-1" href="/club-events">
                 <CalendarCheck className="w-4 h-4 mr-2" /> <span>Events</span>
               </Link>
             </Button>
@@ -194,73 +177,17 @@ export default function GalleryClient({ galleryItems }: { galleryItems: GalleryI
                     style={{ animationDelay: `${index * 0.2}s` }}
                   >
                     <div className="relative aspect-[4/3] cursor-pointer group" onClick={() => openImage(index)}>
-                      {activeTab === "images" ? (
-                        <>
-                          <Image
-                            src={item.src || "/placeholder.svg"}
-                            alt={item.caption}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-110"
-                          />
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <p className="text-white text-sm px-4 text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                              Click to view
-                            </p>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          {/* Video thumbnail with MUX thumbnail */}
-                          <div className="w-full h-full relative">
-                            {(() => {
-                              const playbackId = getPlaybackId(item.videoUrl || "")
-                              const thumbnailUrl = getMuxThumbnail(playbackId)
-
-                              return thumbnailUrl ? (
-                                <div className="w-full h-full relative">
-                                  {/* Use regular img tag to avoid Next.js domain restrictions */}
-                                  <img
-                                    src={thumbnailUrl || "/placeholder.svg"}
-                                    alt={item.title}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 rounded-t-xl"
-                                    onError={(e) => {
-                                      // Fallback to gradient background if thumbnail fails
-                                      const target = e.target as HTMLImageElement
-                                      target.style.display = "none"
-                                      const parent = target.parentElement
-                                      if (parent) {
-                                        parent.innerHTML = `
-                                          <div class="w-full h-full bg-gradient-to-br from-green-700/20 to-green-900/40 flex items-center justify-center rounded-t-xl">
-                                            <svg class="w-16 h-16 text-green-700/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                            </svg>
-                                          </div>
-                                        `
-                                      }
-                                    }}
-                                  />
-                                </div>
-                              ) : (
-                                <div className="w-full h-full bg-gradient-to-br from-green-700/20 to-green-900/40 flex items-center justify-center rounded-t-xl">
-                                  <Video className="w-16 h-16 text-green-700/60" />
-                                </div>
-                              )
-                            })()}
-
-                            {/* Play button overlay */}
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="bg-black/60 rounded-full p-4 transition-all duration-300 group-hover:bg-black/80 group-hover:scale-110">
-                                <Play className="w-8 h-8 text-white fill-white" />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <p className="text-white text-sm px-4 text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                              Click to play
-                            </p>
-                          </div>
-                        </>
-                      )}
+                      <Image
+                        src={item.src || "/placeholder.svg"}
+                        alt={item.caption}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <p className="text-white text-sm px-4 text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                          Click to view
+                        </p>
+                      </div>
                     </div>
                     <div className="p-4">
                       <h3 className="font-bold text-green-800 dark:text-green-500 font-serif mb-1">{item.title}</h3>
@@ -275,17 +202,11 @@ export default function GalleryClient({ galleryItems }: { galleryItems: GalleryI
             </motion.div>
           ) : (
             <div className="text-center py-12 bg-[#fffaf0] dark:bg-gray-800 rounded-xl shadow-lg border border-green-700">
-              {activeTab === "images" ? (
-                <ImageIcon className="w-16 h-16 mx-auto text-green-700/50 mb-4" />
-              ) : (
-                <Video className="w-16 h-16 mx-auto text-green-700/50 mb-4" />
-              )}
+              <ImageIcon className="w-16 h-16 mx-auto text-green-700/50 mb-4" />
               <h3 className="text-2xl font-bold text-green-800 dark:text-green-500 font-serif mb-2">
-                No {activeTab === "images" ? "Images" : "Videos"} Available
+                No Images Available
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 font-serif">
-                Check back soon for {activeTab === "images" ? "images" : "videos"} from our events!
-              </p>
+              <p className="text-gray-600 dark:text-gray-300 font-serif">Check back soon for images from our events!</p>
             </div>
           )}
         </motion.div>
@@ -331,47 +252,14 @@ export default function GalleryClient({ galleryItems }: { galleryItems: GalleryI
                 <ChevronRight className="w-8 h-8 transition-transform duration-200 group-hover:translate-x-1" />
               </button>
 
-              {/* Content Container */}
               <div className="relative w-full h-full flex items-center justify-center">
-                {activeTab === "images" ? (
-                  <Image
-                    src={currentItems[selectedImageIndex].src || "/placeholder.svg"}
-                    alt={currentItems[selectedImageIndex].caption}
-                    width={900}
-                    height={600}
-                    className="max-w-full max-h-full rounded-lg border-2 border-green-700 shadow-lg object-contain"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    {(() => {
-                      const playbackId = getPlaybackId(currentItems[selectedImageIndex].videoUrl || "")
-                      return (
-                        <MuxPlayer
-                          playbackId={playbackId}
-                          metadata={{
-                            video_id: currentItems[selectedImageIndex].id,
-                            video_title: currentItems[selectedImageIndex].title,
-                          }}
-                          streamType="on-demand"
-                          autoPlay
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            maxWidth: "100%",
-                            maxHeight: "100%",
-                          }}
-                          playsInline
-                          // Suppress HLS errors by handling them gracefully
-                          onError={(e) => {
-                            console.warn("Video playback issue (this is normal for some formats):", e)
-                          }}
-                          // Add fallback handling
-                          onLoadedData={() => console.log("Video loaded successfully")}
-                        />
-                      )
-                    })()}
-                  </div>
-                )}
+                <Image
+                  src={currentItems[selectedImageIndex].src || "/placeholder.svg"}
+                  alt={currentItems[selectedImageIndex].caption}
+                  width={900}
+                  height={600}
+                  className="max-w-full max-h-full rounded-lg border-2 border-green-700 shadow-lg object-contain"
+                />
 
                 {/* Close Button */}
                 <Button
@@ -389,7 +277,7 @@ export default function GalleryClient({ galleryItems }: { galleryItems: GalleryI
                 </div>
               </div>
 
-              {/* Caption - positioned outside video area */}
+              {/* Caption - positioned outside image area */}
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4">
                 <div className="p-4 bg-[#fffaf0]/95 dark:bg-gray-800/95 rounded-lg border border-green-700 backdrop-blur-sm shadow-lg">
                   <h3 className="text-xl font-bold text-green-800 dark:text-green-500 font-serif text-center mb-2">

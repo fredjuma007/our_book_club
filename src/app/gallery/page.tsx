@@ -48,46 +48,45 @@ export default async function GalleryPage() {
         isVideo?: boolean
         image?: any
         videoUrl?: string
-        date?: any // Allow any type for date since it might be an object
+        date?: any
         category?: string
       } => !!item && typeof item === "object",
     )
 
-    // Process all gallery items (both images and videos)
-    processedGalleryItems = galleryItems.map((item) => {
-      // Handle date conversion - check if it's an object with $date property
-      let dateString = ""
-      if (item.date) {
-        if (typeof item.date === "object" && item.date.$date) {
-          // Handle MongoDB-style date object
-          dateString = new Date(item.date.$date).toLocaleDateString()
-        } else if (typeof item.date === "string") {
-          // Handle string date
-          dateString = item.date
-        } else if (item.date instanceof Date) {
-          // Handle Date object
-          dateString = item.date.toLocaleDateString()
-        } else {
-          // Try to convert whatever it is to a date
-          try {
-            dateString = new Date(item.date).toLocaleDateString()
-          } catch {
-            dateString = ""
+    processedGalleryItems = galleryItems
+      .filter((item) => !item.isVideo)
+      .map((item) => {
+        // Handle date conversion - check if it's an object with $date property
+        let dateString = ""
+        if (item.date) {
+          if (typeof item.date === "object" && item.date.$date) {
+            // Handle MongoDB-style date object
+            dateString = new Date(item.date.$date).toLocaleDateString()
+          } else if (typeof item.date === "string") {
+            // Handle string date
+            dateString = item.date
+          } else if (item.date instanceof Date) {
+            // Handle Date object
+            dateString = item.date.toLocaleDateString()
+          } else {
+            // Try to convert whatever it is to a date
+            try {
+              dateString = new Date(item.date).toLocaleDateString()
+            } catch {
+              dateString = ""
+            }
           }
         }
-      }
 
-      return {
-        id: item._id,
-        title: item.title || "",
-        caption: item.caption || "",
-        src: item.image ? convertWixImageToUrl(item.image) : "/placeholder.svg",
-        isVideo: item.isVideo || false,
-        videoUrl: item.videoUrl || "",
-        date: dateString, // Now always a string
-        category: item.category || "",
-      }
-    })
+        return {
+          id: item._id,
+          title: item.title || "",
+          caption: item.caption || "",
+          src: item.image ? convertWixImageToUrl(item.image) : "/placeholder.svg",
+          date: dateString,
+          category: item.category || "",
+        }
+      })
   } catch (error) {
     console.error("Error fetching gallery data:", error)
     // Leave processedGalleryItems as an empty array
