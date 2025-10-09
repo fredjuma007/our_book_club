@@ -82,9 +82,11 @@ export async function updateReviewAction(
     revalidatePath("/reviews")
     revalidatePath("/books")
     revalidatePath("/books/[bookId]", "page")
+
+    return { success: true }
   } catch (error) {
     console.error("Update review error:", error)
-    throw error
+    return { success: false, error: (error as Error).message }
   }
 }
 
@@ -115,9 +117,11 @@ export async function deleteReviewAction(reviewId: string) {
     }
 
     revalidatePath("/books/[bookId]", "page")
+
+    return { success: true }
   } catch (error) {
     console.error("Delete review error:", error)
-    throw error
+    return { success: false, error: (error as Error).message }
   }
 }
 

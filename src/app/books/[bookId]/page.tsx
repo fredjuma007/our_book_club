@@ -10,7 +10,6 @@ import { loginAction } from "@/app/actions"
 import type { Metadata } from "next"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { ReviewItem } from "./ReviewItem"
-import { Toaster } from "@/components/ui/toaster"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import ShareButton from "@/components/sharebutton"
 import { BookAIButton } from "@/components/book-ai-button"
@@ -26,6 +25,7 @@ interface Review {
   review: string
   bookId: string
   likes?: number
+  _owner?: string
 }
 
 interface Book {
@@ -79,8 +79,12 @@ export default async function Page({ params }: PageProps) {
         rating: item.rating || 3,
         review: item.review || "",
         bookId: item.bookId || bookId,
+        _owner: item._owner,
       } as Review
     })
+
+    const userReview = member?.id ? reviews.find((r) => r._owner === member.id) : null
+    const otherReviews = member?.id ? reviews.filter((r) => r._owner !== member.id) : reviews
 
     // Calculate average rating
     const averageRating =
@@ -292,30 +296,49 @@ export default async function Page({ params }: PageProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {reviews.length > 0 ? (
-                  reviews.map((review) => (
+                {userReview && (
+                  <div className="border-2 border-green-700 rounded-lg p-4 bg-green-50/50 dark:bg-green-900/10">
+                    <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-2 font-serif">
+                      Your Review
+                    </p>
                     <ReviewItem
-                      key={review._id}
-                      id={review._id}
-                      name={review.name}
-                      rating={review.rating}
-                      review={review.review}
+                      key={userReview._id}
+                      id={userReview._id}
+                      name={userReview.name}
+                      rating={userReview.rating}
+                      review={userReview.review}
                       isLoggedIn={isLoggedIn}
                       bookId={bookId}
                       currentUserId={member?.id ?? undefined}
+                      isOwnReview={true}
                     />
-                  ))
-                ) : (
-                  <p className="text-gray-500 dark:text-gray-400 font-serif">
-                    No reviews available. Be the first to review this book!
-                  </p>
+                  </div>
                 )}
+
+                {otherReviews.length > 0
+                  ? otherReviews.map((review) => (
+                      <ReviewItem
+                        key={review._id}
+                        id={review._id}
+                        name={review.name}
+                        rating={review.rating}
+                        review={review.review}
+                        isLoggedIn={isLoggedIn}
+                        bookId={bookId}
+                        currentUserId={member?.id ?? undefined}
+                        isOwnReview={false}
+                      />
+                    ))
+                  : !userReview && (
+                      <p className="text-gray-500 dark:text-gray-400 font-serif">
+                        No reviews available. Be the first to review this book!
+                      </p>
+                    )}
               </div>
             </CardContent>
           </Card>
           {/* Scroll to Top Button */}
           <ScrollToTop />
-          <Toaster />
         </div>
       </div>
     )
