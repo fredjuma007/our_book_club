@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Send, Sparkles, Copy, Check, BookOpen, Calendar, Home } from "lucide-react"
+import { Send, Sparkles, Copy, Check, BookOpen, Calendar, Home, Trash2, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
@@ -62,15 +62,12 @@ export function GladwellChat() {
   const [isLoading, setIsLoading] = useState(true)
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [suggestionsExpanded, setSuggestionsExpanded] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [hasStartedChat, setHasStartedChat] = useState(false)
 
-  const suggestions = [
-    "Book of the month?",
-    "Next event?",
-    "How do I join the club?",
-  ]
+  const suggestions = ["Book of the month?", "Next event?", "How do I join the club?"]
 
   useEffect(() => {
     const fetchData = async () => {
@@ -248,6 +245,20 @@ export function GladwellChat() {
     }
   }
 
+  const handleClearChat = () => {
+    setMessages([
+      {
+        id: "welcome",
+        content: "Hello! I'm Gladwell, the Reading Circle Assistant. How can I help you today?",
+        sender: "bot",
+        timestamp: new Date(),
+      },
+    ])
+    setConversationHistory([])
+    setHasStartedChat(false)
+    setInputValue("")
+  }
+
   return (
     <div className="flex bg-[#f5f0e1] dark:bg-gray-950 h-[calc(100vh-4rem)]">
       {/* Sidebar */}
@@ -350,8 +361,14 @@ export function GladwellChat() {
               {/* Logo */}
               <div className="flex justify-center">
                 <div className="relative">
-                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-2xl">
-                    <BookOpen className="w-16 h-16 text-white" />
+                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-2xl overflow-hidden">
+                    <Image
+                      src="/logo.jpg"
+                      alt="Gladwell"
+                      width={128}
+                      height={128}
+                      className="object-cover w-full h-full"
+                    />
                   </div>
                   <div className="absolute -top-2 -right-2 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg animate-pulse">
                     <Sparkles className="w-6 h-6 text-white" />
@@ -363,8 +380,8 @@ export function GladwellChat() {
               <div className="space-y-3">
                 <h1 className="text-4xl font-serif font-bold text-green-800 dark:text-foreground">Hi! I'm Gladwell</h1>
                 <p className="text-gray-600 dark:text-muted-foreground leading-relaxed">
-                  Your friendly Reading Circle assistant. I'm here to help you with information about our book club,
-                  upcoming events, and more 📚
+                  I'm here to help you with information about our book club,
+                  chat about books and authors, upcoming events and more!
                 </p>
               </div>
 
@@ -484,6 +501,39 @@ export function GladwellChat() {
 
         {/* Input Area */}
         <div className="sticky bottom-0 border-t border-green-700/30 bg-[#fffaf0] dark:bg-gray-900 z-[100]">
+          {/* Collapsible Suggestions Section for Mobile */}
+          <div className="lg:hidden border-b border-green-700/30">
+            <button
+              onClick={() => setSuggestionsExpanded(!suggestionsExpanded)}
+              className="w-full px-4 py-3 flex items-center justify-between text-sm font-medium text-gray-700 dark:text-foreground hover:bg-emerald-50 dark:hover:bg-accent transition-colors"
+            >
+              <span>Quick Questions</span>
+              {suggestionsExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
+            {suggestionsExpanded && (
+              <div className="px-4 pb-3 space-y-2">
+                {suggestions.map((suggestion, index) => (
+                  <button
+                    key={suggestion}
+                    onClick={() => {
+                      handleSuggestionClick(suggestion)
+                      setSuggestionsExpanded(false)
+                    }}
+                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-emerald-50 dark:hover:bg-accent text-sm transition-all border border-transparent hover:border-emerald-200 dark:hover:border-emerald-800 text-gray-800 dark:text-foreground group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <span className="text-emerald-700 dark:text-emerald-400 font-bold text-xs">{index + 1}</span>
+                      </div>
+                      <span className="flex-1">{suggestion}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Updated Input Area with Clear Chat Button */}
           <div className="max-w-4xl mx-auto p-4 flex items-end gap-3">
             <textarea
               ref={textareaRef}
@@ -494,6 +544,15 @@ export function GladwellChat() {
               rows={1}
               className="flex-1 border border-green-700/30 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 rounded-xl px-4 py-3 text-sm resize-none max-h-32 overflow-y-auto focus:outline-none focus:ring-2 bg-white dark:bg-background text-gray-800 dark:text-foreground"
             />
+            <Button
+              onClick={handleClearChat}
+              variant="outline"
+              className="border-green-700/30 hover:bg-red-50 dark:hover:bg-red-950/30 hover:border-red-300 dark:hover:border-red-800 text-gray-700 dark:text-foreground hover:text-red-600 dark:hover:text-red-400 rounded-xl px-4 flex-shrink-0 transition-all bg-transparent"
+              size="icon"
+              title="Clear chat"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
             <Button
               onClick={handleSend}
               disabled={!inputValue.trim()}
