@@ -21,6 +21,8 @@ export async function MaintenanceWidget() {
     time: string
     location: string
     bookTitle: string
+    image: string
+    meetingLink?: string
   } | null = null
 
   try {
@@ -107,12 +109,23 @@ export async function MaintenanceWidget() {
         day: "numeric",
       })
 
+      let eventImageUrl = "/placeholder.svg?height=225&width=150"
+      try {
+        if (nextEvent.image) {
+          eventImageUrl = convertWixImageToUrl(nextEvent.image)
+        }
+      } catch (error) {
+        console.error("Error converting event image:", error)
+      }
+
       upcomingEvent = {
         title: nextEvent.title,
         eventDate: formattedDate,
         time: nextEvent.time,
         location: nextEvent.location,
         bookTitle: nextEvent.bookTitle || "TBA",
+        image: eventImageUrl,
+        meetingLink: nextEvent.link,
       }
     }
   } catch (error) {
@@ -244,6 +257,17 @@ export async function MaintenanceWidget() {
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    <div className="flex flex-col items-center text-center">
+                      <div className="relative group mb-4">
+                        <Image
+                          src={upcomingEvent.image || "/placeholder.svg"}
+                          alt={upcomingEvent.title}
+                          width={150}
+                          height={225}
+                          className="rounded-lg object-cover shadow-lg ring-2 ring-green-600/20 dark:ring-green-400/20 group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    </div>
                     <div>
                       <h3 className="font-bold text-xl text-gray-900 dark:text-gray-100">{upcomingEvent.title}</h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
@@ -265,6 +289,28 @@ export async function MaintenanceWidget() {
                         <span className="text-gray-700 dark:text-gray-300">{upcomingEvent.location}</span>
                       </div>
                     </div>
+                    {upcomingEvent.meetingLink && (
+                      <Button
+                        className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white shadow-md hover:shadow-lg transition-all duration-300"
+                        asChild
+                      >
+                        <Link href={upcomingEvent.meetingLink} target="_blank" rel="noopener noreferrer">
+                          <svg
+                            className="w-4 h-4 mr-2"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                          </svg>
+                          Join Meeting
+                        </Link>
+                      </Button>
+                    )}
                   </CardContent>
                 </Card>
               )}
