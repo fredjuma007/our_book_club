@@ -137,14 +137,15 @@ export function GladwellChat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const handleSend = async () => {
-    if (!inputValue.trim()) return
+  const handleSend = async (directMessage?: string) => {
+    const messageToSend = directMessage ?? inputValue.trim()
+    if (!messageToSend) return
 
     setHasStartedChat(true)
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: inputValue,
+      content: messageToSend,
       sender: "user",
       timestamp: new Date(),
     }
@@ -164,7 +165,7 @@ export function GladwellChat() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: inputValue,
+          message: messageToSend,
           bookData: {
             currentBook: initialBook,
             allBooks: allBooks,
@@ -229,8 +230,7 @@ export function GladwellChat() {
 
   const handleSuggestionClick = (suggestion: string) => {
     setHasStartedChat(true)
-    setInputValue(suggestion)
-    setTimeout(() => handleSend(), 100)
+    handleSend(suggestion)
   }
 
   const copyToClipboard = async (content: string, messageId: string) => {
@@ -380,8 +380,8 @@ export function GladwellChat() {
               <div className="space-y-3">
                 <h1 className="text-4xl font-serif font-bold text-green-800 dark:text-foreground">Hi! I'm Gladwell</h1>
                 <p className="text-gray-600 dark:text-muted-foreground leading-relaxed">
-                  I'm here to help you with information about our book club,
-                  chat about books and authors, upcoming events and more!
+                  I'm here to help you with information about our book club, chat about books and authors, upcoming
+                  events and more!
                 </p>
               </div>
 
@@ -554,7 +554,7 @@ export function GladwellChat() {
               <Trash2 className="w-4 h-4" />
             </Button>
             <Button
-              onClick={handleSend}
+              onClick={() => handleSend()}
               disabled={!inputValue.trim()}
               className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded-xl px-4 flex-shrink-0"
               size="icon"

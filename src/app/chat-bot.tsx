@@ -298,11 +298,11 @@ export default function ChatBot({
 </div>`
   }
 
-  const handleSend = async () => {
-    if (!input.trim()) return
+  const handleSend = async (directMessage?: string) => {
+    const messageToSend = directMessage || input.trim()
+    if (!messageToSend) return
 
-    const userMessage = input.trim()
-    setMessages((prev) => [...prev, { role: "user", content: userMessage }])
+    setMessages((prev) => [...prev, { role: "user", content: messageToSend }])
     setInput("")
     setIsTyping(true)
 
@@ -317,7 +317,7 @@ export default function ChatBot({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: userMessage,
+          message: messageToSend,
           bookData: {
             currentBook: initialBook,
             allBooks: allBooks,
@@ -336,7 +336,7 @@ export default function ChatBot({
       }
 
       setTimeout(() => {
-        const fallbackResponse = generateResponse(userMessage)
+        const fallbackResponse = generateResponse(messageToSend)
         setMessages((prev) => [...prev, { role: "assistant", content: linkifyText(fallbackResponse) }])
         setIsTyping(false)
       }, 500)
@@ -344,7 +344,7 @@ export default function ChatBot({
       console.error("Error getting AI response:", error)
 
       setTimeout(() => {
-        const fallbackResponse = generateResponse(userMessage)
+        const fallbackResponse = generateResponse(messageToSend)
         setMessages((prev) => [...prev, { role: "assistant", content: linkifyText(fallbackResponse) }])
         setIsTyping(false)
       }, 500)
@@ -359,8 +359,7 @@ export default function ChatBot({
   }
 
   const handleSuggestionClick = (suggestion: string) => {
-    setInput(suggestion)
-    setTimeout(() => handleSend(), 100)
+    handleSend(suggestion)
   }
 
   const clearConversation = () => {
@@ -577,7 +576,7 @@ export default function ChatBot({
                   className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-800 dark:text-white resize-none max-h-32 overflow-y-auto"
                 />
                 <Button
-                  onClick={handleSend}
+                  onClick={() => handleSend()}
                   className="rounded-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-4 flex-shrink-0"
                 >
                   <Send className="w-4 h-4" />
