@@ -250,7 +250,7 @@ function ReviewContent({ review, book }: { review: Review; book?: Book }) {
           {/* Edit Rating */}
           <div>
             <label className="text-sm font-serif text-gray-600 dark:text-gray-400 mb-1 block">Rating</label>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center mb-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
@@ -268,6 +268,24 @@ function ReviewContent({ review, book }: { review: Review; book?: Book }) {
                 </button>
               ))}
             </div>
+            <Input
+              type="number"
+              min="0"
+              max="5"
+              step="0.1"
+              value={editedReview.rating}
+              onChange={(e) => {
+                const value = Number.parseFloat(e.target.value)
+                if (!isNaN(value) && value >= 0 && value <= 5) {
+                  setEditedReview({ ...editedReview, rating: value })
+                }
+              }}
+              placeholder="Enter rating (0-5)"
+              className="font-serif w-32"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-serif">
+              Click stars for whole numbers or type for decimals (e.g., 4.5)
+            </p>
           </div>
 
           {/* Edit Review Text */}
