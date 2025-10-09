@@ -21,20 +21,19 @@ export default async function Home({
     year?: string
   }
 }) {
-  await searchParams
+  const resolvedSearchParams = await searchParams
   const client = await getServerClient()
   const member = await getMember()
 
   const booksData = await client.items
-    .queryDataItems({ dataCollectionId: "Books" })
+    .query("Books")
     .find()
-    .then((res) => res.items.map((item) => item.data || {}))
+    .then((res) => res.items)
     .catch((error) => {
       console.error("Error fetching books:", error)
       return []
     })
 
-  // Filter out any null or undefined values to satisfy TypeScript
   const books = booksData.filter(
     (
       book,
@@ -46,18 +45,16 @@ export default async function Home({
       recommender?: string
       image?: any
       publishDate?: string
-      _createdDate?: string
+      _createdDate?: Date
     } => !!book && typeof book === "object",
   )
 
-  const searchQuery = (await searchParams).search || ""
-  const authorFilter = (await searchParams).author || ""
-  const genreFilter = (await searchParams).genre || ""
-  const yearFilter = (await searchParams).year || ""
+  const searchQuery = resolvedSearchParams.search || ""
+  const authorFilter = resolvedSearchParams.author || ""
+  const genreFilter = resolvedSearchParams.genre || ""
+  const yearFilter = resolvedSearchParams.year || ""
 
-  // Apply all filters
   let filteredBooks = books.filter((book) => {
-    // Search filter
     const matchesSearch =
       !searchQuery ||
       book?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -65,13 +62,10 @@ export default async function Home({
       book?.genre?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       book?.recommender?.toLowerCase().includes(searchQuery.toLowerCase())
 
-    // Author filter
     const matchesAuthor = !authorFilter || authorFilter === "all" || book?.author === authorFilter
 
-    // Genre filter
     const matchesGenre = !genreFilter || genreFilter === "all" || book?.genre === genreFilter
 
-    // Year filter - using publishDate field
     const matchesYear =
       !yearFilter ||
       yearFilter === "all" ||
@@ -80,23 +74,18 @@ export default async function Home({
     return matchesSearch && matchesAuthor && matchesGenre && matchesYear
   })
 
-  // Sort by newest added (createdDate) by default
   filteredBooks = filteredBooks.sort((a, b) => {
-    // Prioritize _createdDate for sorting by most recently added
     if (a?._createdDate && b?._createdDate) {
       return new Date(b._createdDate).getTime() - new Date(a._createdDate).getTime()
     }
-    // Fallback to publishDate if _createdDate isn't available
     if (a?.publishDate && b?.publishDate) {
       return new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
     }
-    // Fallback to title sort if dates aren't available
     return (a?.title || "").localeCompare(b?.title || "")
   })
 
   return (
     <div className="min-h-screen bg-[#f5f0e1] dark:bg-gray-900">
-      {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#15803d_1px,transparent_0)] dark:bg-[radial-gradient(circle_at_1px_1px,#22c55e_1px,transparent_0)] bg-[length:40px_40px] opacity-20" />
 
@@ -125,7 +114,6 @@ export default async function Home({
       </div>
 
       <div className="max-w-screen-xl mx-auto px-4 lg:px-8 pb-16 relative">
-        {/* Search and buttons */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
           <div className="w-full sm:w-auto">
             <SemanticSearch />
@@ -136,7 +124,6 @@ export default async function Home({
           </div>
         </div>
 
-        {/* compact filter component */}
         <BooksFilter
           books={booksData || []}
           initialAuthor={authorFilter}
@@ -157,7 +144,7 @@ export default async function Home({
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {filteredBooks.map((book) => (
             <Card
-              key={book?._id}
+              key={book._id}
               className="hover:shadow-lg transition-all duration-300 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 group hover:-translate-y-1"
             >
               <CardHeader className="pb-2 border-b border-gray-100 dark:border-gray-700">

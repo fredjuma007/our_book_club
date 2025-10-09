@@ -69,21 +69,13 @@ export async function updateReviewAction(
     const client = await getServerClient()
 
     // First, get the existing review to preserve other fields
-    const existingReview = await client.items
-      .getDataItem(reviewId, {
-        dataCollectionId: "Reviews",
-      })
-      .then((res) => res.data)
+    const existingReview = await client.items.get("Reviews", reviewId)
 
-    // Update the review with new data while preserving other fields
-    await client.items.updateDataItem(reviewId, {
-      dataCollectionId: "Reviews",
-      dataItem: {
-        data: {
-          ...existingReview, // Preserve existing fields
-          ...updatedData, // Merge new data
-        },
-      },
+    // Data is no longer nested in a 'data' property
+    await client.items.update("Reviews", {
+      _id: reviewId,
+      ...existingReview, // Preserve existing fields
+      ...updatedData, // Merge new data
     })
 
     // Revalidate all possible paths where reviews might be displayed
@@ -107,12 +99,12 @@ export async function deleteReviewAction(reviewId: string) {
     }
 
     // Get the review to find its bookId for revalidation
-    const review = await client.items.getDataItem(reviewId, { dataCollectionId: "Reviews" }).then((res) => res.data)
+    const review = await client.items.get("Reviews", reviewId)
 
     const bookId = review?.bookId
 
     // deleting an item
-    await client.items.removeDataItem(reviewId, { dataCollectionId: "Reviews" })
+    await client.items.remove("Reviews", reviewId)
 
     // Revalidate all possible paths where reviews might be displayed
     revalidatePath("/reviews")
@@ -144,28 +136,23 @@ export async function createReviewAction(formData: FormData) {
     const rating = Number.parseFloat(formData.get("rating") as string)
     const review = formData.get("review") as string
 
-    if (!bookId || !name || !rating ) {
+    if (!bookId || !name || !rating) {
       throw new Error("Missing required fields")
     }
 
     console.log("Creating review with member ID:", member.id)
 
-    // Insert the review with multiple user ID fields to ensure compatibility
-    const result = await client.items.insertDataItem({
-      dataCollectionId: "Reviews",
-      dataItem: {
-        data: {
-          bookId,
-          name,
-          rating,
-          review,
-          userId: member.id,
-          memberId: member.id,
-          authorId: member.id,
-          createdBy: member.id,
-          userEmail: member.loginEmail || "",
-        },
-      },
+    // Data is no longer nested in a 'data' property
+    const result = await client.items.insert("Reviews", {
+      bookId,
+      name,
+      rating,
+      review,
+      userId: member.id,
+      memberId: member.id,
+      authorId: member.id,
+      createdBy: member.id,
+      userEmail: member.loginEmail || "",
     })
 
     console.log("Review creation result:", result)
@@ -209,13 +196,8 @@ export async function addReplyAction(reviewId: string[], bookId: string, content
 
     console.log("Sending reply to Wix:", reply)
 
-    // Add the reply to the Replies collection
-    const result = await client.items.insertDataItem({
-      dataCollectionId: "Replies",
-      dataItem: {
-        data: reply,
-      },
-    })
+    // Data is no longer nested in a 'data' property
+    const result = await client.items.insert("Replies", reply)
 
     // Revalidate the book details page to show the new reply
     revalidatePath(`/books/${bookId}`)
@@ -241,12 +223,7 @@ export async function getRepliesAction(reviewId: string) {
     const client = await getServerClient()
 
     // Query replies for this review
-    const repliesResponse = await client.items
-      .queryDataItems({
-        dataCollectionId: "Replies",
-      })
-      .eq("reviewId", reviewId)
-      .find()
+    const repliesResponse = await client.items.query("Replies").eq("reviewId", reviewId).find()
 
     // Only log in development if needed
     // console.log("Replies response:", JSON.stringify(repliesResponse, null, 2))
@@ -255,15 +232,13 @@ export async function getRepliesAction(reviewId: string) {
     return {
       success: true,
       replies: repliesResponse.items.map((item) => {
-        const data = item.data || {}
-
         // Ensure all required properties are present
         return {
           _id: item._id || `unknown-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-          reviewId: data.reviewId || reviewId,
-          content: data.content || "",
-          authorId: data.authorId || "",
-          authorName: data.authorName || "Anonymous",
+          reviewId: item.reviewId || reviewId,
+          content: item.content || "",
+          authorId: item.authorId || "",
+          authorName: item.authorName || "Anonymous",
         }
       }),
     }
@@ -294,11 +269,7 @@ export async function deleteReplyAction(replyId: string, bookId: string) {
 
     try {
       // Get the reply to check ownership
-      const replyResponse = await client.items.getDataItem(replyId, {
-        dataCollectionId: "Replies",
-      })
-
-      const reply = replyResponse?.data
+      const reply = await client.items.get("Replies", replyId)
 
       if (!reply) {
         throw new Error("Reply not found")
@@ -314,7 +285,7 @@ export async function deleteReplyAction(replyId: string, bookId: string) {
     }
 
     // Delete the reply
-    await client.items.removeDataItem(replyId, { dataCollectionId: "Replies" })
+    await client.items.remove("Replies", replyId)
     console.log("Reply deleted successfully")
 
     // Revalidate the book details page

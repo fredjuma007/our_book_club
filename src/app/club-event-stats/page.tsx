@@ -35,15 +35,11 @@ async function getEventStats() {
     const client = await getServerClient()
 
     // Fetch all events
-    const eventsResponse = await client.items
-      .queryDataItems({
-        dataCollectionId: "Events",
-      })
-      .find()
+    const eventsResponse = await client.items.query("Events").find()
 
     // Convert and filter events
     const events = eventsResponse.items
-      .map((item) => convertWixEventData(item.data || {}))
+      .map((item) => convertWixEventData(item))
       .filter(
         (event: Partial<IEvent>): event is IEvent =>
           !!event &&

@@ -73,9 +73,9 @@ export default async function HomePage() {
 
       try {
         const data = await client.items
-          .queryDataItems({ dataCollectionId: "Gallery" })
+          .query("Gallery")
           .find()
-          .then((res) => res.items.map((item) => item.data || {}))
+          .then((res) => res.items)
           .catch((error) => {
             console.error("Error fetching gallery items:", error)
             return []
@@ -98,9 +98,9 @@ export default async function HomePage() {
 
       try {
         const data = await client.items
-          .queryDataItems({ dataCollectionId: "Events" })
+          .query("Events")
           .find()
-          .then((res) => res.items.map((item) => item.data || {}))
+          .then((res) => res.items)
           .catch((error) => {
             console.error("Error fetching events:", error)
             return []
@@ -123,9 +123,9 @@ export default async function HomePage() {
 
       try {
         const data = await client.items
-          .queryDataItems({ dataCollectionId: "Testimonials" })
+          .query("Testimonials")
           .find()
-          .then((res) => res.items.map((item) => item.data || {}))
+          .then((res) => res.items)
           .catch((error) => {
             console.error("Error fetching testimonials:", error)
             return []
@@ -148,9 +148,9 @@ export default async function HomePage() {
 
       try {
         const data = await client.items
-          .queryDataItems({ dataCollectionId: "FeaturedBooks" })
+          .query("FeaturedBooks")
           .find()
-          .then((res) => res.items.map((item) => item.data || {}))
+          .then((res) => res.items)
           .catch((error) => {
             console.error("Error fetching featured book:", error)
             return []
@@ -179,19 +179,19 @@ export default async function HomePage() {
       try {
         const [booksResult, eventsResult, reviewsResult, galleryResult] = await Promise.all([
           client.items
-            .queryDataItems({ dataCollectionId: "Books" })
+            .query("Books")
             .find()
             .catch(() => ({ items: [] })),
           client.items
-            .queryDataItems({ dataCollectionId: "Events" })
+            .query("Events")
             .find()
             .catch(() => ({ items: [] })),
           client.items
-            .queryDataItems({ dataCollectionId: "Reviews" })
+            .query("Reviews")
             .find()
             .catch(() => ({ items: [] })),
           client.items
-            .queryDataItems({ dataCollectionId: "Gallery" })
+            .query("Gallery")
             .find()
             .catch(() => ({ items: [] })),
         ])

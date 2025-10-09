@@ -29,16 +29,11 @@ export async function GET() {
 
     // Fetch upcoming events
     const currentDate = new Date().toISOString()
-    const eventsResponse = await client.items
-      .queryDataItems({
-        dataCollectionId: "Events",
-      })
-      .find()
+    const eventsResponse = await client.items.query("Events").find()
 
     // Filter events manually
     const events = eventsResponse.items
-      .filter((item) => item.data)
-      .map((item) => item.data as EventItem)
+      .map((item) => item as EventItem)
       .sort((a, b) => {
         const dateA = new Date(a.date)
         const dateB = new Date(b.date)
@@ -51,19 +46,13 @@ export async function GET() {
       })
 
     // Fetch all books
-    const booksResponse = await client.items
-      .queryDataItems({
-        dataCollectionId: "Books",
-      })
-      .find()
+    const booksResponse = await client.items.query("Books").find()
 
     // Get all books
-    const allBooks = booksResponse.items
-      .filter((item) => item.data)
-      .map((item) => ({
-        ...(item.data as BookItem),
-        _createdDate: (item as any)?.metadata?.createdDate || null,
-      }))
+    const allBooks = booksResponse.items.map((item) => ({
+      ...(item as BookItem),
+      _createdDate: (item as any)?._createdDate || null,
+    }))
 
     // Sort books by creation date (newest first)
     const sortedBooks = allBooks.sort((a, b) => {

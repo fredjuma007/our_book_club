@@ -49,7 +49,7 @@ export default function GladwellButton({ size = "small", onClick }: GladwellButt
         }}
       >
         <Brain className={`${iconSize} text-white mr-1`} />
-        <span className={`text-white ${textSize} font-bold tracking-wider`}>AI</span>
+        <span className={`text-white ${textSize} font-bold tracking-wider`}>Gladwell</span>
       </motion.button>
 
       <AnimatePresence>

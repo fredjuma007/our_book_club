@@ -18,9 +18,9 @@ export default async function GalleryPage() {
 
       try {
         const data = await client.items
-          .queryDataItems({ dataCollectionId: "Gallery" })
+          .query("Gallery")
           .find()
-          .then((res) => res.items.map((item) => item.data || {}))
+          .then((res) => res.items)
           .catch((error) => {
             console.error("Error fetching gallery items:", error)
             return []

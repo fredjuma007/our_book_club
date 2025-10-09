@@ -66,28 +66,19 @@ export default async function Page({ params }: PageProps) {
     const timestamp = Date.now()
 
     const [bookResponse, reviewsResponse] = await Promise.all([
-      client.items.getDataItem(bookId, {
-        dataCollectionId: "Books",
-      }),
-      client.items
-        .queryDataItems({
-          dataCollectionId: "Reviews",
-        })
-        .eq("bookId", bookId)
-        .find(),
+      client.items.get("Books", bookId),
+      client.items.query("Reviews").eq("bookId", bookId).find(),
     ])
 
-    const book = bookResponse?.data as Book | undefined
+    const book = bookResponse as Book | undefined
 
-    // Extract reviews with proper mapping
     const reviews = reviewsResponse.items.map((item) => {
-      const reviewData = item.data || {}
       return {
         _id: item._id,
-        name: reviewData.name || "Anonymous",
-        rating: reviewData.rating || 3,
-        review: reviewData.review || "",
-        bookId: reviewData.bookId || bookId,
+        name: item.name || "Anonymous",
+        rating: item.rating || 3,
+        review: item.review || "",
+        bookId: item.bookId || bookId,
       } as Review
     })
 
@@ -126,7 +117,7 @@ export default async function Page({ params }: PageProps) {
             <div className="mb-8">
               <Button
                 variant="outline"
-                className="border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden"
+                className="border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden bg-transparent"
                 asChild
               >
                 <Link href="/books">
@@ -225,7 +216,7 @@ export default async function Page({ params }: PageProps) {
                   )}
                   <Button
                     variant="outline"
-                    className="border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden"
+                    className="border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden bg-transparent"
                     asChild
                   >
                     <a href="#post-review">
@@ -234,8 +225,7 @@ export default async function Page({ params }: PageProps) {
                       Write a Review
                     </a>
                   </Button>
-                  
-                  
+
                   <ShareButton />
                 </div>
               </div>

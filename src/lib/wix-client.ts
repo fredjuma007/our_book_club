@@ -21,7 +21,7 @@ export function setSessionCookie(tokens: any) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    domain: window.location.hostname // Ensure cookies are accessible across subdomains
+    domain: window.location.hostname, // Ensure cookies are accessible across subdomains
   })
 }
 

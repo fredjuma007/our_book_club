@@ -369,7 +369,6 @@ export default function ChatBot({
   }
 
   const copyToClipboard = async (content: string, messageIndex: number) => {
-    // Strip HTML tags for plain text copy
     const plainText = content.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ")
 
     try {
@@ -383,16 +382,14 @@ export default function ChatBot({
 
   return (
     <>
-      {/* Chat window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="fixed bottom-0 right-0 w-full h-full sm:bottom-24 sm:right-6 sm:w-96 md:w-[500px] lg:w-[600px] sm:h-[600px] bg-white dark:bg-gray-900 sm:rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border-0 sm:border border-gray-200 dark:border-gray-700"
+            className="fixed bottom-0 right-0 w-full h-full sm:bottom-24 sm:right-6 sm:w-[450px] md:w-[550px] lg:w-[650px] sm:h-[85vh] bg-white dark:bg-gray-900 sm:rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border-0 sm:border border-gray-200 dark:border-gray-700"
           >
-            {/* Header */}
             <div className="bg-gradient-to-r from-emerald-600 to-green-600 p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -400,7 +397,6 @@ export default function ChatBot({
                 </div>
                 <div>
                   <h3 className="font-bold text-white text-lg">Gladwell</h3>
-                  <p className="text-xs text-emerald-100">Your Reading Circle Assistant</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -425,7 +421,6 @@ export default function ChatBot({
               </div>
             </div>
 
-            {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-950">
               {messages.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-full py-12">
@@ -435,7 +430,6 @@ export default function ChatBot({
                     transition={{ duration: 0.5 }}
                     className="text-center space-y-6 max-w-md"
                   >
-                    {/* Icon with gradient background */}
                     <div className="relative mx-auto w-24 h-24">
                       <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 to-green-600 rounded-full animate-pulse opacity-20"></div>
                       <div className="relative w-24 h-24 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center shadow-xl">
@@ -456,18 +450,16 @@ export default function ChatBot({
                       </motion.div>
                     </div>
 
-                    {/* Welcome text */}
                     <div className="space-y-3">
                       <h4 className="font-bold text-2xl bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
                         Hi! I'm Gladwell
                       </h4>
                       <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                        Your friendly Reading Circle assistant.
-                        I'm here to help you with information about our book club, upcoming events, and more 📚
+                        Your friendly Reading Circle assistant. I'm here to help you with information about our book
+                        club, upcoming events, and more 📚
                       </p>
                     </div>
 
-                    {/* Feature highlights */}
                     <div className="grid grid-cols-2 gap-3 pt-4">
                       <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800">
                         <div className="text-2xl mb-1">📚</div>
@@ -483,7 +475,6 @@ export default function ChatBot({
                       </div>
                     </div>
 
-                    {/* Prompt to start */}
                     <motion.p
                       className="text-xs text-emerald-600 dark:text-emerald-400 font-medium"
                       animate={{ opacity: [0.5, 1, 0.5] }}
@@ -532,7 +523,7 @@ export default function ChatBot({
                     </div>
                   )}
                   {message.role === "user" && (
-                    <div className="bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%] shadow-sm">
+                    <div className="bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%] shadow-sm text-sm">
                       {message.content}
                     </div>
                   )}
@@ -574,7 +565,6 @@ export default function ChatBot({
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
             <div className="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
               <div className="flex gap-2 items-end">
                 <textarea
@@ -595,7 +585,6 @@ export default function ChatBot({
               </div>
             </div>
 
-            {/* Suggestions */}
             {suggestions.length > 0 && (
               <div className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
                 <div
@@ -641,7 +630,6 @@ export default function ChatBot({
         )}
       </AnimatePresence>
 
-      {/* Floating button */}
       <div className="fixed bottom-6 right-6 z-50">
         <AnimatePresence>
           {!isOpen && (
@@ -651,20 +639,78 @@ export default function ChatBot({
               exit={{ scale: 0, opacity: 0 }}
               className="relative"
             >
-              <Button
-                onClick={() => setIsOpen(true)}
-                className="w-14 h-14 rounded-full bg-green-700 hover:bg-green-800 text-white shadow-lg relative z-10"
-              >
-                <MessageSquare className="w-6 h-6" />
-              </Button>
               <motion.div
-                className="absolute -top-3 -right-3 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full px-2 py-0.5 flex items-center justify-center shadow-lg"
+                className="absolute -top-1 -left-1"
+                animate={{
+                  y: [-2, 2, -2],
+                  rotate: [0, 10, 0],
+                }}
+                transition={{
+                  repeat: Number.POSITIVE_INFINITY,
+                  duration: 2,
+                  ease: "easeInOut",
+                }}
+              >
+                <Sparkles className="w-4 h-4 text-purple-400" />
+              </motion.div>
+              <motion.div
+                className="absolute -bottom-1 -right-1"
+                animate={{
+                  y: [2, -2, 2],
+                  rotate: [0, -10, 0],
+                }}
+                transition={{
+                  repeat: Number.POSITIVE_INFINITY,
+                  duration: 2.5,
+                  ease: "easeInOut",
+                  delay: 0.5,
+                }}
+              >
+                <Sparkles className="w-3 h-3 text-cyan-400" />
+              </motion.div>
+              <motion.div
+                className="absolute top-0 -right-2"
+                animate={{
+                  scale: [1, 1.3, 1],
+                  opacity: [0.5, 1, 0.5],
+                }}
+                transition={{
+                  repeat: Number.POSITIVE_INFINITY,
+                  duration: 1.8,
+                  ease: "easeInOut",
+                }}
+              >
+                <Sparkles className="w-3 h-3 text-pink-400" />
+              </motion.div>
+              <motion.div
+                animate={{
+                  boxShadow: [
+                    "0 0 20px rgba(147, 51, 234, 0.4)",
+                    "0 0 40px rgba(147, 51, 234, 0.6)",
+                    "0 0 20px rgba(147, 51, 234, 0.4)",
+                  ],
+                }}
+                transition={{
+                  repeat: Number.POSITIVE_INFINITY,
+                  duration: 2,
+                }}
+                className="rounded-full"
+              >
+                <Button
+                  onClick={() => setIsOpen(true)}
+                  className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 hover:from-purple-700 hover:via-blue-700 hover:to-cyan-700 text-white shadow-lg relative z-10"
+                >
+                  <MessageSquare className="w-7 h-7" />
+                </Button>
+              </motion.div>
+              <motion.div
+                className="absolute -top-3 -right-3 bg-gradient-to-r from-pink-500 to-orange-500 rounded-full px-2 py-0.5 flex items-center justify-center shadow-lg"
                 animate={{
                   scale: [1, 1.2, 1],
                   boxShadow: [
-                    "0 0 0 rgba(139, 92, 246, 0.4)",
-                    "0 0 20px rgba(139, 92, 246, 0.6)",
-                    "0 0 0 rgba(139, 92, 246, 0.4)",
+                    "0 0 0 rgba(236, 72, 153, 0.4)",
+                    "0 0 20px rgba(236, 72, 153, 0.6)",
+                    "0 0 0 rgba(236, 72, 153, 0.4)",
                   ],
                 }}
                 transition={{

@@ -19,11 +19,11 @@ export async function Header() {
   try {
     const currentDate = new Date()
 
-    const eventsResponse = await client.items.queryDataItems({ dataCollectionId: "Events" }).find()
+    const eventsResponse = await client.items.query("Events").find()
 
     // Process events data
     const processedEvents = eventsResponse.items
-      .map((item) => convertWixEventData(item.data || {}))
+      .map((item) => convertWixEventData(item))
       .filter(
         (event) =>
           !!event &&
@@ -110,7 +110,7 @@ export async function Header() {
 
   return (
     <>
-      {/* Fixed Header */}
+      
       <div className="fixed top-0 left-0 w-full z-50 overflow-hidden">
         <div className="absolute inset-0 bg-repeat opacity-10 dark:opacity-5" />
         <div className="absolute inset-0 bg-white/90 dark:bg-gray-900/90 opacity-95" />
@@ -167,7 +167,7 @@ export async function Header() {
               </Link>
             </Button>
 
-            {/* Social media icons - Show on all screen sizes */}
+            {/* Social media icons */}
             <div className="flex items-center gap-3 sm:gap-4">
               <Link
                 href="https://www.instagram.com/thereadingcircle254/"

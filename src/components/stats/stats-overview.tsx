@@ -81,7 +81,7 @@ export function StatsOverview({ books, reviews }: StatsOverviewProps) {
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.6, ease: "easeOut" },
+      transition: { duration: 0.6 },
     },
   }
 
@@ -146,7 +146,6 @@ export function StatsOverview({ books, reviews }: StatsOverviewProps) {
 // Helper function to estimate page count based on title length if not provided
 function estimatePageCount(title: string): number {
   // This is just a placeholder function that returns a random page count
-  // In a real app, you might want to use an API or database to get actual page counts
   const baseCount = 250
   const variance = title.length * 2
   return baseCount + variance

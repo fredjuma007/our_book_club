@@ -157,13 +157,10 @@ export async function getBookInsights(
     let bookData = null
 
     try {
-      // Try to get more detailed book information from Wix
-      const bookResponse = await client.items.getDataItem(bookId, {
-        dataCollectionId: "Books",
-      })
+      const bookResponse = await client.items.get("Books", bookId)
 
-      if (bookResponse?.data) {
-        bookData = bookResponse.data
+      if (bookResponse) {
+        bookData = bookResponse
 
         // Use the more detailed data if available
         if (bookData.title) bookTitle = bookData.title
@@ -365,7 +362,7 @@ function extractInsightsWithRegex(text: string, bookTitle: string, bookAuthor: s
 
       if (titleMatch || authorMatch) {
         if (!insights.recommendations) {
-          insights.recommendations = [];
+          insights.recommendations = []
         }
         insights.recommendations.push({
           title: titleMatch ? titleMatch[1] : `Book similar to ${bookTitle}`,

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion, type Variants } from "framer-motion"
 import { Users, Award } from "lucide-react"
 import { useTheme } from "next-themes"
 
@@ -76,8 +76,7 @@ export function ModeratorStats({ events }: ModeratorStatsProps) {
   const countBgColor = isDark ? "bg-green-700/30" : "bg-green-100"
   const countTextColor = isDark ? "text-green-300" : "text-green-700"
 
-  // Animation variants
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -87,12 +86,12 @@ export function ModeratorStats({ events }: ModeratorStatsProps) {
     },
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { x: -20, opacity: 0 },
     visible: {
       x: 0,
       opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
+      transition: { duration: 0.5 },
     },
   }
 
@@ -101,7 +100,7 @@ export function ModeratorStats({ events }: ModeratorStatsProps) {
       className={`bg-gradient-to-br ${bgGradient} rounded-xl p-6 border ${borderColor} shadow-lg backdrop-blur-sm`}
       initial={{ opacity: 0, y: 20 }}
       animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
+      transition={{ duration: 0.6, delay: 0.3 }}
     >
       <div className="flex items-center gap-3 mb-6">
         <div className={`${iconBgColor} p-2 rounded-full`}>

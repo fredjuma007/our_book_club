@@ -20,17 +20,14 @@ export default async function EventPage({ params }: { params: Promise<{ eventId:
   try {
     const client = await getServerClient()
 
-    // Use getDataItem directly with the event ID instead of querying with a filter
-    const eventResponse = await client.items.getDataItem(eventId, {
-      dataCollectionId: "Events",
-    })
+    const eventResponse = await client.items.get("Events", eventId)
 
-    if (!eventResponse || !eventResponse.data) {
+    if (!eventResponse) {
       console.log(`Event with ID ${eventId} not found`)
       return notFound()
     }
 
-    const eventData = convertWixEventData(eventResponse.data || {})
+    const eventData = convertWixEventData(eventResponse)
 
     console.log(`Event found: ${eventData.title}`)
 
@@ -51,7 +48,7 @@ export default async function EventPage({ params }: { params: Promise<{ eventId:
             <div className="mb-8">
               <Button
                 variant="outline"
-                className="border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden"
+                className="border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden bg-transparent"
                 asChild
               >
                 <Link href="/club-events" className="flex items-center">

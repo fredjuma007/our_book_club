@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion, type Variants } from "framer-motion"
 import { Calendar, Users, MapPin } from "lucide-react"
 import { useTheme } from "next-themes"
 
@@ -65,8 +65,7 @@ export function StatsOverview({ events }: StatsOverviewProps) {
   const valueColor = isDark ? "text-white" : "text-green-800"
   const iconBgColor = isDark ? "bg-green-700/30" : "bg-green-100"
 
-  // Animation variants
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -76,12 +75,12 @@ export function StatsOverview({ events }: StatsOverviewProps) {
     },
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.6, ease: "easeOut" },
+      transition: { duration: 0.6 },
     },
   }
 

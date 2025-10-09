@@ -16,11 +16,10 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
   try {
     const client = await getServerClient()
 
-    const response = await client.items.queryDataItems({ dataCollectionId: "Events" }).find()
+    const response = await client.items.query("Events").find()
 
-    // Filter out any null or invalid event items to satisfy TypeScript
     let eventsData = response.items
-      .map((item) => convertWixEventData(item.data || {}))
+      .map((item) => convertWixEventData(item))
       .filter(
         (
           event,

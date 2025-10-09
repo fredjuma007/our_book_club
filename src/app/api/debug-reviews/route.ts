@@ -13,27 +13,23 @@ export async function GET(request: NextRequest) {
     const client = await getServerClient()
 
     // Get all reviews
-    const allReviews = await client.items
-      .queryDataItems({
-        dataCollectionId: "Reviews",
-      })
-      .find()
+    const allReviews = await client.items.query("Reviews").find()
 
     // Get a sample of reviews (first 10)
     const sampleReviews = allReviews.items.slice(0, 10).map((item) => ({
       id: item._id,
-      data: item.data,
+      data: item,
     }))
 
     // Try to find reviews by this user
     const userReviews = allReviews.items.filter((item) => {
       // Check all possible user ID fields
       return (
-        item.data?.userId === member.id ||
-        item.data?.authorId === member.id ||
-        item.data?.memberId === member.id ||
-        item.data?.createdBy === member.id ||
-        item.data?.userEmail === member.loginEmail
+        item.userId === member.id ||
+        item.authorId === member.id ||
+        item.memberId === member.id ||
+        item.createdBy === member.id ||
+        item.userEmail === member.loginEmail
       )
     })
 
@@ -45,7 +41,7 @@ export async function GET(request: NextRequest) {
       sampleReviews,
       userReviews: userReviews.map((item) => ({
         id: item._id,
-        data: item.data,
+        data: item,
       })),
     })
   } catch (error) {

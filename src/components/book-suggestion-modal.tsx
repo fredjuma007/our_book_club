@@ -45,23 +45,17 @@ export function BookSuggestionModal({ isLoggedIn, userEmail, userName }: BookSug
     try {
       const client = getClient()
 
-      // Submit to Wix CMS collection
-      await client.items.insertDataItem({
-        dataCollectionId: "BookSuggestions",
-        dataItem: {
-          data: {
-            name: formData.name,
-            email: formData.email,
-            bookTitle: formData.bookTitle,
-            author: formData.author,
-            genre: formData.genre,
-            reason: formData.reason,
-            membershipStatus: formData.membershipStatus,
-            status: "Pending", // Default status for new suggestions
-            reviewed: false, // Boolean to track if suggestion has been reviewed
-            createdAt: new Date().toISOString(),
-          },
-        },
+      await client.items.insert("BookSuggestions", {
+        name: formData.name,
+        email: formData.email,
+        bookTitle: formData.bookTitle,
+        author: formData.author,
+        genre: formData.genre,
+        reason: formData.reason,
+        membershipStatus: formData.membershipStatus,
+        status: "Pending", // Default status for new suggestions
+        reviewed: false, // Boolean to track if suggestion has been reviewed
+        createdAt: new Date().toISOString(),
       })
 
       // Reset form and show success message
@@ -103,7 +97,7 @@ export function BookSuggestionModal({ isLoggedIn, userEmail, userName }: BookSug
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="border-green-600 text-green-600 hover:bg-green-50 dark:border-green-500 dark:text-green-500 dark:hover:bg-green-900/20"
+          className="border-green-600 text-green-600 hover:bg-green-50 dark:border-green-500 dark:text-green-500 dark:hover:bg-green-900/20 bg-transparent"
         >
           <BookPlus className="w-4 h-4 mr-1" />
           <span>Suggest Book</span>

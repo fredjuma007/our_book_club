@@ -26,7 +26,7 @@ interface IBook {
 
 // Define the Review type
 interface Review {
-  _id?: string
+  _id: string
   bookId?: string
   rating?: number
   review?: string
@@ -39,22 +39,14 @@ async function getClubStats() {
     const client = await getServerClient()
 
     // Fetch all books
-    const booksResponse = await client.items
-      .queryDataItems({
-        dataCollectionId: "Books",
-      })
-      .find()
+    const booksResponse = await client.items.query("Books").find()
 
     // Fetch all reviews
-    const reviewsResponse = await client.items
-      .queryDataItems({
-        dataCollectionId: "Reviews",
-      })
-      .find()
+    const reviewsResponse = await client.items.query("Reviews").find()
 
     return {
-      books: booksResponse.items.map((item) => item.data),
-      reviews: reviewsResponse.items.map((item) => item.data),
+      books: booksResponse.items.map((item) => item),
+      reviews: reviewsResponse.items.map((item) => item),
     }
   } catch (error) {
     console.error("Error fetching club stats:", error)
@@ -66,7 +58,7 @@ export default async function ClubStatsPage() {
   const { books, reviews } = await getClubStats()
 
   // Filter out null or undefined items and ensure they match the expected types
-  const validBooks = books.filter((book): book is IBook => book !== null && book !== undefined)
+  const validBooks = books.filter((book): book is Required<IBook> => book !== null && book !== undefined && typeof book._id === "string")
   const validReviews = reviews.filter((review): review is Review => review !== null && review !== undefined)
 
   return (

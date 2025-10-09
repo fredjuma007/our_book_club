@@ -45,22 +45,16 @@ export default function JoinUs() {
     try {
       const client = getClient()
 
-      // Submit to Wix CMS collection
-      await client.items.insertDataItem({
-        dataCollectionId: "ClubApplications", // Use your actual collection ID
-        dataItem: {
-          data: {
-            name: formData.name,
-            phoneNumber: formData.phoneNumber,
-            readingFrequency: formData.readingFrequency,
-            favoriteBook: formData.favoriteBook,
-            discussionComfort: formData.discussionComfort,
-            readGuidelines: formData.readGuidelines,
-            howDidYouHear: formData.howDidYouHear,
-            pending: true, // Boolean field - true for pending, false for done
-            createdAt: new Date().toISOString(),
-          },
-        },
+      await client.items.insert("ClubApplications", {
+        name: formData.name,
+        phoneNumber: formData.phoneNumber,
+        readingFrequency: formData.readingFrequency,
+        favoriteBook: formData.favoriteBook,
+        discussionComfort: formData.discussionComfort,
+        readGuidelines: formData.readGuidelines,
+        howDidYouHear: formData.howDidYouHear,
+        pending: true,
+        createdAt: new Date().toISOString(),
       })
 
       setIsSuccess(true)
@@ -517,7 +511,7 @@ export default function JoinUs() {
               <Link href="/about-us">
                 <Button
                   variant="outline"
-                  className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden w-full md:w-auto"
+                  className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden w-full md:w-auto bg-transparent"
                 >
                   <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <Info className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:rotate-12" />
@@ -527,7 +521,7 @@ export default function JoinUs() {
               <Link href="/club-events">
                 <Button
                   variant="outline"
-                  className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden w-full md:w-auto"
+                  className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group relative overflow-hidden w-full md:w-auto bg-transparent"
                 >
                   <span className="absolute inset-0 bg-gradient-to-r from-green-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <CalendarCheck className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:rotate-12" />

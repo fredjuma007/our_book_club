@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion, type Variants } from "framer-motion"
 import { Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "next-themes"
@@ -95,19 +95,20 @@ export function AIEventSummary({ events }: AIEventSummaryProps) {
       setError("Failed to generate summary. Please try again later.")
 
       // Set fallback summary
-      setSummary("The Reading Circle has hosted a variety of events, including book discussions, author talks, and social gatherings. These events have been a mix of online and in-person formats, allowing members to connect regardless of location.")
+      setSummary(
+        "The Reading Circle has hosted a variety of events, including book discussions, author talks, and social gatherings. These events have been a mix of online and in-person formats, allowing members to connect regardless of location.",
+      )
       setInsights([
         "Book discussions are the most common event type",
         "There's a good balance between online and in-person events",
-        "Events are typically moderated by a core group of dedicated members"
+        "Events are typically moderated by a core group of dedicated members",
       ])
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Animation variants
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -117,12 +118,12 @@ export function AIEventSummary({ events }: AIEventSummaryProps) {
     },
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
+      transition: { duration: 0.5 },
     },
   }
 
@@ -131,7 +132,7 @@ export function AIEventSummary({ events }: AIEventSummaryProps) {
       className={`bg-gradient-to-br ${bgGradient} rounded-xl p-6 border ${borderColor} shadow-lg backdrop-blur-sm`}
       initial={{ opacity: 0, y: 20 }}
       animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.6, ease: "easeOut", delay: 0.6 }}
+      transition={{ duration: 0.6, delay: 0.6 }}
     >
       <div className="flex items-center gap-3 mb-6">
         <div className={`${iconBgColor} p-2 rounded-full`}>

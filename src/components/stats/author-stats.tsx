@@ -86,7 +86,7 @@ export function AuthorStats({ books }: AuthorStatsProps) {
     visible: {
       x: 0,
       opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
+      transition: { duration: 0.5 },
     },
   }
 
@@ -95,7 +95,7 @@ export function AuthorStats({ books }: AuthorStatsProps) {
       className={`bg-gradient-to-br ${bgGradient} rounded-xl p-6 border ${borderColor} shadow-lg backdrop-blur-sm`}
       initial={{ opacity: 0, y: 20 }}
       animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
+      transition={{ duration: 0.6, delay: 0.3 }}
     >
       <div className="flex items-center gap-3 mb-6">
         <div className={`${iconBgColor} p-2 rounded-full`}>

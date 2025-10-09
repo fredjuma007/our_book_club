@@ -41,11 +41,7 @@ export default async function ReviewsPage() {
   //console.log(`[SERVER] Fetching reviews for member ID: ${member.id} at ${new Date().toISOString()}`)
 
   // Get all reviews to examine their structure
-  const allReviewsResponse = await client.items
-    .queryDataItems({
-      dataCollectionId: "Reviews",
-    })
-    .find()
+  const allReviewsResponse = await client.items.query("Reviews").find()
 
   // Log a sample of reviews to understand their structure
   if (allReviewsResponse.items.length > 0) {
@@ -55,18 +51,17 @@ export default async function ReviewsPage() {
   // Filter reviews on the server side based on the data structure
   const userReviews = allReviewsResponse.items.filter((item) => {
     // Check if the review belongs to the current user
-    // Look for userId in the data object
-    return item.data?.userId === member.id || item.data?.authorId === member.id || item.data?.memberId === member.id
+    // Look for userId directly on the item
+    return item.userId === member.id || item.authorId === member.id || item.memberId === member.id
   })
 
   //console.log(`[SERVER] Found ${userReviews.length} reviews for user ${member.id}`)
 
   // Map the reviews properly, preserving the _id field and ensuring they match the Review type
   const reviews = userReviews.map((item) => {
-    // Ensure we have both the _id and all data properties
+    // Items are now returned at root level without nested .data
     return {
-      _id: item._id || "", // Provide a default empty string to satisfy the type
-      ...(item.data || {}),
+      ...item,
     } as Review // Explicitly cast to Review type
   })
 
@@ -79,14 +74,14 @@ export default async function ReviewsPage() {
       .filter((review) => review?.bookId) // Only process reviews with valid bookIds
       .map(async (review) => {
         try {
-          const bookResponse = await client.items.getDataItem(review.bookId!, { dataCollectionId: "Books" })
+          const bookResponse = await client.items.get("Books", review.bookId!)
 
           // Ensure the book data matches the Book type
           const book: Book = {
-            _id: bookResponse.data?._id || review.bookId,
-            title: bookResponse.data?.title || "Unknown Title",
-            author: bookResponse.data?.author,
-            image: bookResponse.data?.image,
+            _id: bookResponse?.['_id'] || review.bookId,
+            title: bookResponse?.['title'] || "Unknown Title",
+            author: bookResponse?.['author'],
+            image: bookResponse?.['image'],
           }
 
           return { review, book }
@@ -137,7 +132,7 @@ export default async function ReviewsPage() {
           <div className="flex justify-center gap-2 mt-8">
             <Button
               variant="outline"
-              className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif relative overflow-hidden group"
+              className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif relative overflow-hidden group bg-transparent"
             >
               <Link className="text-green-700 dark:text-white flex items-center gap-1" href="/books">
                 📚 <span>Books</span>
@@ -146,7 +141,7 @@ export default async function ReviewsPage() {
 
             <Button
               variant="outline"
-              className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif relative overflow-hidden group"
+              className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif relative overflow-hidden group bg-transparent"
             >
               <Link className="text-green-700 dark:text-white flex items-center gap-1" href="/club-events">
                 📅 <span>Events</span>
@@ -204,7 +199,7 @@ export default async function ReviewsPage() {
             </div>
             <Button
               variant="outline"
-              className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group"
+              className="text-green-700 border-green-700 hover:bg-green-200 hover:text-white font-serif group bg-transparent"
             >
               <Link href="/books" className="flex items-center gap-2">
                 <BookOpen className="w-4 h-4 transition-transform group-hover:scale-110" />
