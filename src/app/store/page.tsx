@@ -7,7 +7,6 @@ import { ShoppingBag, Coffee, Bookmark, Shirt, Sparkles, Phone, Star } from "luc
 import { getServerClient } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import { CategoryFilter } from "@/components/category-filter"
-import { CartButton } from "@/components/cart-button"
 
 export default async function StorePage({
   searchParams,
@@ -20,22 +19,22 @@ export default async function StorePage({
   const client = await getServerClient()
 
   const merchandiseData = await client.items
-    .queryDataItems({ dataCollectionId: "Merchandise" })
+    .query("Merchandise")
     .find()
     .then((res) => {
-      console.log("[v0] Raw merchandise data from Wix:", JSON.stringify(res.items.slice(0, 1), null, 2))
+     // console.log("[v0] Raw merchandise data from Wix:", JSON.stringify(res.items.slice(0, 1), null, 2))
       return res.items.map((item) => {
         const mappedItem = {
-          _id: item.data?._id,
-          name: item.data?.title_fld, // Map title_fld to name
-          category: item.data?.category,
-          price: item.data?.price,
-          description: item.data?.description_fld, // Map description_fld to description
-          image: item.data?.image_fld, // Map image_fld to image
-          inStock: item.data?.inStock,
-          featured: item.data?.featured,
+          _id: item._id,
+          name: item.title_fld, // Map title_fld to name
+          category: item.category,
+          price: item.price,
+          description: item.description_fld, // Map description_fld to description
+          image: item.image_fld, // Map image_fld to image
+          inStock: item.inStock,
+          featured: item.featured,
         }
-        console.log("[v0] Processing item:", mappedItem._id, "Image data:", mappedItem.image)
+       // console.log("[v0] Processing item:", mappedItem._id, "Image data:", mappedItem.image)
         return mappedItem
       })
     })
@@ -97,9 +96,8 @@ export default async function StorePage({
               <Sparkles className="absolute -right-8 -top-8 w-6 h-6 text-emerald-700/40" />
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto mb-8">
-              Show your love for reading with our exclusive book club merchandise! 
-              From stylish bookmarks to amazing t-shirts and mugs.
-              Every purchase supports our community initiatives. Happy shopping!
+              Show your love for reading with our exclusive book club merchandise! From stylish bookmarks to amazing
+              t-shirts and mugs. Every purchase supports our community initiatives. Happy shopping!
             </p>
 
             {/* Call to Action Buttons */}
@@ -114,7 +112,7 @@ export default async function StorePage({
               <Button
                 variant="outline"
                 size="lg"
-                className="border-emerald-600 text-emerald-700"
+                className="border-emerald-600 text-emerald-700 bg-transparent"
                 asChild
               >
                 <Link href="tel:+254700000000">
@@ -166,10 +164,6 @@ export default async function StorePage({
                           src={
                             convertWixImageToUrl(item.image) ||
                             "/placeholder.svg?height=200&width=200&query=book club merchandise" ||
-                            "/placeholder.svg" ||
-                            "/placeholder.svg" ||
-                            "/placeholder.svg" ||
-                            "/placeholder.svg" ||
                             "/placeholder.svg"
                           }
                           alt={item?.name}
@@ -237,87 +231,77 @@ export default async function StorePage({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {sortedMerchandise.map((item) => (
-                <Card
+              <Card
                 key={item?._id}
                 className="hover:shadow-lg transition-all duration-300 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 group hover:-translate-y-1"
-                >
+              >
                 <CardHeader className="pb-2 border-b border-gray-100 dark:border-gray-700">
                   <CardTitle className="text-lg font-semibold text-emerald-800 dark:text-emerald-500 font-serif group-hover:text-emerald-700 dark:group-hover:text-emerald-400">
-                  {item?.name}
+                    {item?.name}
                   </CardTitle>
                   <CardDescription className="text-sm text-gray-600 dark:text-gray-400 font-serif capitalize">
-                  {item?.category}
+                    {item?.category}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center pt-4">
                   {item?.image ? (
-                  <div className="relative w-full h-40 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-gradient-to-t from-emerald-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 rounded-lg" />
-                    <Image
-                    width={150}
-                    height={150}
-                    src={
-                      convertWixImageToUrl(item.image) ||
-                      "/placeholder.svg?height=150&width=150&query=book club merchandise" ||
-                      "/placeholder.svg" ||
-                      "/placeholder.svg" ||
-                      "/placeholder.svg" ||
-                      "/placeholder.svg" ||
-                      "/placeholder.svg"
-                    }
-                    alt={item?.name}
-                    className="max-w-full max-h-full object-contain rounded-lg cursor-pointer border border-gray-200 dark:border-gray-700 transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
+                    <div className="relative w-full h-40 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-gradient-to-t from-emerald-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 rounded-lg" />
+                      <Image
+                        width={150}
+                        height={150}
+                        src={
+                          convertWixImageToUrl(item.image) ||
+                          "/placeholder.svg?height=150&width=150&query=book club merchandise" ||
+                          "/placeholder.svg"
+                        }
+                        alt={item?.name}
+                        className="max-w-full max-h-full object-contain rounded-lg cursor-pointer border border-gray-200 dark:border-gray-700 transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
                   ) : (
-                  <div className="flex flex-col gap-2 items-center justify-center w-full h-40 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30">
-                    {item?.category === "bookmark" && (
-                    <Bookmark className="w-8 h-8 text-emerald-500 group-hover:scale-110 transition-transform" />
-                    )}
-                    {item?.category === "mug" && (
-                    <Coffee className="w-8 h-8 text-emerald-500 group-hover:scale-110 transition-transform" />
-                    )}
-                    {item?.category === "t-shirt" && (
-                    <Shirt className="w-8 h-8 text-emerald-500 group-hover:scale-110 transition-transform" />
-                    )}
-                    <p className="text-emerald-600 dark:text-emerald-400 font-serif text-sm">No Image</p>
-                  </div>
+                    <div className="flex flex-col gap-2 items-center justify-center w-full h-40 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30">
+                      {item?.category === "bookmark" && (
+                        <Bookmark className="w-8 h-8 text-emerald-500 group-hover:scale-110 transition-transform" />
+                      )}
+                      {item?.category === "mug" && (
+                        <Coffee className="w-8 h-8 text-emerald-500 group-hover:scale-110 transition-transform" />
+                      )}
+                      {item?.category === "t-shirt" && (
+                        <Shirt className="w-8 h-8 text-emerald-500 group-hover:scale-110 transition-transform" />
+                      )}
+                      <p className="text-emerald-600 dark:text-emerald-400 font-serif text-sm">No Image</p>
+                    </div>
                   )}
                   <div className="mt-3 text-center">
-                  <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400 font-serif">
-                    KES {item?.price?.toLocaleString()}
-                  </p>
+                    <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400 font-serif">
+                      KES {item?.price?.toLocaleString()}
+                    </p>
                   </div>
                 </CardContent>
                 <CardFooter className="flex flex-col gap-2 pt-2">
                   <Button
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white transition-colors font-serif w-full"
-                  disabled={!item?.inStock}
-                  asChild
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white transition-colors font-serif w-full"
+                    disabled={!item?.inStock}
+                    asChild
                   >
-                  <Link href={`/store/${item?._id}`}>{item?.inStock ? "View Details" : "Out of Stock"}</Link>
+                    <Link href={`/store/${item?._id}`}>{item?.inStock ? "View Details" : "Out of Stock"}</Link>
                   </Button>
-                  <Button
-                  variant="outline"
-                  className="border-emerald-600 text-emerald-700"
-                  asChild
-                  >
-                  <Link href="tel:+254700000000">
-                    <Phone className="w-4 h-4 mr-2" />
-                    Call to Order
-                  </Link>
+                  <Button variant="outline" className="border-emerald-600 text-emerald-700 bg-transparent" asChild>
+                    <Link href="tel:+254700000000">
+                      <Phone className="w-4 h-4 mr-2" />
+                      Call to Order
+                    </Link>
                   </Button>
                 </CardFooter>
-                </Card>
+              </Card>
             ))}
           </div>
         </div>
 
         {/* Call to Action Footer */}
         <div className="mt-16 text-center bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-8 border border-emerald-200 dark:border-emerald-700">
-          <h3 className="text-2xl font-bold text-emerald-800 dark:text-emerald-500 font-serif mb-4">
-            Order by Phone!
-          </h3>
+          <h3 className="text-2xl font-bold text-emerald-800 dark:text-emerald-500 font-serif mb-4">Order by Phone!</h3>
           <p className="text-gray-600 dark:text-gray-300 font-serif mb-6">
             Call us directly to place your order. We're here to help you find the perfect book club merchandise!
           </p>

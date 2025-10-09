@@ -8,6 +8,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 import ChatBotProvider from "@/components/chat-bot-provider"
 import Footer from "@/components/footer"
+import { MaintenanceWidget } from "@/components/maintenance-widget"
+import { Suspense } from "react"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,6 +27,8 @@ export const metadata: Metadata = {
   description: "A book club for everyone",
 }
 
+const MAINTENANCE_MODE = true // Set to true to enable maintenance mode
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,11 +41,17 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-background text-foreground`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <div className="page-transition-element" aria-hidden="true"></div>
-            <main className="flex-1">{children}</main>
-          </div>
+          {MAINTENANCE_MODE ? (
+            <MaintenanceWidget />
+          ) : (
+            <Suspense fallback={<div>Loading...</div>}>
+              <div className="flex flex-col min-h-screen">
+                <Header />
+                <div className="page-transition-element" aria-hidden="true"></div>
+                <main className="flex-1">{children}</main>
+              </div>
+            </Suspense>
+          )}
           <SpeedInsights />
           <Analytics />
           <ChatBotProvider />

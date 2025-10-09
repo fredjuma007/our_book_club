@@ -138,7 +138,7 @@ export function AIEventSummary({ events }: AIEventSummaryProps) {
         <div className={`${iconBgColor} p-2 rounded-full`}>
           <Sparkles className={`w-5 h-5 ${textColor}`} />
         </div>
-        <h3 className={`text-xl font-serif font-bold ${textColor}`}>AI Event Summary</h3>
+        <h3 className={`text-xl font-serif font-bold ${textColor}`}>Gladwell AI Event Summary</h3>
       </div>
 
       {isLoading ? (

@@ -36,28 +36,26 @@ export default async function ProductPage({ params }: PageProps) {
   const client = await getServerClient()
 
   try {
-    const productResponse = await client.items.getDataItem(productId, {
-      dataCollectionId: "Merchandise",
-    })
+    const productResponse = await client.items.get("Merchandise", productId)
 
-    console.log("[v0] Raw product data from Wix:", JSON.stringify(productResponse, null, 2))
+    // console.log("[v0] Raw product data from Wix:", JSON.stringify(productResponse, null, 2))
 
-    if (!productResponse?.data) {
+    if (!productResponse) {
       return notFound()
     }
 
     const product: Product = {
-      _id: productResponse.data._id,
-      name: productResponse.data.title_fld, // Map title_fld to name
-      category: productResponse.data.category,
-      price: productResponse.data.price,
-      description: productResponse.data.description_fld, // Map description_fld to description
-      image: productResponse.data.image_fld, // Map image_fld to image
-      inStock: productResponse.data.inStock ?? true,
-      featured: productResponse.data.featured ?? false,
+      _id: productResponse._id,
+      name: productResponse.title_fld, // Map title_fld to name
+      category: productResponse.category,
+      price: productResponse.price,
+      description: productResponse.description_fld, // Map description_fld to description
+      image: productResponse.image_fld, // Map image_fld to image
+      inStock: productResponse.inStock ?? true,
+      featured: productResponse.featured ?? false,
     }
 
-    console.log("[v0] Mapped product data:", product)
+    // console.log("[v0] Mapped product data:", product)
 
     if (!product.name) {
       return notFound()
