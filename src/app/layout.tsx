@@ -10,6 +10,7 @@ import ChatBotProvider from "@/components/chat-bot-provider"
 import Footer from "@/components/footer"
 import { MaintenanceWidget } from "@/components/maintenance-widget"
 import { Suspense } from "react"
+import { LoadingScreen } from "@/components/loading-screen"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -44,7 +45,9 @@ export default function RootLayout({
           {MAINTENANCE_MODE ? (
             <MaintenanceWidget />
           ) : (
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense
+              fallback={<LoadingScreen message="Loading Page..." submessage="Preparing your experience" />}
+            >
               <div className="flex flex-col min-h-screen">
                 <Header />
                 <div className="page-transition-element" aria-hidden="true"></div>

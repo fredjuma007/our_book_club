@@ -1,9 +1,9 @@
 "use client"
 import { useState, useEffect, useRef } from "react"
 import type React from "react"
-import { BookOpen, Sparkles, Trash2, Copy, Check } from "lucide-react"
+import { Sparkles, Trash2, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { MessageSquare, X, Send, ChevronDown, ChevronUp } from "lucide-react"
+import { X, Send, ChevronDown, ChevronUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 type ChatBotProps = {
@@ -392,8 +392,8 @@ export default function ChatBot({
           >
             <div className="bg-gradient-to-r from-emerald-600 to-green-600 p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                  <MessageSquare className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center backdrop-blur-sm overflow-hidden">
+                  <img src="/logo.jpg" alt="Gladwell Logo" className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <h3 className="font-bold text-white text-lg">Gladwell</h3>
@@ -432,8 +432,8 @@ export default function ChatBot({
                   >
                     <div className="relative mx-auto w-24 h-24">
                       <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 to-green-600 rounded-full animate-pulse opacity-20"></div>
-                      <div className="relative w-24 h-24 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center shadow-xl">
-                        <BookOpen className="w-12 h-12 text-white" />
+                      <div className="relative w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-xl overflow-hidden">
+                        <img src="/logo.jpg" alt="Gladwell Logo" className="w-full h-full object-cover" />
                       </div>
                       <motion.div
                         className="absolute -top-2 -right-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-2 shadow-lg"
@@ -700,7 +700,7 @@ export default function ChatBot({
                   onClick={() => setIsOpen(true)}
                   className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 hover:from-purple-700 hover:via-blue-700 hover:to-cyan-700 text-white shadow-lg relative z-10"
                 >
-                  <MessageSquare className="w-7 h-7" />
+                  <Send className="w-7 h-7" />
                 </Button>
               </motion.div>
               <motion.div
