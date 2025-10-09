@@ -5,7 +5,7 @@ import type React from "react"
 import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 import { MessageCircle, Trash2 } from "lucide-react"
 import { addReplyAction, getRepliesAction, deleteReplyAction } from "@/app/actions"
 
@@ -28,7 +28,6 @@ export function ReplySection({ reviewId, bookId, isLoggedIn, currentUserId }: Re
   const [replyContent, setReplyContent] = useState("")
   const [replies, setReplies] = useState<Reply[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const { toast } = useToast()
 
   const fetchReplies = useCallback(async () => {
     setIsLoading(true)
@@ -39,15 +38,13 @@ export function ReplySection({ reviewId, bookId, isLoggedIn, currentUserId }: Re
       }
     } catch (error) {
       console.error("Error fetching replies:", error)
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to load replies",
-        variant: "destructive",
       })
     } finally {
       setIsLoading(false)
     }
-  }, [reviewId, toast])
+  }, [reviewId])
 
   useEffect(() => {
     fetchReplies()
@@ -58,10 +55,8 @@ export function ReplySection({ reviewId, bookId, isLoggedIn, currentUserId }: Re
       e.preventDefault()
 
       if (!replyContent.trim()) {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Reply cannot be empty",
-          variant: "destructive",
         })
         return
       }
@@ -74,22 +69,17 @@ export function ReplySection({ reviewId, bookId, isLoggedIn, currentUserId }: Re
           setIsReplying(false)
           await fetchReplies()
 
-          toast({
-            title: "Success",
-            description: "Your reply has been posted",
-            className: "bg-green-700 text-white",
+          toast.success("Comment Posted!", {
+            description: "Your comment has been posted successfully.",
           })
         }
       } catch (error) {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: error instanceof Error ? error.message : "Failed to post reply",
-          variant: "destructive",
-          className: "bg-green-700 text-white",
         })
       }
     },
-    [replyContent, reviewId, bookId, toast, fetchReplies],
+    [replyContent, reviewId, bookId, fetchReplies],
   )
 
   const handleDeleteReply = useCallback(
@@ -97,21 +87,17 @@ export function ReplySection({ reviewId, bookId, isLoggedIn, currentUserId }: Re
       try {
         await deleteReplyAction(replyId, bookId)
         await fetchReplies()
-        toast({
-          title: "Deleted",
-          description: "Reply deleted successfully",
-          className: "bg-green-700 text-white",
+        toast.success("Comment Deleted", {
+          description: "Your comment has been deleted successfully.",
         })
       } catch (error) {
         console.error("Error deleting reply:", error)
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: error instanceof Error ? error.message : "Failed to delete reply",
-          variant: "destructive",
         })
       }
     },
-    [bookId, fetchReplies, toast],
+    [bookId, fetchReplies],
   )
 
   return (
@@ -122,10 +108,8 @@ export function ReplySection({ reviewId, bookId, isLoggedIn, currentUserId }: Re
         className="text-gray-600 dark:text-gray-400 hover:text-green-700 hover:bg-green-50 dark:hover:text-green-400 dark:hover:bg-gray-700 p-1 h-auto"
         onClick={() => {
           if (!isLoggedIn) {
-            toast({
-              title: "Login Required",
+            toast.error("Login Required", {
               description: "Please log in to reply to reviews",
-              variant: "destructive",
             })
             return
           }

@@ -1,15 +1,14 @@
 "use client"
 
 import type React from "react"
-
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import { Loader2, Star } from "lucide-react"
-import { useRouter } from "next/navigation"
 import { createReviewAction } from "@/app/actions"
+import { useRouter } from "next/navigation"
 
 const initialReview = {
   name: "",
@@ -21,7 +20,6 @@ export function PostReviewForm({ bookId, userName }: { bookId: string; userName:
   const [newReview, setNewReview] = useState({ ...initialReview, name: userName })
   const [isLoading, setIsLoading] = useState(false)
   const [hoverRating, setHoverRating] = useState(0)
-  const { toast } = useToast()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,40 +27,27 @@ export function PostReviewForm({ bookId, userName }: { bookId: string; userName:
     setIsLoading(true)
 
     try {
-      // Use FormData with the server action
       const formData = new FormData()
       formData.append("bookId", bookId)
       formData.append("name", newReview.name)
       formData.append("rating", newReview.rating.toString())
       formData.append("review", newReview.review)
 
-      // Use the server action instead of client-side API call
       const result = await createReviewAction(formData)
 
       if (result.success) {
         setNewReview({ ...initialReview, name: userName })
-        toast({
-          title: "Your review has been posted",
-          description: "Thank you for your feedback!",
-          className: "bg-green-700 text-white",
+        toast.success("Review Posted!", {
+          description: "Your review has been posted successfully.",
         })
-
-        // Force a refresh of all routes that display reviews
         router.refresh()
-
-        // Add a small delay and then force a hard refresh if needed
-        setTimeout(() => {
-          window.location.href = window.location.href
-        }, 1000)
       } else {
         throw new Error(result.error || "Failed to post review")
       }
     } catch (error) {
       console.error("Error posting review:", error)
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: (error as Error).message || "Something went wrong",
-        variant: "destructive",
       })
     } finally {
       setIsLoading(false)
