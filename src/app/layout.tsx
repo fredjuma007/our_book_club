@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   description: "A book club for everyone",
 }
 
-const MAINTENANCE_MODE = false // Set to true to enable maintenance mode
+const MAINTENANCE_MODE = true // Set to true to enable maintenance mode
 
 export default function RootLayout({
   children,
