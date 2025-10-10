@@ -98,9 +98,9 @@ export function MobileMenu({ isLoggedIn, memberNickname, loginAction, logoutActi
                 hover:text-green-700 hover:bg-green-50/50 dark:hover:bg-green-900/20
                 dark:hover:text-green-300 transition-colors relative group overflow-hidden font-serif"
               >
-                <Link href="/reviews">
+                <Link href="/dashboard">
                   <span className="absolute inset-0 bg-gradient-to-r from-green-200/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
-                  My Reviews
+                  My Dashboard
                 </Link>
               </Button>
             )}

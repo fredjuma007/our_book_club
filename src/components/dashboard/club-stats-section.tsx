@@ -152,7 +152,7 @@ export function ClubStatsSection({
         )}
 
         {/* Action Buttons */}
-        <div className="pt-4 space-y-2">
+        {/*<div className="pt-4 space-y-2">
           <Link href="/stats" className="block">
             <Button
               variant="outline"
@@ -161,7 +161,7 @@ export function ClubStatsSection({
               View Full Stats
             </Button>
           </Link>
-        </div>
+        </div>*/}
       </div>
     </motion.div>
   )

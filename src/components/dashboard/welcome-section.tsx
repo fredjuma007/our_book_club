@@ -14,6 +14,14 @@ const quotes = [
   "Reading is dreaming with open eyes.",
   "The more that you read, the more things you will know.",
   "A book is a dream that you hold in your hand.",
+  "Books are the mirrors of the soul.",
+  "Reading gives us someplace to go when we have to stay where we are.",
+  "A room without books is like a body without a soul.",
+  "So many books, so little time.",
+  "Books are a refuge, a sort of cloistral refuge, from the vulgarities of the actual world.",
+  "Sometimes you need fantasy to understand reality.",
+  "There is no friend as loyal as a book.",
+  "Books wash away from the soul the dust of everyday life.",
 ]
 
 export function WelcomeSection({ memberName }: WelcomeSectionProps) {
