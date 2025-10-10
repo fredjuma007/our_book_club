@@ -2,14 +2,11 @@ import { getMember, getServerClient } from "@/lib/wix"
 import { redirect } from "next/navigation"
 import { WelcomeSection } from "@/components/dashboard/welcome-section"
 import { MyStats } from "@/components/dashboard/my-stats"
-import { ClubStatsSection } from "@/components/dashboard/club-stats-section"
-import { UpcomingEvents } from "@/components/dashboard/upcoming-events"
-import { BookOfMonth } from "@/components/dashboard/book-of-month"
-import { CommunityFeed } from "@/components/dashboard/community-feed"
-import { ReviewCard } from "@/components/review-card"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { Suspense } from "react"
 import { convertWixEventData } from "@/lib/event-utils"
+import { MobileDashboardLayout } from "@/components/dashboard/mobile-dashboard-layout"
+import { DesktopDashboardLayout } from "@/components/dashboard/desktop-dashboard-layout"
 
 // Force dynamic rendering and disable caching
 export const dynamic = "force-dynamic"
@@ -197,66 +194,32 @@ export default async function DashboardPage() {
           <MyStats totalReviews={totalReviews} avgRating={avgRating} lovedBooks={lovedBooks} />
         </Suspense>
 
-        {/* Two Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* My Reviews Section */}
-            <section className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-green-700/30 shadow-lg">
-              <h2 className="text-3xl font-bold text-green-800 dark:text-green-500 font-serif mb-6 flex items-center gap-2">
-                <span>📚</span> My Reviews
-              </h2>
-              {reviews.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-600 dark:text-gray-400 font-serif mb-4">No reviews yet</p>
-                  <a
-                    href="/books"
-                    className="text-green-700 dark:text-green-400 hover:underline font-serif font-semibold"
-                  >
-                    Browse books to get started
-                  </a>
-                </div>
-              ) : (
-                <div className="max-h-[550px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-green-700 scrollbar-track-green-100 dark:scrollbar-track-green-900/20">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {userReviewsWithBooks.map(({ review, book }) => (
-                      <ReviewCard key={review._id} review={review} book={book} />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </section>
+        <div className="lg:hidden">
+          <MobileDashboardLayout
+            userReviewsWithBooks={userReviewsWithBooks}
+            reviews={reviews}
+            bookOfMonth={bookOfMonthWithStringDate}
+            recentReviewsWithBooks={recentReviewsWithBooks}
+            upcomingEvents={upcomingEvents}
+            totalClubBooks={totalClubBooks}
+            totalClubReviews={totalClubReviews}
+            topRatedBook={topRatedBook}
+            mostActiveMembers={mostActiveMembers}
+          />
+        </div>
 
-            {/* Club Stats */}
-            <Suspense fallback={<div className="h-64 animate-pulse bg-gray-200 dark:bg-gray-800 rounded-xl" />}>
-              <ClubStatsSection
-                totalBooks={totalClubBooks}
-                totalReviews={totalClubReviews}
-                topRatedBook={topRatedBook}
-                mostActiveMembers={mostActiveMembers}
-              />
-            </Suspense>
-          </div>
-
-          {/* Right Column - Sidebar */}
-          <div className="space-y-8">
-            {/* Book of the Month */}
-            {bookOfMonthWithStringDate && (
-              <Suspense fallback={<div className="h-64 animate-pulse bg-gray-200 dark:bg-gray-800 rounded-xl" />}>
-                <BookOfMonth book={bookOfMonthWithStringDate} />
-              </Suspense>
-            )}
-
-            {/* Community Feed */}
-            <Suspense fallback={<div className="h-96 animate-pulse bg-gray-200 dark:bg-gray-800 rounded-xl" />}>
-              <CommunityFeed recentReviews={recentReviewsWithBooks} />
-            </Suspense>
-
-            {/* Upcoming Events */}
-            <Suspense fallback={<div className="h-64 animate-pulse bg-gray-200 dark:bg-gray-800 rounded-xl" />}>
-              <UpcomingEvents events={upcomingEvents} />
-            </Suspense>
-          </div>
+        <div className="hidden lg:block">
+          <DesktopDashboardLayout
+            userReviewsWithBooks={userReviewsWithBooks}
+            reviews={reviews}
+            bookOfMonth={bookOfMonthWithStringDate}
+            recentReviewsWithBooks={recentReviewsWithBooks}
+            upcomingEvents={upcomingEvents}
+            totalClubBooks={totalClubBooks}
+            totalClubReviews={totalClubReviews}
+            topRatedBook={topRatedBook}
+            mostActiveMembers={mostActiveMembers}
+          />
         </div>
 
         <ScrollToTop />

@@ -6,6 +6,7 @@ import { CommunityFeed } from "@/components/dashboard/community-feed"
 import { UpcomingEvents } from "@/components/dashboard/upcoming-events"
 import { ClubStatsSection } from "@/components/dashboard/club-stats-section"
 import { Suspense } from "react"
+import type { Event } from "@/lib/event-utils"
 
 interface Review {
   _id: string
@@ -28,17 +29,6 @@ interface Book {
   genre?: string
   rating?: number
   _createdDate?: string
-}
-
-interface Event {
-  _id: string
-  title: string
-  description?: string
-  date: string
-  time?: string
-  location?: string
-  meetingLink?: string
-  isPast: boolean
 }
 
 interface DesktopDashboardLayoutProps {
