@@ -69,7 +69,7 @@ export function ReviewCard({ review, book }: ReviewCardProps) {
         )}
 
         {/* Main Content */}
-        <div className="flex gap-4 flex-grow">
+        <div className="flex gap-4 flex-grow min-w-0">
           {/* Book Image */}
           <div className="flex-shrink-0">
             <Link
@@ -232,7 +232,7 @@ function ReviewContent({ review, book }: { review: Review; book?: Book }) {
 
   return (
     <div
-      className={`flex-1 flex flex-col transition-opacity duration-300 ${isPendingDelete ? "opacity-50" : "opacity-100"}`}
+      className={`flex-1 flex flex-col min-w-0 transition-opacity duration-300 ${isPendingDelete ? "opacity-50" : "opacity-100"}`}
     >
       {isEditing ? (
         <div className="flex-1 flex flex-col gap-4">
@@ -295,7 +295,7 @@ function ReviewContent({ review, book }: { review: Review; book?: Book }) {
               value={editedReview.review}
               onChange={(e) => setEditedReview({ ...editedReview, review: e.target.value })}
               placeholder="Write your review..."
-              className="font-serif min-h-[120px] resize-none"
+              className="font-serif w-full min-h-[120px] resize-none"
             />
           </div>
 
@@ -333,7 +333,7 @@ function ReviewContent({ review, book }: { review: Review; book?: Book }) {
       ) : (
         <>
           {/* Review Text */}
-          <div className="text-gray-700 dark:text-gray-300 font-serif leading-relaxed text-sm flex-grow">
+          <div className="text-gray-700 dark:text-gray-300 font-serif leading-relaxed text-sm flex-grow break-words">
             {review?.review && review.review.length > 120 && !isExpanded ? (
               <>
                 {review.review.substring(0, 120)}...
@@ -370,20 +370,20 @@ function ReviewContent({ review, book }: { review: Review; book?: Book }) {
               size="sm"
               onClick={() => setIsEditing(true)}
               disabled={isPendingDelete}
-              className="text-green-700 border-green-700 hover:bg-green-200 font-serif group disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-green-700 border-green-700 hover:bg-green-200 font-serif group disabled:opacity-50 disabled:cursor-not-allowed md:px-4 px-2"
             >
-              <PenTool className="w-4 h-4 mr-2 transition-transform group-hover:scale-110" />
-              Edit
+              <PenTool className="w-4 h-4 md:mr-2 transition-transform group-hover:scale-110" />
+              <span className="hidden md:inline">Edit</span>
             </Button>
             <Button
               variant="destructive"
               size="sm"
               onClick={handleDelete}
               disabled={isPendingDelete}
-              className="transition-all duration-300 hover:scale-105 group/delete disabled:opacity-50 disabled:cursor-not-allowed"
+              className="transition-all duration-300 hover:scale-105 group/delete disabled:opacity-50 disabled:cursor-not-allowed md:px-4 px-2"
             >
-              <Trash2 className="w-4 h-4 mr-2 transition-transform duration-200 group-hover/delete:rotate-12" />
-              {isPendingDelete ? "Deleting..." : "Delete"}
+              <Trash2 className="w-4 h-4 md:mr-2 transition-transform duration-200 group-hover/delete:rotate-12" />
+              <span className="hidden md:inline">{isPendingDelete ? "Deleting..." : "Delete"}</span>
             </Button>
           </div>
         </>
