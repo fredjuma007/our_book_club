@@ -27,8 +27,8 @@ import {
 import React, { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import GladwellButton from "@/components/gladwell-button"
+import { MyDashboardButton } from "@/components/my-dashboard-button"
 import { ClubStatsButton } from "@/components/club-stats-button"
-import { ClubEventStatsButton } from "@/components/club-event-stats-button"
 
 // Define the GalleryItem type
 interface GalleryItem {
@@ -482,15 +482,15 @@ export default function HomePageClient({
                 >
                   <Sparkles className="absolute -right-8 -top-4 w-6 h-6 text-green-500/40 animate-spin-slow" />
                   <p className="text-base md:text-xl text-gray-800 dark:text-gray-300 max-w-lg bg-white/80 dark:bg-black/30 p-3 rounded-lg shadow-sm">
-                    Discover, share, and review your favorite{" "}
+                    Welcome To Our Vibrant{" "}
                     <motion.span
                       className="text-green-700 dark:text-green-400 font-bold"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >
-                      books
+                      Book Club!
                     </motion.span>{" "}
-                    with a community of{" "}
+                    Read With a Community of{" "}
                     <motion.span
                       className="text-green-700 dark:text-green-400 font-bold"
                       whileHover={{ scale: 1.1 }}
@@ -535,10 +535,10 @@ export default function HomePageClient({
                     size="lg"
                     className="bg-green-700 hover:bg-green-800 text-white gap-2 group relative overflow-hidden font-serif shadow-lg"
                   >
-                    <Link href="/gallery">
+                    <Link href="/club-events">
                       <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                      <ImagePlay className="w-6 h-6 transition-transform duration-300 group-hover:rotate-12 animate-pulse-slow" />
-                      View Gallery
+                      <Calendar className="w-6 h-6 transition-transform duration-300 group-hover:scale-110 animate-pulse-slow" />
+                      Events
                     </Link>
                   </Button>
                 </motion.div>
@@ -552,18 +552,17 @@ export default function HomePageClient({
                   <Button
                     asChild
                     size="lg"
-                    variant="outline"
-                    className="border-green-700 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-gray-700 font-serif group relative overflow-hidden shadow-lg bg-transparent"
+                    className="bg-green-700 hover:bg-green-800 text-white gap-2 group relative overflow-hidden font-serif shadow-lg"
                   >
                     <Link href="/club-events">
-                      <span className="absolute inset-0 bg-gradient-to-r from-green-700/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <Calendar className="w-6 h-6 transition-transform duration-300 group-hover:scale-110 animate-pulse-slow" />
-                      Check Events
+                      <span className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                      <ImagePlay className="w-6 h-6 transition-transform duration-300 group-hover:scale-110 animate-pulse-slow" />
+                      Gallery
                     </Link>
                   </Button>
                 </motion.div>
+                <MyDashboardButton />
                 <ClubStatsButton />
-                <ClubEventStatsButton />
               </div>
 
               {/* Mobile Book of the Month */}

@@ -20,7 +20,7 @@ import {
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import type { Event } from "@/lib/event-utils"
 import AddToCalendar from "@/components/add-to-calendar"
-import { ClubEventStatsButton } from "@/components/club-event-stats-button"
+import { ClubStatsButton } from "@/components/club-stats-button"
 
 interface EventsClientProps {
   eventsData: Event[]
@@ -261,7 +261,7 @@ export default function EventsClient({
               <History className="w-4 h-4 mr-2" />
               Previous Events
             </Link>
-            <ClubEventStatsButton />
+            <ClubStatsButton />
           </div>
         </div>
 

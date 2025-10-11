@@ -277,7 +277,6 @@ export async function Header() {
           </div>
 
           <div className="flex lg:hidden items-center gap-2 z-10">
-            <HeaderCountdown upcomingEvent={upcomingEvent} />
             <ThemeToggle />
             <MobileMenu
               isLoggedIn={isLoggedIn}

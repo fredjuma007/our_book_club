@@ -7,7 +7,6 @@ import { getServerClient, getMember } from "@/lib/wix"
 import { convertWixImageToUrl } from "@/lib/wix-client"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { BooksFilter } from "@/components/books-filter"
-import { ClubStatsButton } from "@/components/club-stats-button"
 import { SemanticSearch } from "@/components/semantic-search"
 import { BookSuggestionModal } from "@/components/book-suggestion-modal"
 
@@ -104,7 +103,7 @@ export default async function Home({
               <Sparkles className="absolute -right-8 -top-8 w-6 h-6 text-green-700/40" />
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 font-serif max-w-2xl mx-auto">
-              Explore the books we have read and currently reading. Drop a review and share your ratings with the
+              Explore the books we have read. Drop a review and share your ratings with the
               community!
             </p>
           </div>
@@ -119,7 +118,6 @@ export default async function Home({
             <SemanticSearch />
           </div>
           <div className="flex gap-2">
-            <ClubStatsButton />
             <BookSuggestionModal isLoggedIn={!!member} userEmail={member?.loginEmail} userName={member?.nickname} />
           </div>
         </div>
