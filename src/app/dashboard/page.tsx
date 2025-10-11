@@ -1,5 +1,5 @@
 import { getMember, getServerClient } from "@/lib/wix"
-import { redirect } from "next/navigation"
+import { DashboardLanding } from "@/components/dashboard/dashboard-landing"
 import { WelcomeSection } from "@/components/dashboard/welcome-section"
 import { MyStats } from "@/components/dashboard/my-stats"
 import { ScrollToTop } from "@/components/scroll-to-top"
@@ -8,7 +8,6 @@ import { convertWixEventData } from "@/lib/event-utils"
 import { MobileDashboardLayout } from "@/components/dashboard/mobile-dashboard-layout"
 import { DesktopDashboardLayout } from "@/components/dashboard/desktop-dashboard-layout"
 
-// Force dynamic rendering and disable caching
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
@@ -39,7 +38,7 @@ export default async function DashboardPage() {
   const member = await getMember()
 
   if (!member) {
-    redirect("/")
+    return <DashboardLanding />
   }
 
   const client = await getServerClient()
@@ -194,6 +193,7 @@ export default async function DashboardPage() {
           <MyStats totalReviews={totalReviews} avgRating={avgRating} lovedBooks={lovedBooks} />
         </Suspense>
 
+        {/* Mobile Layout */}
         <div className="lg:hidden">
           <MobileDashboardLayout
             userReviewsWithBooks={userReviewsWithBooks}
@@ -208,6 +208,7 @@ export default async function DashboardPage() {
           />
         </div>
 
+        {/* Desktop Layout */}
         <div className="hidden lg:block">
           <DesktopDashboardLayout
             userReviewsWithBooks={userReviewsWithBooks}
